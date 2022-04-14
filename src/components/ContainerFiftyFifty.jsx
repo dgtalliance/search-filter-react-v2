@@ -27,6 +27,11 @@ const ContainerFiftyFifty = () => {
           </div>
         </div>
       </div>
+
+      {/* COMPONENTS MODALES PARA EL SEARCH FILTER */}
+
+      
+
     </>
   )
 }
