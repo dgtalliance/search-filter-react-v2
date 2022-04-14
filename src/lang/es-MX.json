@@ -1,0 +1,18 @@
+{
+	"app.welcome": "Bienvenido, {name}",
+
+	"menu.home": "Inicio",
+	"menu.explore": "Explorar",
+	"menu.profile": "Perfil",
+
+	"profile.title": "Perfil",
+	"explore.title": "Explorar",
+
+  "filter.showing": "Mostrando {start} a {end} de {count} Propiedades.",
+  "filter.select": "Seleccionar Opción",
+  "filter.select.newest": "Listados más recientes",
+  "filter.select.highet.price": "Precio más alto",
+  "filter.select.lowest.price": "Precio más bajo",
+  "filter.select.highest.sqft": "Más pies cuadrados",
+  "filter.select.lowest.sqft": "Menos pies cuadrados"
+}

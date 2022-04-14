@@ -1,0 +1,34 @@
+{
+	"app.welcome": "Welcome, {name}",
+
+	"menu.home": "Home",
+	"menu.explore": "Explore",
+	"menu.profile": "Profile",
+
+	"profile.title": "Profile",
+	"explore.title": "Explore",
+
+
+  "filter.showing": "Showing {start} to {end} of {count} Properties.",
+  "filter.select": "Select option",
+  "filter.select.newest": "Newest Listings",
+  "filter.select.highest.price": "Highest Price",
+  "filter.select.lowest.price": "Lowest Price",
+  "filter.select.highest.sqft": "Highest Sq.Ft",
+  "filter.select.lowest.sqft": "Lowest Sq.Ft",
+  "filter.pagination": "Page {start} of {end}",
+  "filter.pagination.next": "Next page",
+  "filter.pagination.last": "Previous page",
+  "filter.modal.bath_beds": "Baths and Beds",
+  "filter.minimum_price": "Minimum Price",
+  "filter.maximum_price": "Maximum Price",
+  "filter.accompany": "Who will accompany you?",
+  "filter.filter": "Filter",
+  "filter.modal.title": "Edit the search",
+  "general.map": "Map",
+  "general.grid": "Grid",
+  "general.clear": "Clear",
+  "general.search": "Search"
+
+
+}

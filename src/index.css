@@ -1,0 +1,11 @@
+/*ESTILOS PARA LA BARRA DE FILTRO */
+@import "assets/css/reset/index.css";
+@import "assets/fonts/icons/style.css";
+@import "assets/css/residentials_filter/filters/index.css";
+
+/*ESTILOS PARA EL RESULTADO DE BUSQUEDA (50/50)*/
+@import "assets/css/result_filter/index.css";
+
+/*ESTILOS PARA EL MODAL DEL DETALLE DE PROPIEDAD*/
+@import "assets/css/modal_detail/modal/index.css";
+

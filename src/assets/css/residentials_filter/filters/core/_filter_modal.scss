@@ -1,0 +1,326 @@
+.ib-guests-search-modal{
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100vh;
+	width: 100%;
+	z-index: 0;
+	visibility: hidden;
+	transition: all .4s;
+	opacity: 0;
+
+	.ib-wrapper-modal{
+		display: flex;
+		flex-direction: column;
+		justify-content: flex-start;
+		background-color: var(--color-white);
+		padding-bottom: 65px;
+		.ib-md-header{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10px 0;
+			box-shadow: 0 0 16px 0 rgba(0,0,0,0.10);
+			border-bottom: 1px solid var(--color-border);
+			.ib-btn{
+				width: 50px;
+				height: 45px;
+				display: block;
+				text-indent: -999999px;
+				overflow: hidden;
+				position: relative;
+				font-size: 16px;
+				background-color: var(--color-white);
+				&:before{
+					content: "";
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					width: 100%;
+					height: 100%;
+					position: absolute;
+					top: 0;
+					left: 0;
+					text-indent: 0;
+					font-family: var(--icons-font);
+				}
+
+				&.-filter{
+					&:before{
+						content: "\e93b";
+					}
+				}
+
+				&.-close{
+					&:before{
+						content: "\e90e";
+					}
+				}
+			}
+
+			.ib-text{
+				font-size: 14px;
+				font-weight: 600;
+				padding: 0 15px;
+			}
+		}
+
+		.ib-body-guests{
+			overflow: hidden;
+			overflow-y: auto;
+			height: calc(100vh - 139px);
+			&::-webkit-scrollbar {
+				width: 10px;
+			}
+
+			&::-webkit-scrollbar-thumb {
+				background-color: var(--color-gray);
+			}
+
+			&::-webkit-scrollbar-track {
+				border: 0px solid var(--color-black);
+				background-color: rgba(0, 0, 0, 0.15);
+			}
+			
+			@media screen and (min-width: 768px){
+				height: auto;
+				max-height: calc(100vh - 139px);
+			}
+
+			.ib-gs-item{
+				border-bottom: 1px solid rgb(235, 235, 235) !important;
+				&:last-child{
+					margin-bottom: 0;
+				}
+
+				.ms-flex-wp,
+				.ib-locations{
+					width: 100%;
+					.ant-select{
+						display: flex;
+						align-items: center;
+						height: 45px;
+						&:not(.ant-select-customize-input) .ant-select-selector {
+							height: 100%;
+							display: flex;
+							align-items: center;
+							justify-content: flex-start;
+							border-radius: 6px;
+							border-color: var(--color-border) !important;
+							box-shadow: none !important;
+						}
+
+						&:not(.ant-select-customize-input) .ant-select-selector .ant-select-selection-search-input {
+							display: flex;
+							align-items: center;
+							justify-content: flex-start;
+							height: 100%;
+						}
+					}
+				}
+
+				.ms-flex-wp{
+					.ms-flex{
+						display: flex;
+						justify-content: space-between;
+						align-items: center;
+						.ms-item{
+							width: 43%;
+						}
+
+						.ms-txt{
+							color: var(--color-gray);
+							font-size: 14px;
+						}
+					}
+				}
+
+				.ib-chk-list{
+					justify-content: flex-start;
+					.ib-wrapper-chk{
+						.ib-chk {
+							padding: 0 10px;
+							width: auto;
+							min-width: 75px;
+							margin-right: 10px;
+							@media screen and (min-width: 768px){
+								padding: 0 20px;
+							}
+						}
+					}
+
+					&.-property{
+						.ant-radio-group{
+							justify-content: flex-start;
+							.ant-radio-button-wrapper{
+								font-size: 14px;
+								height: 45px;
+								width: 110px;
+								margin-right: 10px;
+								.ant-radio-button{
+									display: none;
+								}
+							}
+						}
+					}
+
+					&.-round{
+						.ant-radio-group{
+							justify-content: flex-start;
+							.ant-radio-button-wrapper{
+								width: 48px;
+								height: 48px;
+								margin-right: 2.33%;
+								flex-shrink: 0;
+								&:last-child{
+									margin-right: 0;
+								}
+								.ant-radio-button{
+									display: none;
+								}
+							}
+						}
+					}
+				}
+			}
+
+			.rdrDateRangePickerWrapper{
+				width: 100%;
+				.rdrCalendarWrapper{
+					width: 100%;
+					.rdrMonths {
+						flex-direction: column;
+						.rdrMonth{
+							padding: 0;
+							width: 100%;
+							&:last-child{
+								margin-top: 15px;
+								padding-top: 15px;
+								border-top: 1px dashed var(--color-border);
+							}
+						}
+					}
+				}
+
+				.rdrMonthAndYearWrapper {
+					height: 40px;
+					padding-top: 0;
+				}
+			}
+		}
+
+		.ib-modal-footer{
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			z-index: 2;
+			height: 75px;
+			padding: 15px;
+			.ib-btn{
+				padding: 13px 40px;
+				font-size: 13px;
+			}
+		}
+
+		.ib-wrapper-title{
+			background-color: var(--color-gray-title);
+			text-transform: uppercase;
+			font-weight: 600;
+			font-size: 12px;
+			padding: 13px 20px;
+			border-top-left-radius: 10px;
+			border-top-right-radius: 10px;
+		}
+	}
+
+	@media screen and (min-width: 768px){
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background-color: rgba(0, 0, 0, 0.25);
+		.ib-wrapper-modal{
+			padding-bottom: 0;
+			width: 600px;
+			margin: auto;
+			height: auto;
+			max-height: 90vh;
+			border-radius: 10px;
+			overflow: hidden;
+			.ib-md-header {
+				box-shadow: none;
+			}
+
+			.ib-modal-footer {
+				position: relative;
+				box-shadow: none;
+			}
+		}
+	}
+
+	.ib-wrapper-modal{
+		.ib-body-guests{
+			.ib-gs-item{
+				.ib-wrapper-flex{
+					display: flex;
+					.ib-flex-wrapper{
+						width: 100%;
+						&:nth-child(2){
+							display: none;
+						}
+
+						.ib-chk-list{
+							.ant-radio-group {
+								justify-content: flex-start;
+								.ant-radio-button-wrapper{
+									margin-right: 10px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/*@media screen and (min-width: 540px){
+		.ib-wrapper-modal{
+			.ib-body-guests{
+				.ib-gs-item{
+					.ib-wrapper-flex{
+						display: flex;
+						.ib-flex-wrapper{
+							width: 50%;
+							.ib-chk-list{
+								.ant-radio-group{
+									.ant-radio-button-wrapper{
+										margin-right: 10px;
+										height: 50px;
+										width: 50px;
+										min-width: 50px;
+										padding: 15px;
+										line-height: 1.1;
+										font-size: 12px;
+										text-align: center;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}*/
+}
+
+body{
+	&.ms-show-guests-filter{
+		overflow: hidden;
+		.ib-guests-search{
+			z-index: 32;
+		}
+		.ib-guests-search-modal{
+			visibility: visible;
+			opacity: 1;
+		}
+	}
+}
