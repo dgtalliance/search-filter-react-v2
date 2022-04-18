@@ -2,6 +2,7 @@ import { memo } from 'react'
 import { initializeElement } from '../utils/utils'
 import FilterSearch from './Filter/FilterSearch'
 import MapSearch from './Map/MapSearch'
+import { ModalDetailProperties } from './ModalDetailProperties/ModalDetailProperties'
 import Properties from './Properties/Properties'
 
 initializeElement()
@@ -29,7 +30,7 @@ const ContainerFiftyFifty = () => {
       </div>
 
       {/* COMPONENTS MODALES PARA EL SEARCH FILTER */}
-
+      <ModalDetailProperties />
       
 
     </>

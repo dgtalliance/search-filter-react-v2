@@ -176,5 +176,5 @@ export const initializeElement = () => {
     document.execCommand('copy')
     temp.remove()
     jQuery('.-copied').text('URL copied!').show().delay(2000).fadeOut()
-  })
+  })  
 }
