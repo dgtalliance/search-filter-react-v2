@@ -86,9 +86,9 @@ export const ModalDetailProperties = () => {
                   <div className="ib-header-detail">
                     <div className="ib-flex-column">
                       <h2 className="ib-title">
-                        {propertiesData.address_large}
+                        {propertiesData.address_short}
                       </h2>
-                      <span>{propertiesData.address_short}</span>
+                      <span>{propertiesData.address_large}</span>
                     </div>
                   </div>
                 </div>
@@ -866,8 +866,8 @@ export const ModalDetailProperties = () => {
 
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
-                        <h2 className="ib-ptitle"> {propertiesData.address_large}</h2>
-                        <span> {propertiesData.address_short}</span>
+                        <h2 className="ib-ptitle"> {propertiesData.address_short}</h2>
+                        <span> {propertiesData.address_large}</span>
                       </div>
                       <div
                         className="ib-wrapper-map"
@@ -1042,7 +1042,7 @@ export const ModalDetailProperties = () => {
                                     name="comment"
                                     id="comment"
                                     defaultValue={
-                                      "I am interested in 2900 NE 7th Ave #4106 Miami, FL 33137"
+                                      `I am interested in ${propertiesData.address_large}`
                                     }
                                     cols="30"
                                     rows="10"
