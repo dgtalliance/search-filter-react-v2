@@ -178,3 +178,19 @@ export const initializeElement = () => {
     jQuery('.-copied').text('URL copied!').show().delay(2000).fadeOut()
   })  
 }
+
+export const dateViewRental = (rental_stay)=>{
+  var date_stay =  rental_stay.split('-');
+  return date_stay[0]+" - "+date_stay[1];
+}
+
+export const datesConvertView = (dt)=>{
+  if(dt!== null && dt!==undefined){
+  var dat = dt.split('-');
+  var dat_y_out = dat[0];
+  var dat_m_out = dat[1];
+  var dat_d_out = dat[2];
+  return dat_m_out+"/"+dat_d_out+"/"+dat_y_out;
+  }
+  return {};
+}

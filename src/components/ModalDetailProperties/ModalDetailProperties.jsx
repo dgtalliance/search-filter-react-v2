@@ -4,6 +4,8 @@ import Carousel from "../common/Carousel";
 import { getpropertiesDetails } from "../../config/slices/propertiesDetails";
 import { useSelector } from "react-redux";
 import ModalPropertyMap from "../common/ModalPropertyMap";
+
+import RentalFormContact from './RentalFormContact'
 export const ModalDetailProperties = () => {
   const { closeModal } = useContext(FilterContext);
 
@@ -573,46 +575,56 @@ export const ModalDetailProperties = () => {
                             <span className="ib-plist-st">
                               Sewer Description
                             </span>
-                            <span className="ib-plist-pt">{propertiesData.more_info_info.sewer}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.more_info_info.sewer}
+                            </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">Short Sale</span>
-                            <span className="ib-plist-pt">{propertiesData.short_sale}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.short_sale}
+                            </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">
                               Subdivision Complex
                             </span>
-                            <span className="ib-plist-pt">{propertiesData.complex}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.complex}
+                            </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">
                               Subdivision Info
                             </span>
                             <span className="ib-plist-pt">
-                            {propertiesData.subdivision}
+                              {propertiesData.subdivision}
                             </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">Tax Amount</span>
-                            <span className="ib-plist-pt">{propertiesData.tax_amount}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.tax_amount}
+                            </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">Tax Legal desc</span>
                             <span className="ib-plist-pt">
-                            {propertiesData.more_info_info.tax_information}
+                              {propertiesData.more_info_info.tax_information}
                             </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">Tax Year</span>
-                            <span className="ib-plist-pt">{propertiesData.tax_year}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.tax_year}
+                            </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">
                               Terms Considered
                             </span>
                             <span className="ib-plist-pt">
-                            {propertiesData.more_info_info.terms}
+                              {propertiesData.more_info_info.terms}
                             </span>
                           </li>
                           <li>
@@ -620,23 +632,29 @@ export const ModalDetailProperties = () => {
                               Type of Property
                             </span>
                             <span className="ib-plist-pt">
-                            {propertiesData.more_info_info.type_property}
+                              {propertiesData.more_info_info.type_property}
                             </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">View</span>
-                            <span className="ib-plist-pt">{propertiesData.more_info_info.view}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.more_info_info.view}
+                            </span>
                           </li>
                           <li>
                             <span className="ib-plist-st">Water Source</span>
-                            <span className="ib-plist-pt">{propertiesData.more_info_info.water_source}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.more_info_info.water_source}
+                            </span>
                           </li>
 
                           <li>
                             <span className="ib-plist-st">
                               Year Built Details
                             </span>
-                            <span className="ib-plist-pt">{propertiesData.more_info_info.year_built_details}</span>
+                            <span className="ib-plist-pt">
+                              {propertiesData.more_info_info.year_built_details}
+                            </span>
                           </li>
                         </ul>
                       </div>
@@ -866,7 +884,10 @@ export const ModalDetailProperties = () => {
 
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
-                        <h2 className="ib-ptitle"> {propertiesData.address_short}</h2>
+                        <h2 className="ib-ptitle">
+                          {" "}
+                          {propertiesData.address_short}
+                        </h2>
                         <span> {propertiesData.address_large}</span>
                       </div>
                       <div
@@ -920,7 +941,7 @@ export const ModalDetailProperties = () => {
                   </div>
 
                   <div className="ib-row -aside">
-                    <div className="ib-modal-form">
+                    {/* <div className="ib-modal-form">
                       <div className="ib-modal-dialog">
                         <div className="ib-modal-content">
                           <div className="ib-modal-header">
@@ -1042,7 +1063,7 @@ export const ModalDetailProperties = () => {
                                     name="comment"
                                     id="comment"
                                     defaultValue={
-                                      `I am interested in ${propertiesData.address_large}`
+                                      `I am interested in ${propertiesData.address_large} ${propertiesData.address_short }`
                                     }
                                     cols="30"
                                     rows="10"
@@ -1057,7 +1078,15 @@ export const ModalDetailProperties = () => {
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> */}
+
+                    <RentalFormContact
+                      mls_num={propertiesData.mls_num}
+                      address_large={address_large(propertiesData)}
+                      address_short={propertiesData.address_short}
+                      key_val={propertiesData.key}
+                      owner={propertiesData.owner}
+                    />
 
                     <div className="ib-disclaimer">
                       <p>
