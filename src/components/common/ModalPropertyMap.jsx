@@ -183,7 +183,7 @@ const ModalPropertyMap = (
             language: 'en',
             region: 'us',
           }}
-          style={{ height: '100%', position: 'relative', width: '100%' }}   
+          style={{ height: '100%', position: 'absolute', width: '100%' }}   
           zoom={18}     
           center={{
             lat: lat,

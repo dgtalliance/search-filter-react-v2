@@ -1,16 +1,117 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import FilterContext from "../../Contexts/FilterContext";
 import Carousel from "../common/Carousel";
 import { getpropertiesDetails } from "../../config/slices/propertiesDetails";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalPropertyMap from "../common/ModalPropertyMap";
 
-import RentalFormContact from './RentalFormContact'
+import { fetchAsyncDetails } from "../../config/actions/propertiesDetails";
+
+import { calculate_mortgage, formatPrice, phoneFormat } from "../../utils/utils";
+
+import RentalFormContact from "./RentalFormContact";
+import ModalSendToFriend from "./ModalSendToFriend";
 export const ModalDetailProperties = () => {
-  const { closeModal } = useContext(FilterContext);
+  const { closeModal, openModal, setSlug, slug, modalData } =
+    useContext(FilterContext);
+  const [showModal, setShowModal] = useState(false);
+  const dispatch = useDispatch();
+  const [showModalEmailThankYou, setShowModalEmailThankYou] = useState(false);
+
+  const [mediaElement, setMediaElement] = useState(0);
+  const [propertymcpp, setPropertymcpp] = useState("$");
+  const [propertymcty, setPropertymcty] = useState("30");
+  const [propertymcdp, setPropertymcdp] = useState("20");
+  const [propertymcir, setPropertymcir] = useState("3.215");
+
+
+  const refFormMortgage = useRef();
+  const refPropertyMcTy = useRef();
+  const refPropertyMcDp = useRef();
+  const refPropertyMcIr = useRef();
+  const refEstPayment = useRef();
+  const refMortageCalculator = useRef();
+  const refPriceCalculator = useRef();
+  const refCalcMcMonthly = useRef();
+  const refPropertyMcPp = useRef();
+  const refCalculatorYears = useRef();
+  const refCalculatorYearsList = useRef();
+  const agentPhone = '(305) 614-4048';
+
+
+  const styleMapModalShared = {
+    position: "absolute",
+    overflow: "hidden",
+    height: "100%",
+    width: "100%",
+    top: "0",
+    left: "0",
+  };
+
+  const styleMapModal = {
+    backgroundColor: "rgb(238, 238, 238)",
+    height: "100%",
+    width: "100%",
+    margin: "0px",
+    left: "0px",
+    top: "0px",
+    position: "absolute",
+    overflow: "hidden",
+  };
+
+  const handleOpenModal = (mls_num) => {
+    // var new_slug = slug ? slug +`&show=${mls_num}`: `show=${mls_num}`;
+    // var new_slug =  `show=${mls_num}`;
+    // history.replaceState(null, null, "?" + new_slug);
+    // setSlug(new_slug);
+
+    // if(slug.includes("&")){
+    //   let pos = slug.lastIndexOf("&");
+    //   let new_str = slug.slice(0, pos);
+    //   history.replaceState(null, null, "?" + new_str);
+    //   setSlug(new_str);
+    // }else{
+    //   history.replaceState(null, null, "?");
+    //   setSlug("");
+    // }
+
+    var currentSlug = "show=" + propertiesData.mls_num;
+    var str = slug.replace(new RegExp(currentSlug, "g"), `show=${mls_num}`);
+    history.replaceState(null, null, "?" + str);
+    setSlug(str);
+    dispatch(fetchAsyncDetails(mls_num));
+  };
+
+  const calculate = (val_cal) => {
+    var price = val_cal.price;
+    if (refFormMortgage.current.length > 0) {
+      refFormMortgage.current.reset();
+
+      var dp = refPropertyMcDp.current.value;
+      var ty = refPropertyMcTy.current.value;
+      var ir = refPropertyMcIr.current.value;
+
+      var calc_mg = calculate_mortgage(price, dp, ty, ir);
+
+      // refPriceCalculator.current.innerText = "$" + calc_mg.monthly + "/mo";
+      refPriceCalculator.current.innerText = calc_mg.monthly + "/mo";
+
+      var pp = price.replace(/[^\d]/g, "");
+      setPropertymcpp("$" + formatPrice(pp));
+
+      refEstPayment.current.style.display = "none";
+
+      if (val_cal.is_rental == "0") {
+        refEstPayment.current.style.display = "block";
+      }
+    }
+  };
 
   const propertiesData = useSelector(getpropertiesDetails);
-  console.log("dataaaa", propertiesData);
+
+  useEffect(() => {
+    if (Object.keys(propertiesData).length > 0) calculate(propertiesData);
+  }, [propertiesData]);
 
   const [isOpenCarusel, setIsOpenCarusel] = useState(false);
   const handlefullscreenButton = (e) => {
@@ -23,6 +124,183 @@ export const ModalDetailProperties = () => {
       ? resultDetail.address_large
       : "";
   };
+
+  const formatPriceSqft = (sqft, price) => {
+    if (sqft > 0 && price > 0) {
+      return formatPrice(price / sqft);
+    }
+    return "";
+  };
+
+  const refOpenUrl = useRef();
+  const openUrl = (e) => {
+    e.preventDefault();
+    const linkToOpen = refOpenUrl.current.getAttribute("data-permalink");
+    //window.open(linkToOpen);
+    window.open(linkToOpen);
+  };
+
+  const urlParseOpen = () => {
+    return `/property/${propertiesData.slug}`;
+  };
+
+  const refSharedTwiter = useRef();
+  const sharedTwitter = (e) => {
+    e.preventDefault();
+    let shareURL = "http://twitter.com/share?"; // url base
+    const buildTextShare = [];
+    const propertyRental =
+      refSharedTwiter.current.getAttribute("data-rental") == 1
+        ? "Rent "
+        : "Sale ";
+    buildTextShare.push(refSharedTwiter.current.getAttribute("data-type"));
+    buildTextShare.push(` for ${propertyRental}`);
+    buildTextShare.push(refSharedTwiter.current.getAttribute("data-price"));
+    buildTextShare.push(
+      ` #${refSharedTwiter.current.getAttribute("data-mls")}`
+    );
+    buildTextShare.push(" in ");
+    buildTextShare.push(
+      `${refSharedTwiter.current.getAttribute("data-address")} `
+    );
+
+    // params
+    const params = {
+      url: refSharedTwiter.current.href,
+      text: buildTextShare.join(""),
+    };
+
+    for (const prop in params) {
+      shareURL += `&${prop}=${encodeURIComponent(params[prop])}`;
+    }
+
+    const wo = window.open(
+      shareURL,
+      "",
+      "left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0"
+    );
+
+    if (wo.focus) {
+      wo.focus();
+    }
+  };
+
+  const refSharedFacebook = useRef();
+
+  const sharedFacebook = (e) => {
+    e.preventDefault();
+    let shareURL = "https://www.facebook.com/sharer/sharer.php?";
+
+    // params
+    const params = {
+      u: refSharedFacebook.current.href,
+    };
+
+    for (const prop in params) {
+      shareURL += `&${prop}=${encodeURIComponent(params[prop])}`;
+    }
+    console.log(shareURL);
+    const wo = window.open(
+      shareURL,
+      "",
+      "left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0"
+    );
+
+    if (wo.focus) {
+      wo.focus();
+    }
+  };
+
+  const openModalEmailToFriend = (e) => {
+    e.preventDefault();
+    setShowModal(true);
+
+    // update fields from store data user
+    // var fn = (typeof Cookies.get("_ib_user_firstname") !== "undefined") ? Cookies.get("_ib_user_firstname") : "";
+    // var ln = (typeof Cookies.get("_ib_user_lastname") !== "undefined") ? Cookies.get("_ib_user_lastname") : "";
+    // var em = (typeof Cookies.get("_ib_user_email") !== "undefined") ? Cookies.get("_ib_user_email") : "";
+    // if (fn.lenght || ln.length) {
+    // 	$("#_sf_name").val(fn + " " + ln);
+    // }
+    // $("#_sf_email").val(em);
+  };
+
+  const closeModalEmailToFriend = (e) => {
+    e.preventDefault();
+    setShowModal(false);
+  };
+
+  const openEmailThankYou = (e) => {
+    e.preventDefault();
+    setShowModalEmailThankYou(true);
+  };
+
+  const handleSubmitSendToFriend = (e, data) => {
+    e.preventDefault();
+    // console.log('resultDetail.mls_num:',resultDetail.mls_num);
+  };
+
+  const openCalculatorYears = (e) => {
+    e.preventDefault();
+    refCalculatorYearsList.current.style.display = "block";
+  };
+
+  const closeCalculatorYears = (e) => {
+    e.preventDefault();
+
+    var itemValue = e.target.getAttribute("data-value");
+    var itemText = e.target.innerText;
+
+    setPropertymcty(itemValue);
+    refCalculatorYears.current.innerText = itemText;
+
+    refCalculatorYearsList.current.style.display = "none";
+  };
+
+  const calculatePrice = (e)=>{
+    e.preventDefault(); 
+    var pp = (refPropertyMcPp.current.value).replace(/[^\d]/g, "");  
+    var dp = refPropertyMcDp.current.value;
+    var ty = refPropertyMcTy.current.value;
+    var ir = refPropertyMcIr.current.value;
+
+    var calc_mg = calculate_mortgage(pp,dp,ty,ir);
+    
+    // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
+    refCalcMcMonthly.current.innerText = calc_mg.monthly;
+  }
+
+  const onClosePriceCalculator = (e)=>{
+    e.preventDefault(); 
+    if(refFormMortgage.current.length>0){
+      refFormMortgage.current.reset();
+      setPropertymcty("30");
+      setPropertymcdp("20");
+      setPropertymcir("3.215");
+    }
+    refMortageCalculator.current.classList.remove('ib-md-active');
+  }
+
+   const onClickPriceCalculator = (e)=>{
+    e.preventDefault(); 
+    
+    var pp = refPropertyMcPp.current.value;  
+    var dp = refPropertyMcDp.current.value;
+    var ty = refPropertyMcTy.current.value;
+    var ir = refPropertyMcIr.current.value;
+
+    var calc_mg = calculate_mortgage(pp,dp,ty,ir);
+
+    var price = pp.replace(/[^\d]/g, "");
+    // setPropertymcpp("$" + formatPrice(price));
+    setPropertymcpp(formatPrice(price));
+    
+    refMortageCalculator.current.classList.add('ib-md-active');
+    
+    // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
+    refCalcMcMonthly.current.innerText = calc_mg.monthly;
+
+  }
 
   return (
     <>
@@ -44,6 +322,9 @@ export const ModalDetailProperties = () => {
                             href="#"
                             className="js-show-modals"
                             data-modal="#modalAlert"
+                            data-status={propertiesData.status_type}
+                            data-mls={propertiesData.mls_num}
+                            onClick={openModalEmailToFriend}
                           >
                             <i className="idx-icons-envelope"></i> Email to a
                             friend
@@ -61,18 +342,40 @@ export const ModalDetailProperties = () => {
                           </a>
                         </li>
                         <li>
-                          <a href="#">
+                          <a
+                            href={`/property/${propertiesData.slug}`}
+                            ref={refSharedFacebook}
+                            className="ib-plsitem ib-plsifb"
+                            onClick={sharedFacebook}
+                          >
                             <i className="idx-icons-facebook"></i> Facebook
                           </a>
                         </li>
                         <li>
-                          <a href="#">
+                          <a
+                            href={`/property/${propertiesData.slug}`}
+                            className="ib-plsitem ib-plsitw"
+                            data-address={`${propertiesData.address_short} ${propertiesData.address_large}`}
+                            data-price={propertiesData.price}
+                            data-type={propertiesData.class_id}
+                            data-rental={propertiesData.is_rental}
+                            data-mls={propertiesData.mls_num}
+                            ref={refSharedTwiter}
+                            onClick={sharedTwitter}
+                          >
                             <i className="idx-icons-twitter"></i> Twitter
                           </a>
                         </li>
                       </ul>
                     </div>
-                    <a href="#" className="ib-btn -open">
+
+                    <a
+                      href="#"
+                      className="ib-btn -open"
+                      data-permalink={urlParseOpen()}
+                      ref={refOpenUrl}
+                      onClick={openUrl}
+                    >
                       <i className="idx-icons-open"></i> Open
                     </a>
                     <a href="#" className="ib-btn">
@@ -160,11 +463,15 @@ export const ModalDetailProperties = () => {
                             {propertiesData.price}
                           </span>
                           <div className="ib-asking">
-                            <div className="ib-txt -mobile js-est-payment">
+                            <div
+                              className="ib-txt -mobile js-est-payment"
+                              ref={refEstPayment}
+                            >
                               Est. Payment
-                              <button className="ib-price-calculator">
-                                $4,329.41/mo
-                              </button>
+                              <button
+                                className="ib-price-calculator"
+                                ref={refPriceCalculator} onClick={onClickPriceCalculator}
+                              ></button>
                             </div>
                           </div>
                         </li>
@@ -659,6 +966,78 @@ export const ModalDetailProperties = () => {
                         </ul>
                       </div>
                     </div>
+
+                    {propertiesData.related_properties && (
+                      <div className="ib-plist-details">
+                        <div className="ib-plist-card">
+                          <h2 className="ib-plist-card-title">
+                            Similar Properties For sale
+                          </h2>
+                          <ul className="ib-similar-property">
+                            {propertiesData.related_properties.map(
+                              (element) => (
+                                <li
+                                  className="ib-item ib-property"
+                                  data-mls={element.mls_num}
+                                  key={element.mls_num}
+                                >
+                                  <div className="ib-wrapper-item">
+                                    <h4 className="ib-title">
+                                      {element.address_short}
+                                    </h4>
+                                    <ul className="ib-details">
+                                      <li className="ib-address">
+                                        {element.address_large}
+                                      </li>
+                                      <li className="ib-price">{`$ ${element.price}`}</li>
+                                      <li className="ib-beds">
+                                        <strong>{element.bed}</strong> Bed(s)
+                                      </li>
+                                      <li className="ib-baths">
+                                        <strong>{element.bath}</strong> Bath(s)
+                                      </li>
+                                      <li className="ib-sqft">
+                                        <strong>
+                                          {formatPrice(element.sqft)}
+                                        </strong>{" "}
+                                        Sqft
+                                      </li>
+                                      <li className="ib-sqft">
+                                        <strong>
+                                          {formatPriceSqft(
+                                            element.sqft,
+                                            element.price
+                                          )}
+                                        </strong>{" "}
+                                        / Sqft
+                                      </li>
+                                    </ul>
+                                  </div>
+                                  <div className="ib-figure">
+                                    <img
+                                      className="ib-img"
+                                      src={element.thumbnail}
+                                      alt={element.address_large}
+                                    />
+                                  </div>
+                                  <a
+                                    className="ib-link"
+                                    onClick={() =>
+                                      handleOpenModal(element.mls_num)
+                                    }
+                                    href="#"
+                                  >
+                                    Details of
+                                    {element.address_short}
+                                    {element.address_large}
+                                  </a>
+                                </li>
+                              )
+                            )}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
 
                     {/* <div className="ib-plist-details">
                       <div className="ib-plist-card">
@@ -1164,6 +1543,245 @@ export const ModalDetailProperties = () => {
               </div>
             </div>
           </div>
+          {/* modal calculator */}
+          <div
+            className="ib-modal-master"
+            id="ib-mortage-calculator"
+            ref={refMortageCalculator}
+          >
+            <div className="ib-mmcontent">
+              <div className="ib-mwrapper ib-mgeneric">
+                <div className="ib-mgheader">
+                  <h4 className="ib-mghtitle">Estimated Monthly Payment</h4>
+                </div>
+                <div className="ib-mg-detail">
+                  <p style={{ marginTop: "0" }}>Monthly Amount</p>
+                  <span
+                    className="ib-price-mont ib-mcdinumbers ib-calc-mc-monthly"
+                    ref={refCalcMcMonthly}
+                  ></span>
+                  <div id="chart-container"></div>
+                  <p>
+                    Estimate includes principal and interest, taxes and
+                    insurance.
+                  </p>
+                </div>
+                <div className="ib-mgcontent">
+                  <div className="mb-mcform">
+                    <form
+                      className="ib-property-mortgage-f"
+                      ref={refFormMortgage}
+                    >
+                      <ul className="ib-mcinputs">
+                        <li className="ib-mcitem">
+                          <span className="ib-mgitxt">Purchase Price</span>
+                          <div className="ib-mgiwrapper ib-property-mc-pp">
+                            <label
+                              className="ms-hidden"
+                              htmlFor="ib-property-mc-pp"
+                            >
+                              Purchase Price
+                            </label>
+                            <input
+                              id="ib-property-mc-pp"
+                              ref={refPropertyMcPp}
+                              className="ib-mcipurchase ib-property-mc-pp"
+                              value={propertymcpp}
+                              type="text"
+                              readOnly
+                            />
+                          </div>
+                        </li>
+                        <li className="ib-mcitem">
+                          <span className="ib-mgitxt">Year Term (Years)</span>
+                          <div className="ib-mgiwrapper ib-mgwselect">
+                            <label
+                              className="ms-hidden"
+                              htmlFor="ib-property-mc-ty"
+                            >
+                              Select year
+                            </label>
+                            <input
+                              className="ib-mcsyears ib-property-mc-ty"
+                              id="ib-property-mc-ty"
+                              ref={refPropertyMcTy}
+                              defaultValue={propertymcty}
+                            />
+                            <div className="ms-wrapper-dropdown-menu">
+                              <button
+                                id="calculatorYears"
+                                ref={refCalculatorYears}
+                                onClick={openCalculatorYears}
+                              >
+                                30 Years
+                              </button>
+                              <ul
+                                id="calculatorYearsList"
+                                ref={refCalculatorYearsList}
+                                className="ms-dropdown-menu"
+                                role="menu"
+                              >
+                                <li>
+                                  <a
+                                    href="#"
+                                    data-value="30"
+                                    className="-js-item-cl"
+                                    onClick={closeCalculatorYears}
+                                  >
+                                    30 Years
+                                  </a>
+                                </li>
+                                <li>
+                                  <a
+                                    href="#"
+                                    data-value="20"
+                                    className="-js-item-cl"
+                                    onClick={closeCalculatorYears}
+                                  >
+                                    20 Years
+                                  </a>
+                                </li>
+                                <li>
+                                  <a
+                                    href="#"
+                                    data-value="15"
+                                    className="-js-item-cl"
+                                    onClick={closeCalculatorYears}
+                                  >
+                                    15 Years
+                                  </a>
+                                </li>
+                                <li>
+                                  <a
+                                    href="#"
+                                    data-value="10"
+                                    className="-js-item-cl"
+                                    onClick={closeCalculatorYears}
+                                  >
+                                    10 Years
+                                  </a>
+                                </li>
+                              </ul>
+                            </div>
+                            {/* <select className="ib-mcsyears ib-property-mc-ty" id="ib-property-mc-ty">
+                          <option value="30">30 Years</option>
+                          <option value="15">15 Years</option>
+                        </select> */}
+                          </div>
+                        </li>
+                        <li className="ib-mcitem">
+                          <span className="ib-mgitxt">Interest Rate(%)</span>
+                          <div className="ib-mgiwrapper">
+                            <label
+                              className="ms-hidden"
+                              htmlFor="ib-property-mc-ir"
+                            >
+                              Interest Rate(%)
+                            </label>
+                            <div className="ms-item-input">
+                              <input
+                                className="ib-mcidpayment ib-property-mc-ir"
+                                data-default="3.215"
+                                ref={refPropertyMcIr}
+                                defaultValue={propertymcir}
+                                onChange={(e) =>
+                                  setPropertymcir(e.target.value)
+                                }
+                                step="any"
+                                type="text"
+                                max="100"
+                                min="0"
+                              />
+                              <span>%</span>
+                            </div>
+                          </div>
+                        </li>
+                        <li className="ib-mcitem">
+                          <span className="ib-mgitxt">Down Payment(%)</span>
+                          <div className="ib-mgiwrapper">
+                            <label
+                              className="ms-hidden"
+                              htmlFor="ib-property-mc-dp"
+                            >
+                              Down Payment(%)
+                            </label>
+                            <div className="ms-item-input">
+                              <input
+                                className="ib-mcidpayment ib-property-mc-dp"
+                                data-default="20"
+                                ref={refPropertyMcDp}
+                                defaultValue={propertymcdp}
+                                onChange={(e) =>
+                                  setPropertymcdp(e.target.value)
+                                }
+                                step="any"
+                                type="text"
+                                max="100"
+                                min="0"
+                              />
+                              <span>%</span>
+                            </div>
+                          </div>
+                        </li>
+                      </ul>
+                      <button
+                        type="button"
+                        className="ib-mgsubmit ib-property-mortage-submit"
+                        onClick={calculatePrice}
+                      >
+                        Calculate
+                      </button>
+                    </form>
+                  </div>
+                  <div className="mb-mcdata">
+                    <p>
+                      Let's us know the best time for showing.{" "}
+                      <a
+                        href={`tel:${phoneFormat(agentPhone)}`}
+                        title={`Call Us ${phoneFormat(agentPhone)}`}
+                      >
+                        {agentPhone}
+                      </a>
+                    </p>
+                  </div>
+                </div>
+                <div className="ib-img-calculator"></div>
+              </div>
+              <div className="ib-mmclose" onClick={onClosePriceCalculator}>
+                <span className="ib-mmctxt">Close</span>
+              </div>
+            </div>
+            <div className="ib-mmbg"></div>
+          </div>
+          {/* modal calculator */}
+          <ModalSendToFriend
+            isOpen={showModal}
+            closeModal={closeModalEmailToFriend}
+            openEmailThankYou={openEmailThankYou}
+            mediaElement={
+              (parseInt(propertiesData.img_cnt, 10) > 0 ? 1 : 0) > 0
+                ? "ib-pva-photos"
+                : "ib-pva-map"
+            }
+            itemLt={parseFloat(propertiesData.lat)}
+            itemLg={parseFloat(propertiesData.lng)}
+            styleMapModalShared={styleMapModalShared}
+            styleMapModal={styleMapModal}
+            itemYear={propertiesData.year}
+            itemCity={propertiesData.city_name}
+            origin={1}
+            imgProp={
+              propertiesData.gallery.length > 0 ? propertiesData.gallery[0] : ""
+            }
+            itemPrice={propertiesData.price}
+            itemBeds={propertiesData.bed}
+            itemBaths={propertiesData.bath}
+            itemSqft={propertiesData.sqft}
+            itemAddress={
+              propertiesData.address_short + ", " + propertiesData.address_large
+            }
+            handleSubmitSendToFriend={handleSubmitSendToFriend}
+          />
         </div>
       )}
     </>

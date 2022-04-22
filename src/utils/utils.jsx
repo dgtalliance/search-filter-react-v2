@@ -194,3 +194,46 @@ export const datesConvertView = (dt)=>{
   }
   return {};
 }
+
+export const calculate_mortgage = (price, percent, year, interest) =>{
+	var price = price.replace(/[^\d]/g, "");
+	var percent = parseFloat(percent);
+	var year = year.replace(/[^\d]/g, "");
+	var interest = parseFloat(interest);
+	var month_factor = 0;
+	var month_term = year * 12;
+	var down_payment = price * (percent / 100);
+  
+	interest = interest / 100;
+  
+	var month_interest = interest / 12;
+	
+	var financing_price = price - down_payment;
+	var base_rate = 1 + month_interest;
+	var denominator = base_rate;
+	
+	for (var i = 0; i < (year * 12); i++) {
+	  month_factor += (1 / denominator);
+	  denominator *= base_rate;
+	}
+  
+	var month_payment = financing_price / month_factor;
+	var pmi_per_month = 0;
+	
+	if (percent < 20) {
+	  pmi_per_month = 55 * (financing_price / 100000);
+	}
+  
+	var total_monthly = month_payment + pmi_per_month;
+	
+	return {
+	  'mortgage': formatPrice(financing_price),
+	  'down_payment': formatPrice(down_payment),
+	  'monthly': formatPrice(month_payment, 2),
+	  'total_monthly': formatPrice(total_monthly, 2)
+	};
+}
+
+export const phoneFormat = (val) =>{
+  return val.replace(/[^\d]/g, '');
+  }
