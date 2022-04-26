@@ -4,13 +4,17 @@ import Carousel from "../common/Carousel";
 import { getpropertiesDetails } from "../../config/slices/propertiesDetails";
 import { useDispatch, useSelector } from "react-redux";
 import ModalPropertyMap from "../common/ModalPropertyMap";
-
+import axios from 'axios'
 import { fetchAsyncDetails } from "../../config/actions/propertiesDetails";
 
 import { calculate_mortgage, formatPrice, phoneFormat } from "../../utils/utils";
 
 import RentalFormContact from "./RentalFormContact";
 import ModalSendToFriend from "./ModalSendToFriend";
+import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
+import { Chart } from "./Chart";
+
+
 export const ModalDetailProperties = () => {
   const { closeModal, openModal, setSlug, slug, modalData } =
     useContext(FilterContext);
@@ -23,6 +27,7 @@ export const ModalDetailProperties = () => {
   const [propertymcty, setPropertymcty] = useState("30");
   const [propertymcdp, setPropertymcdp] = useState("20");
   const [propertymcir, setPropertymcir] = useState("3.215");
+  
 
 
   const refFormMortgage = useRef();
@@ -112,6 +117,9 @@ export const ModalDetailProperties = () => {
   useEffect(() => {
     if (Object.keys(propertiesData).length > 0) calculate(propertiesData);
   }, [propertiesData]);
+  
+  
+  
 
   const [isOpenCarusel, setIsOpenCarusel] = useState(false);
   const handlefullscreenButton = (e) => {
@@ -1260,6 +1268,11 @@ export const ModalDetailProperties = () => {
                         </ul>
                       </div>
                     </div> */}
+
+
+                    <Chart propertiesData={propertiesData}/>
+
+
 
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
