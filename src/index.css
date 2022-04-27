@@ -9,6 +9,8 @@
 /*ESTILOS PARA EL MODAL DEL DETALLE DE PROPIEDAD*/
 @import "assets/css/modal_detail/modal/index.css";
 
+@import "antd/dist/antd.css";
+
 .highcharts-figure,
 .highcharts-data-table table {
   min-width: 310px;
@@ -50,4 +52,8 @@
 
 .highcharts-data-table tr:hover {
   background: #f1f7ff;
+}
+
+.ant-tabs-tab-btn {
+  box-shadow: none !important;
 }

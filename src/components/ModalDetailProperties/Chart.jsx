@@ -1,33 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
-// import { Tabs } from 'antd';
+import { Tabs } from 'antd';
 
 
-export const Chart = ({ propertiesData }) => {
-  const [chartData, setChartData] = useState("3.215");
+export const Chart = ({ chartData, con, years }) => {
+
 
   let chartDataVar = [];
 
-  useEffect(() => {
-    if (Object.keys(propertiesData).length > 0) {
+  useEffect(() => { 
       chartsDetails();
-    }
-  }, [propertiesData]);
 
-  const chartsDetails = async () => {
-    const response = await axios.get(
-      API_PROPERTIES_DETAIL_CHART +
-        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
-    );
-    console.log("", response.data);
+  }, [chartData, years]);
 
-    if (response.data.length != 0) {
-      setChartData(response.data);
-      chartDataVar = response.data;
-    }
+  const chartsDetails = () => {
+   
 
-    Highcharts.chart("container", {
+    Highcharts.chart(con, {
       chart: {
         type: "spline",
         scrollablePlotArea: {
@@ -50,7 +40,7 @@ export const Chart = ({ propertiesData }) => {
         labels: {
           overflow: "justify",
         },
-        categories: chartDataVar.value.city.month,
+        categories: chartData.categories.slice(-12 * years),
       },
       yAxis: {
         title: {
@@ -154,12 +144,17 @@ export const Chart = ({ propertiesData }) => {
         //   pointInterval: 3600000, // one hour
         //   pointStart: Date.UTC(2018, 1, 13, 0, 0, 0)
         // }
+        series: {
+          marker: {
+            enabled: false
+          }
+        }
       },
       series: [
         {
           showInLegend: false,
           name: "",
-          data: chartDataVar.value.city.metadata[1].media_price,
+          data: chartData.series.slice(-12 * years),
         },
       ],
 
@@ -173,7 +168,7 @@ export const Chart = ({ propertiesData }) => {
 
   return (
     <figure className="highcharts-figure">
-      <div id="container"></div>
+      <div id={con}></div>
     </figure>
   );
 };

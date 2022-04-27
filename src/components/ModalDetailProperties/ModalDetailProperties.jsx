@@ -4,16 +4,23 @@ import Carousel from "../common/Carousel";
 import { getpropertiesDetails } from "../../config/slices/propertiesDetails";
 import { useDispatch, useSelector } from "react-redux";
 import ModalPropertyMap from "../common/ModalPropertyMap";
-import axios from 'axios'
+import axios from "axios";
 import { fetchAsyncDetails } from "../../config/actions/propertiesDetails";
+import { Select } from "antd";
+import { Segmented } from "antd";
 
-import { calculate_mortgage, formatPrice, phoneFormat } from "../../utils/utils";
+import {
+  calculate_mortgage,
+  formatPrice,
+  phoneFormat,
+} from "../../utils/utils";
 
 import RentalFormContact from "./RentalFormContact";
 import ModalSendToFriend from "./ModalSendToFriend";
 import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
 import { Chart } from "./Chart";
 
+import { Tabs } from "antd";
 
 export const ModalDetailProperties = () => {
   const { closeModal, openModal, setSlug, slug, modalData } =
@@ -27,8 +34,13 @@ export const ModalDetailProperties = () => {
   const [propertymcty, setPropertymcty] = useState("30");
   const [propertymcdp, setPropertymcdp] = useState("20");
   const [propertymcir, setPropertymcir] = useState("3.215");
-  
 
+  const [chartDataApi, setChartDataApi] = useState([]);
+  const [chartDataShow, setChartDataShow] = useState({});
+  const [defaultHome, setDefaultHome] = useState("1");
+  const [defaultTab, setDefaultTab] = useState("media_price");
+  const [defaultYears, setDefaultYears] = useState(1);
+  const [defaultYearsSegment, setDefaultYearsSegment] = useState("1 year");
 
   const refFormMortgage = useRef();
   const refPropertyMcTy = useRef();
@@ -41,8 +53,7 @@ export const ModalDetailProperties = () => {
   const refPropertyMcPp = useRef();
   const refCalculatorYears = useRef();
   const refCalculatorYearsList = useRef();
-  const agentPhone = '(305) 614-4048';
-
+  const agentPhone = "(305) 614-4048";
 
   const styleMapModalShared = {
     position: "absolute",
@@ -117,9 +128,57 @@ export const ModalDetailProperties = () => {
   useEffect(() => {
     if (Object.keys(propertiesData).length > 0) calculate(propertiesData);
   }, [propertiesData]);
-  
-  
-  
+
+  useEffect(() => {
+    if (Object.keys(propertiesData).length > 0) {
+      chartsDetails();
+    }
+  }, [propertiesData]);
+
+  const chartsDetails = async () => {
+    const response = await axios.get(
+      API_PROPERTIES_DETAIL_CHART +
+        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+    );
+
+    if (response.data.length != 0) {
+      setChartDataApi(response.data);
+      setChartDataShow({
+        categories: response.data.value.city.month,
+        series: response.data.value.city.metadata[defaultHome][defaultTab],
+      });
+    }
+  };
+
+  //cart events
+  const { TabPane } = Tabs;
+
+  const { Option } = Select;
+
+  function onChange(value) {
+    console.log(`selected ${value}`);
+    setChartDataShow({
+      ...chartDataShow,
+      series: chartDataApi.value.city.metadata[value][defaultTab],
+    });
+    setDefaultHome(value);
+  }
+  function changeYear(value) {
+    setDefaultYears(value.charAt(0));
+    setDefaultYearsSegment(value);
+  }
+
+  function onSearch(val) {
+    console.log("search:", val);
+  }
+
+  function callback(key) {
+    setChartDataShow({
+      ...chartDataShow,
+      series: chartDataApi.value.city.metadata[defaultHome][key],
+    });
+    setDefaultTab(key);
+  }
 
   const [isOpenCarusel, setIsOpenCarusel] = useState(false);
   const handlefullscreenButton = (e) => {
@@ -265,50 +324,49 @@ export const ModalDetailProperties = () => {
     refCalculatorYearsList.current.style.display = "none";
   };
 
-  const calculatePrice = (e)=>{
-    e.preventDefault(); 
-    var pp = (refPropertyMcPp.current.value).replace(/[^\d]/g, "");  
+  const calculatePrice = (e) => {
+    e.preventDefault();
+    var pp = refPropertyMcPp.current.value.replace(/[^\d]/g, "");
     var dp = refPropertyMcDp.current.value;
     var ty = refPropertyMcTy.current.value;
     var ir = refPropertyMcIr.current.value;
 
-    var calc_mg = calculate_mortgage(pp,dp,ty,ir);
-    
+    var calc_mg = calculate_mortgage(pp, dp, ty, ir);
+
     // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
     refCalcMcMonthly.current.innerText = calc_mg.monthly;
-  }
+  };
 
-  const onClosePriceCalculator = (e)=>{
-    e.preventDefault(); 
-    if(refFormMortgage.current.length>0){
+  const onClosePriceCalculator = (e) => {
+    e.preventDefault();
+    if (refFormMortgage.current.length > 0) {
       refFormMortgage.current.reset();
       setPropertymcty("30");
       setPropertymcdp("20");
       setPropertymcir("3.215");
     }
-    refMortageCalculator.current.classList.remove('ib-md-active');
-  }
+    refMortageCalculator.current.classList.remove("ib-md-active");
+  };
 
-   const onClickPriceCalculator = (e)=>{
-    e.preventDefault(); 
-    
-    var pp = refPropertyMcPp.current.value;  
+  const onClickPriceCalculator = (e) => {
+    e.preventDefault();
+
+    var pp = refPropertyMcPp.current.value;
     var dp = refPropertyMcDp.current.value;
     var ty = refPropertyMcTy.current.value;
     var ir = refPropertyMcIr.current.value;
 
-    var calc_mg = calculate_mortgage(pp,dp,ty,ir);
+    var calc_mg = calculate_mortgage(pp, dp, ty, ir);
 
     var price = pp.replace(/[^\d]/g, "");
     // setPropertymcpp("$" + formatPrice(price));
     setPropertymcpp(formatPrice(price));
-    
-    refMortageCalculator.current.classList.add('ib-md-active');
-    
+
+    refMortageCalculator.current.classList.add("ib-md-active");
+
     // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
     refCalcMcMonthly.current.innerText = calc_mg.monthly;
-
-  }
+  };
 
   return (
     <>
@@ -393,7 +451,13 @@ export const ModalDetailProperties = () => {
                       className="ib-close js-close-modals"
                       aria-label="Close"
                       data-modal="#modalDetailProperty"
-                      onClick={closeModal}
+                      onClick={() => {
+                        setDefaultHome("1");
+                        setDefaultTab("media_price");
+                        setDefaultYears(1);
+                        setDefaultYearsSegment("1 year");
+                        closeModal();
+                      }}
                     ></button>
                   </div>
                   <div className="ib-header-detail">
@@ -478,7 +542,8 @@ export const ModalDetailProperties = () => {
                               Est. Payment
                               <button
                                 className="ib-price-calculator"
-                                ref={refPriceCalculator} onClick={onClickPriceCalculator}
+                                ref={refPriceCalculator}
+                                onClick={onClickPriceCalculator}
                               ></button>
                             </div>
                           </div>
@@ -1269,10 +1334,119 @@ export const ModalDetailProperties = () => {
                       </div>
                     </div> */}
 
-
-                    <Chart propertiesData={propertiesData}/>
-
-
+                    {Object.keys(chartDataShow).length > 0 && (
+                      <div style={{ padding: 12 }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                          <Select
+                            style={{ width: 300, marginBottom: 12 }}
+                            showSearch
+                            placeholder="Select a home type"
+                            optionFilterProp="children"
+                            onChange={onChange}
+                            value={defaultHome}
+                            onSearch={onSearch}
+                            filterOption={(input, option) =>
+                              option.children
+                                .toLowerCase()
+                                .indexOf(input.toLowerCase()) >= 0
+                            }
+                          >
+                            <Option value="1">Condos</Option>
+                            <Option value="2">Homes</Option>
+                            <Option value="26">Lands</Option>
+                            <Option value="100">TownHomes</Option>
+                          </Select>
+                          <Segmented
+                            options={["1 year", "2 years", "3 years"]}
+                            value={defaultYearsSegment}
+                            onChange={changeYear}
+                          />
+                        </div>
+                        <Tabs onChange={callback} type="card">
+                          <TabPane
+                            tab={
+                              <div>
+                                <h3>Median Sale Price</h3>
+                                <h3>$800,200</h3>
+                                <h5>
+                                  <span>
+                                    +
+                                    {
+                                      chartDataApi.value.city.metadata[
+                                        defaultHome
+                                      ].percent.media_price_percent
+                                    }
+                                    %
+                                  </span>{" "}
+                                  year-over-year
+                                </h5>
+                              </div>
+                            }
+                            key="media_price"
+                          >
+                            <Chart
+                              chartData={chartDataShow}
+                              con={"media_price"}
+                              years={defaultYears}
+                            />
+                          </TabPane>
+                          <TabPane
+                            tab={
+                              <div>
+                                <h3># of Homes Sold</h3>
+                                <h3>12</h3>
+                                <h5>
+                                  <span>
+                                    +
+                                    {
+                                      chartDataApi.value.city.metadata[
+                                        defaultHome
+                                      ].percent.sold_cant_percent
+                                    }
+                                    %
+                                  </span>{" "}
+                                  year-over-year
+                                </h5>
+                              </div>
+                            }
+                            key="sold_cant"
+                          >
+                            <Chart
+                              chartData={chartDataShow}
+                              con={"sold_cant"}
+                              years={defaultYears}
+                            />
+                          </TabPane>
+                          <TabPane
+                            tab={
+                              <div>
+                                <h3>Median Days on Market</h3>
+                                <h3>12</h3>
+                                <h5>
+                                  <span>
+                                    +
+                                    {
+                                      chartDataApi.value.city.metadata[
+                                        defaultHome
+                                      ].percent.media_price_percent
+                                    }
+                                    %
+                                  </span>{" "}
+                                  year-over-year
+                                </h5>
+                              </div>
+                            }
+                            key="media_adom"
+                          >
+                            <Chart
+                              chartData={chartDataShow}
+                              con={"media_adom"}
+                              years={defaultYears}
+                            />
+                          </TabPane>
+                        </Tabs>
+                      </div>
+                    )}
 
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
