@@ -47,6 +47,7 @@ export const propertyDetailsSlice = createSlice({
 })
 
 
+
 export const getpropertiesDetails = (state) => state.propertiesDetails.properties_data
 export const getloadingDetails = (state) => state.propertiesDetails.loading
 export const geterrorDetails = (state) => state.propertiesDetails.error
