@@ -5,9 +5,9 @@ import { fetchAsyncSearch } from './config/actions/properties'
 
 const App = () => {
   const dispatch = useDispatch()
-
+  console.log("App render");
   useEffect(() => {
-    dispatch(fetchAsyncSearch())
+   dispatch(fetchAsyncSearch())
   }, [dispatch])
 
   return (

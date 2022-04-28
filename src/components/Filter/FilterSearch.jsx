@@ -1,6 +1,7 @@
 import { memo } from 'react'
 
 const FilterSearch = () => {
+  console.log("Render Filter");
   return (
     <>
       <div className="ib-guests-search">
