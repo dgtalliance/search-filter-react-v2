@@ -17,7 +17,6 @@ export const formatPrice = (value, n, x, d, c, s, p) => {
     num = Number(value).toFixed(Math.max(0, ~~n))
 
   return (
-    '$' +
     (s && p ? s : '') +
     (c ? num.replace('.', c) : num).replace(
       new RegExp(re, 'g'),
@@ -25,6 +24,78 @@ export const formatPrice = (value, n, x, d, c, s, p) => {
     ) +
     (s && !p ? s : '')
   )
+}
+
+function pluck(arr, key) {
+  return arr.map((o) => o[key])
+}
+
+export const ib_fetch_default_cities = (cities) => {
+  var ib_autocomplete_cities = pluck(cities, 'name')
+  var featured_cities = []
+
+  if (ib_autocomplete_cities.length) {
+    for (var i = 0, l = ib_autocomplete_cities.length; i < l; i++) {
+      featured_cities.push({
+        label: ib_autocomplete_cities[i],
+        type: 'city',
+      })
+    }
+  }
+
+  return featured_cities
+}
+
+export const numberWithCommas = (x) =>
+  x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0
+
+export const transformPrice = (price) => {
+  if (price === 0 || price === 100000000 || price === 100000 || price === null) {
+    return 'Any'
+  } else {
+    return numberWithCommas(price)
+  }
+}
+
+export const formatShortPriceX = (value) => {
+  var price = Number(value),
+    short_price
+
+  if (price < 1000) {
+    return price
+  }
+
+  if (price < 10000) {
+    short_price = Math.ceil(price / 100) / 10
+
+    return short_price + 'K'
+  } else {
+    if (price < 1000000) {
+      short_price = Math.ceil(price / 1000)
+
+      if (short_price < 100) {
+        return String(short_price).substr(0, 2) + 'K'
+      }
+
+      if (short_price >= 1000) {
+        return '1M'
+      }
+
+      return short_price + 'K'
+    } else {
+      if (price < 10000000) {
+        short_price = Math.ceil(price / 10000) / 100
+      } else {
+        short_price = Math.ceil(price / 100000) / 10
+      }
+    }
+  }
+
+  if (String(short_price, '.') !== -1) {
+    short_price = String(short_price).substr(0, 4)
+  }
+
+  return short_price + 'M'
 }
 
 export const initializeElement = () => {

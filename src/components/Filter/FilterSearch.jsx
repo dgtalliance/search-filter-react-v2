@@ -1,163 +1,24 @@
 import { memo } from 'react'
+import Complete from './AutoCompete'
+import ContainerFilterBeds from './ContainerFilterBeds'
+import ContainerFilterPrice from './ContainerFilterPrice'
+import FilterSaleType from './FilterSaleType'
 
 const FilterSearch = () => {
-  console.log("Render Filter");
+  console.log('Render Filter')
   return (
     <>
       <div className="ib-guests-search">
         <div className="ib-wrapper-item -default">
           <div className="ib-wrapper-dropdown -search">
             <div className="ib-action -search js-show-basic-filter">
-              <input
-                type="search"
-                placeholder="Where are you going?"
-                id="input-area"
-              />
+              <Complete />
             </div>
           </div>
 
-          <div className="ib-wrapper-dropdown -price">
-            <button className="ib-action -price js-show-basic-filter">
-              <span id="text-price" data-text="Any Price">
-                Any Price
-              </span>
-            </button>
-            <div className="ib-dropdown">
-              <div className="ib-wrapper-title">Price Range</div>
-              <div className="ib-wrapper">
-                <div className="ib-flex-wrapper">
-                  Aquí va el componente react
-                </div>
-              </div>
-            </div>
-          </div>
+          <ContainerFilterPrice />
 
-          <div className="ib-wrapper-dropdown -beds">
-            <button className="ib-action -beds js-show-basic-filter">
-              <span id="text-beds" data-text="Any Beds">
-                Any Beds
-              </span>
-            </button>
-            <div className="ib-dropdown">
-              <div className="ib-wrapper-title">Bedrooms</div>
-              <div className="ib-wrapper">
-                <div className="ib-flex-wrapper">
-                  <div className="ib-chk-list -round">
-                    <div className="ant-radio-group ant-radio-group-outline">
-                      <label className="ant-radio-button-wrapper ant-radio-button-wrapper-checked">
-                        <span className="ant-radio-button ant-radio-button-checked">
-                          <input
-                            type="radio"
-                            className="ant-radio-button-input"
-                            value="Studio"
-                          />
-                          <span className="ant-radio-button-inner"></span>
-                        </span>
-                        <span>Studio</span>
-                      </label>
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                          <input
-                            type="radio"
-                            className="ant-radio-button-input"
-                            value="1+"
-                          />
-                          <span className="ant-radio-button-inner"></span>
-                        </span>
-                        <span>1+</span>
-                      </label>
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                          <input
-                            type="radio"
-                            className="ant-radio-button-input"
-                            value="2+"
-                          />
-                          <span className="ant-radio-button-inner"></span>
-                        </span>
-                        <span>2+</span>
-                      </label>
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                          <input
-                            type="radio"
-                            className="ant-radio-button-input"
-                            value="3+"
-                          />
-                          <span className="ant-radio-button-inner"></span>
-                        </span>
-                        <span>3+</span>
-                      </label>
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                          <input
-                            type="radio"
-                            className="ant-radio-button-input"
-                            value="4+"
-                          />
-                          <span className="ant-radio-button-inner"></span>
-                        </span>
-                        <span>4+</span>
-                      </label>
-                      <label className="ant-radio-button-wrapper">
-                        <span className="ant-radio-button">
-                          <input
-                            type="radio"
-                            className="ant-radio-button-input"
-                            value="5+"
-                          />
-                          <span className="ant-radio-button-inner"></span>
-                        </span>
-                        <span>5+</span>
-                      </label>
-                    </div>
-                  </div>
-                  <div className="ms-line-br">
-                    <span>Or Select Bedrooms Range</span>
-                  </div>
-                  <div className="ms-flex">
-                    <div className="ms-item">
-                      <select
-                        style={{
-                          width: '100%',
-                          padding: '15px',
-                          fontSize: '14px',
-                          border: '1px solid #e3e3e3',
-                          borderRadius: '6px',
-                        }}
-                      >
-                        <option value="Studio">Studio</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                      </select>
-                    </div>
-                    <span className="ms-txt">to</span>
-                    <div className="ms-item">
-                      <select
-                        style={{
-                          width: '100%',
-                          padding: '15px',
-                          fontSize: '14px',
-                          border: '1px solid #e3e3e3',
-                          borderRadius: '6px',
-                        }}
-                      >
-                        <option value="Studio">Studio</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ContainerFilterBeds />
 
           <div className="ib-wrapper-dropdown -baths">
             <button className="ib-action -baths js-show-basic-filter">
@@ -304,7 +165,9 @@ const FilterSearch = () => {
                         name="any_types"
                         value="0"
                       />
-                      <label htmlFor="ib-ppt-outer_0">Single Family Homes</label>
+                      <label htmlFor="ib-ppt-outer_0">
+                        Single Family Homes
+                      </label>
                     </div>
                     <div className="ib-chk-wrapper">
                       <input
@@ -380,32 +243,7 @@ const FilterSearch = () => {
                 <div className="ib-wrapper">
                   <div className="ib-flex-wrapper">
                     <span className="ib-title">Property Search</span>
-                    <div className="ib-chk-list -property">
-                      <div className="ant-radio-group ant-radio-group-outline">
-                        <label className="ant-radio-button-wrapper ant-radio-button-wrapper-checked">
-                          <span className="ant-radio-button">
-                            <input
-                              type="radio"
-                              className="ant-radio-button-input"
-                              value="1"
-                            />
-                            <span className="ant-radio-button-inner"></span>
-                          </span>
-                          <span>For Sale</span>
-                        </label>
-                        <label className="ant-radio-button-wrapper">
-                          <span className="ant-radio-button">
-                            <input
-                              type="radio"
-                              className="ant-radio-button-input"
-                              value="2"
-                            />
-                            <span className="ant-radio-button-inner"></span>
-                          </span>
-                          <span>For Rent</span>
-                        </label>
-                      </div>
-                    </div>
+                    <FilterSaleType />
                   </div>
                 </div>
               </div>
@@ -813,7 +651,9 @@ const FilterSearch = () => {
                           name="any_features"
                           value="pool"
                         />
-                        <label htmlFor="ib-amt-inner-amt_0">Swimming Pool</label>
+                        <label htmlFor="ib-amt-inner-amt_0">
+                          Swimming Pool
+                        </label>
                       </div>
                       <div className="ib-chk-wrapper">
                         <input
@@ -831,7 +671,9 @@ const FilterSearch = () => {
                           name="any_features"
                           value="tennis"
                         />
-                        <label htmlFor="ib-amt-inner-amt_2">Tennis Courts</label>
+                        <label htmlFor="ib-amt-inner-amt_2">
+                          Tennis Courts
+                        </label>
                       </div>
                       <div className="ib-chk-wrapper">
                         <input
@@ -840,7 +682,9 @@ const FilterSearch = () => {
                           name="any_features"
                           value="gated_community"
                         />
-                        <label htmlFor="ib-amt-inner-amt_3">Gated Community</label>
+                        <label htmlFor="ib-amt-inner-amt_3">
+                          Gated Community
+                        </label>
                       </div>
                       <div className="ib-chk-wrapper">
                         <input
@@ -903,7 +747,9 @@ const FilterSearch = () => {
                           name="any_features"
                           value="foreclosure"
                         />
-                        <label htmlFor="ib-amt-inner-amt_10">Foreclosures</label>
+                        <label htmlFor="ib-amt-inner-amt_10">
+                          Foreclosures
+                        </label>
                       </div>
                     </div>
                   </div>

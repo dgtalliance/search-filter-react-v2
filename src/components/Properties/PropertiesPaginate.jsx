@@ -12,6 +12,11 @@ function PropertiesPaginate({ pagination, current }) {
     console.log('page',page);
     dispatch(updateForm({ page }))
     dispatch(fetchAsyncSearch())
+    document.getElementsByClassName('ib-wrapper-grid-result').scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
   })
 
   return (

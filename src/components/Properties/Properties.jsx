@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { memo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import {
@@ -14,13 +14,14 @@ function Properties() {
   const loading = useSelector(getloading)
   const dispatch = useDispatch()
   console.log('Render Properties')
- 
+
 
   const handleSort = (query) => {
     dispatch(updateForm({page:1, sort_type: query }))
     dispatch(fetchAsyncSearch())
+   
+    
   }
-
   const renderItem = (index, itemData, hackbox) => {
     return (
       <PropertiesItem
@@ -102,7 +103,7 @@ function Properties() {
                   </div>
                 </div>
                 <div className="ib-wrapper-grid-result">
-                  <ul className="ib-lproperties ib-listings-ct">
+                  <ul className="ib-lproperties ib-listings-ct" >
                     {propertiesItems.items.map((itemData, index) =>
                       renderItem(index, itemData, propertiesItems.hackbox),
                     )}
