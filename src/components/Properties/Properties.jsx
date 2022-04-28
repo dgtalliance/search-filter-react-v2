@@ -1,4 +1,4 @@
-import { memo, useRef } from 'react'
+import { memo, useContext, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import {
@@ -6,6 +6,7 @@ import {
   getloading,
   updateForm,
 } from '../../config/slices/properties'
+import FilterContext from '../../Contexts/FilterContext'
 import PropertiesItem from './PropertiesItem'
 import PropertiesPaginate from './PropertiesPaginate'
 
@@ -14,13 +15,14 @@ function Properties() {
   const loading = useSelector(getloading)
   const dispatch = useDispatch()
   console.log('Render Properties')
-
+  const { setSlug } = useContext(FilterContext)
+  useEffect(() => {
+    setSlug(propertiesItems.slug)
+  }, [propertiesItems])
 
   const handleSort = (query) => {
-    dispatch(updateForm({page:1, sort_type: query }))
+    dispatch(updateForm({ page: 1, sort_type: query }))
     dispatch(fetchAsyncSearch())
-   
-    
   }
   const renderItem = (index, itemData, hackbox) => {
     return (
@@ -70,7 +72,6 @@ function Properties() {
                         >
                           Highest Price
                         </a>
-                        
                       </li>
                       <li>
                         <a
@@ -103,7 +104,7 @@ function Properties() {
                   </div>
                 </div>
                 <div className="ib-wrapper-grid-result">
-                  <ul className="ib-lproperties ib-listings-ct" >
+                  <ul className="ib-lproperties ib-listings-ct">
                     {propertiesItems.items.map((itemData, index) =>
                       renderItem(index, itemData, propertiesItems.hackbox),
                     )}

@@ -7,6 +7,7 @@ const initialState = {
     currentpage: 1,
     pagination: {},
     items: [],
+    slug:''
   },
   properties_maps: [],
   properties_data: [],
@@ -181,6 +182,7 @@ export const propertySlice = createSlice({
           currentpage: actions.payload.data.params?.currentpage,
           pagination: actions.payload.data?.pagination,
           items: actions.payload.data?.items,
+          slug: actions.payload.data.slug
         }
 
         state.properties = { ...state.properties, ...temp_properties }
