@@ -1,14 +1,24 @@
-import { memo } from 'react'
+import { memo, useContext } from 'react'
+import FilterContext from '../../Contexts/FilterContext';
 import { formatPrice } from '../../utils/utils'
 import Carousel from '../common/Carousel'
-
+import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
+import { useDispatch } from 'react-redux';
 function PropertiesItem({ itemData }) {
+  const {openModal} = useContext(FilterContext);
+  const dispatch = useDispatch()
+
+  const handleOpenModal = ()=> {
+    dispatch(fetchAsyncDetails(itemData.mls_num))
+    openModal({mls_num: itemData.mls_num})
+  }
+
   return (
     <li
       className="ib-pitem"
       data-geocode="25.772612:-80.279587"
       data-mls="A11149258"
-      data-status="1"
+      data-status="1"      
     >
       <ul className="ib-info">
         <li className="ib-item -price">{formatPrice(itemData.price)}</li>
@@ -46,8 +56,8 @@ function PropertiesItem({ itemData }) {
       <a
         className="ib-pipermalink js-show-modals"
         data-modal="#modalDetailProperty"
-        href="#"
         title=""
+        onClick={handleOpenModal}
       ></a>
     </li>
   )

@@ -1,38 +1,52 @@
+import { memo, useCallback } from "react"
+import { useDispatch } from "react-redux";
+import { fetchAsyncSearch } from "../../config/actions/properties";
+import { updateForm } from "../../config/slices/properties";
+
 function PropertiesPaginate({ pagination, current }) {
   const { prev, next, pages, range } = pagination
+  const dispatch = useDispatch()
 
-  const paginate = ()=>{
-      
-  }
+  console.log("Render PropertiesPaginate");  
+  const paginate = useCallback((page)=>{
+    console.log('page',page);
+    dispatch(updateForm({ page }))
+    dispatch(fetchAsyncSearch())
+    document.getElementsByClassName('ib-wrapper-grid-result').scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
+  })
 
   return (
     <div className="ib-wrapper-pagination">
       <ul className="ib-pagination">
         {prev ? (
           <li className="ib-page-item">
-            <a
+            <button
               className="ib-page-link -icon-arrow -prev"
-              onClick={() => paginate((p) => (p > 1 ? p - 1 : p))}
+              onClick={() => paginate(current - 1)}
             >
               Previous Page
-            </a>
+            </button>
           </li>
         ) : null}
-        {range.map((page) => (
+        {range?.map((page) => (
           <li
             onClick={() => paginate(page)}
             key={`page-picker-${page}`}
             className={`ib-page-item ${current === page ? 'active' : ''}`}
           >
-            <a className="ib-page-link">{page}</a>
+            <button className="ib-page-link">{page}</button>
           </li>
         ))}
         {next ? (
           <li
             className="ib-page-item"
-            onClick={() => paginate((p) => (p < pages ? p + 1 : p))}
+            onClick={() => paginate(current+1)}
           >
-            <a className="ib-page-link -icon-arrow -next">Next Page</a>
+            <button className="ib-page-link -icon-arrow -next">Next Page</button>
           </li>
         ) : null}
       </ul>
@@ -40,4 +54,4 @@ function PropertiesPaginate({ pagination, current }) {
   )
 }
 
-export default PropertiesPaginate
+export default memo(PropertiesPaginate)

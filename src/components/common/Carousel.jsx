@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import Slider from 'react-slick'
 import Lightbox from 'react-image-lightbox'
 import 'react-image-lightbox/style.css'
+import { isMobile, browserName } from "react-device-detect"
 
 const Carousel = ({
   itemsSlider,
