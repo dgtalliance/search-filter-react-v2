@@ -5,11 +5,11 @@ import { getparams } from '../../config/slices/properties'
 import { formatShortPriceX, numberWithCommas } from '../../utils/utils'
 
 const FilterPrice = ({
-  settitle,
   setMinPriceParent,
   setMaxPriceParent,
   setSalesType,
   error,
+  setMaxPriceDefault
 }) => {
   const maxPriceDefaultSales = 100000000
   const maxPriceDefaultRent = 100000
@@ -19,6 +19,7 @@ const FilterPrice = ({
   const params = useSelector(getparams)
 
   useEffect(() => {
+    var min, max
     var {
       sale_type,
       min_rent_price,
@@ -28,21 +29,29 @@ const FilterPrice = ({
     } = params
     setSalesType(parseInt(sale_type))
     if (parseInt(sale_type) === 0) {
-      console.log('params', params)
       setmaxPriceDefault(maxPriceDefaultSales)
+      setMaxPriceDefault(maxPriceDefaultSales)
+      min = min_sale_price !== '' ? parseInt(min_sale_price) : 0
+      max =
+        max_sale_price !== '' ? parseInt(max_sale_price) : maxPriceDefaultSales
       setMinPrice(min_sale_price !== '' ? parseInt(min_sale_price) : 0)
       setMaxPrice(
         max_sale_price !== '' ? parseInt(max_sale_price) : maxPriceDefaultSales,
       )
     } else {
       setmaxPriceDefault(maxPriceDefaultRent)
+      setMaxPriceDefault(maxPriceDefaultRent)
+      min = min_rent_price !== '' ? parseInt(min_rent_price) : 0
+      max =
+        max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent
       setMinPrice(min_rent_price !== '' ? parseInt(min_rent_price) : 0)
       setMaxPrice(
         max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent,
       )
     }
-    updateTitle(minPrice, maxPrice)
-  }, [params, minPrice, maxPrice])
+    console.log('Prices----', min, max)
+    updateTitle(min, max)
+  }, [params])
 
   const onChangeMin = (e) => {
     if ('' === e.target.value) {
@@ -109,11 +118,10 @@ const FilterPrice = ({
     }
   }
 
-  const updateTitle = useCallback((min, max) => {
+  const updateTitle = (min, max) => {
     console.log('min-max:', min, max)
-    setMinPriceParent(min)
-    setMaxPriceParent(max)
-    if (min === 0) {
+    
+ /*    if (min === 0) {
       settitle('Any' + '- $' + formatShortPriceX(max))
     }
     if (min > 0 && max === maxPriceDefault) {
@@ -124,8 +132,10 @@ const FilterPrice = ({
     }
     if (min === 0 && max === maxPriceDefault) {
       settitle('Any Price')
-    }
-  })
+    } */
+    setMinPriceParent(min)
+    setMaxPriceParent(max)
+  }
 
   return (
     <>

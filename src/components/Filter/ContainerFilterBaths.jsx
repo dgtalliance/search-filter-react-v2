@@ -6,32 +6,32 @@ import FilterBaths from './FilterBaths'
 
 const ContainerFilterBaths = () => {
   const [title, settitle] = useState('Any Baths')
-  const [minBeds, setMinBeds] = useState(0)
-  const [maxBeds, setMaxBeds] = useState(0)
+  const [minBaths, setMinBaths] = useState(0)
+  const [maxBaths, setMaxBaths] = useState(0)
   const [activeMatch, setActiveMatch] = useState(false)
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
   const TitleChange = () => {
-    console.log('TitleChange', minBeds, maxBeds, activeMatch)
-    if (parseInt(minBeds) !== 10) {
-      if (activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+    console.log('TitleChange', minBaths, maxBaths, activeMatch)
+    if (parseInt(minBaths) !== 10) {
+      if (activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 0) {
         settitle('Studio Baths')
       }
 
-      if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+      if (!activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 0) {
         settitle('Any Baths')
       }
 
-      if (activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Baths: ' + minBeds)
+      if (activeMatch && parseInt(minBaths) !== 0) {
+        settitle('Baths: ' + minBaths)
       }
-      if (!activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Baths: ' + minBeds + '+')
+      if (!activeMatch && parseInt(minBaths) !== 0) {
+        settitle('Baths: ' + minBaths + '+')
       }
-      if (activeMatch && parseInt(minBeds) !== 0 && parseInt(maxBeds) !== 0) {
-        if (parseInt(maxBeds) !== 10) {
-          settitle('Baths: ' + minBeds + '-' + maxBeds)
+      if (activeMatch && parseInt(minBaths) !== 0 && parseInt(maxBaths) !== 0) {
+        if (parseInt(maxBaths) !== 10) {
+          settitle('Baths: ' + minBaths + '-' + maxBaths)
         }
       }
     } else {
@@ -41,28 +41,26 @@ const ContainerFilterBaths = () => {
 
   useEffect(() => {
     TitleChange()
-  }, [minBeds, maxBeds, activeMatch])
+  }, [minBaths, maxBaths, activeMatch])
 
-  const cleanBeds = () => {
-    var beds = { min_beds: '', max_beds: '', page: 1 }
-    dispatch(updateForm(beds))
+  const cleanBaths = () => {
+    var Baths = { min_baths: '', max_baths: '', page: 1 }
+    dispatch(updateForm(Baths))
     dispatch(fetchAsyncSearch())
     settitle('Any Baths')
     setActiveMatch(false)
-    setMinBeds(0)
-    setMaxBeds(0)
+    setMinBaths(0)
+    setMaxBaths(0)
     setError(false)
   }
   const handleClick = () => {
-    var beds = {}
-    var min = parseInt(minBeds)
-    var max = parseInt(maxBeds)
-    if (min > max) {
-      setError(true)
+    var min = parseInt(minBaths)
+    var max = parseInt(maxBaths)
+     if (min > max) {
       return
-    } else {
+    } /*else {
       setError(false)
-    }
+    } */
     console.log('Click', min, max)
     var min_temp = min !== 10 ? min : ''
     var max_temp = max !== 10 ? max : ''
@@ -72,8 +70,8 @@ const ContainerFilterBaths = () => {
       max_temp = max_temp === 0 ? '' : max_temp
     }
 
-    beds = { min_beds: min_temp, max_beds: max_temp, page: 1 }
-    dispatch(updateForm(beds))
+    var baths = { min_baths: min_temp, max_baths: max_temp, page: 1 }
+    dispatch(updateForm(baths))
     dispatch(fetchAsyncSearch())
   }
   return (
@@ -81,7 +79,7 @@ const ContainerFilterBaths = () => {
       <div className="ib-wrapper-dropdown -baths">
         <button className="ib-action -baths js-show-basic-filter">
           <span id="text-baths" data-text="Any Baths">
-            Any Baths
+            {title}
           </span>
         </button>
         <div className="ib-dropdown">
@@ -89,15 +87,15 @@ const ContainerFilterBaths = () => {
           <div className="ib-wrapper">
             <div className="ib-flex-wrapper">
               <FilterBaths
-                setMinBeds={setMinBeds}
-                setMaxBeds={setMaxBeds}
+                setMinBaths={setMinBaths}
+                setMaxBaths={setMaxBaths}
                 setActiveMatch={setActiveMatch}
                 error={error}
                 setError={setError}
               />
 
               <div className="ib-modal-footer">
-                <a className="ib-link" onClick={() => cleanBeds()}>
+                <a className="ib-link" onClick={() => cleanBaths()}>
                   Clear
                 </a>
                 <button

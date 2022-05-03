@@ -57,12 +57,11 @@ function ContainerFilterBeds() {
     var beds = {}
     var min = parseInt(minBeds)
     var max = parseInt(maxBeds)
-    if (min > max) {
-      setError(true)
+   if (min > max) {
       return
-    } else {
+    } /*  else {
       setError(false)
-    }
+    } */
     console.log('Click', min, max)
     var min_temp = min !== 10 ? min : ''
     var max_temp = max !== 10 ? max : ''

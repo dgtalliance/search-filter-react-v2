@@ -22,8 +22,8 @@ const optionsStudio = [
 
 const FilterBaths = ({
   error,
-  setMinBeds,
-  setMaxBeds,
+  setMinBaths,
+  setMaxBaths,
   setActiveMatch,
   setError,
 }) => {
@@ -35,9 +35,9 @@ const FilterBaths = ({
 
   const params = useSelector(getparams)
   useEffect(() => {
-    var { min_beds, max_beds } = params
-    var min_v = parseInt(min_beds)
-    var max_v = parseInt(max_beds)
+    var { min_baths, max_baths } = params
+    var min_v = parseInt(min_baths)
+    var max_v = parseInt(max_baths)
 
     if (isNaN(min_v) && isNaN(max_v)) {
       console.log('1', min_v, max_v)
@@ -81,8 +81,8 @@ const FilterBaths = ({
       setvalueOption(max_v)
       setexactMatch(false)
     }
-    setMinBeds(!isNaN(min_v) ? min_v : 0)
-    setMaxBeds(!isNaN(max_v) ? max_v : 10)
+    setMinBaths(!isNaN(min_v) ? min_v : 0)
+    setMaxBaths(!isNaN(max_v) ? max_v : 10)
   }, [params])
 
   const onChangeExact = (e) => {
@@ -92,13 +92,13 @@ const FilterBaths = ({
     if (e.target.checked) {
       setselectLeft(valueOption)
       setselectRight(valueOption)
-      setMinBeds(valueOption)
-      setMaxBeds(valueOption)
+      setMinBaths(valueOption)
+      setMaxBaths(valueOption)
     } else {
       setselectLeft(valueOption)
       setselectRight(10)
-      setMinBeds(valueOption)
-      setMaxBeds(0)
+      setMinBaths(valueOption)
+      setMaxBaths(0)
     }
 
     if (parseInt(valueOption) === 0 && !e.target.checked) {
@@ -120,28 +120,28 @@ const FilterBaths = ({
       setselectLeft(temp)
       setselectRight(temp)
 
-      setMinBeds(temp)
-      setMaxBeds(temp)
+      setMinBaths(temp)
+      setMaxBaths(temp)
     } else {
       setselectLeft(temp)
       setselectRight(10)
 
-      setMinBeds(temp)
-      setMaxBeds(10)
+      setMinBaths(temp)
+      setMaxBaths(10)
     }
     if (parseInt(temp) === 0) {
       setselectLeft(10)
       setselectRight(10)
 
-      setMinBeds(temp)
-      setMaxBeds(temp)
+      setMinBaths(temp)
+      setMaxBaths(temp)
     }
     if (parseInt(temp) === 0 && exactMatch) {
       setselectLeft(0)
       setselectRight(0)
 
-      setMinBeds(temp)
-      setMaxBeds(temp)
+      setMinBaths(temp)
+      setMaxBaths(temp)
     }
     if (parseInt(valueOption) <= parseInt(selectRight)) {
       setError(false)
@@ -152,7 +152,7 @@ const FilterBaths = ({
   const handleChangeStudioLeft = (e) => {
     var temp = parseInt(e.target.value)
     setselectLeft(temp !== 10 ? temp : 10)
-    setMinBeds(temp !== 10 ? temp : 10)
+    setMinBaths(temp !== 10 ? temp : 10)
     setvalueOption(temp !== 10 ? temp : 10)
 
     if (parseInt(temp) === 10) {
@@ -168,13 +168,13 @@ const FilterBaths = ({
       setActiveMatch(true)
       setvalueOption(0)
       setselectRight(0)
-      setMinBeds(temp !== 10 ? temp : 10)
-      setMaxBeds(temp !== 10 ? temp : 10)
+      setMinBaths(temp !== 10 ? temp : 10)
+      setMaxBaths(temp !== 10 ? temp : 10)
     }
     if (exactMatch) {
       setselectRight(temp)
-      setMinBeds(temp !== 10 ? temp : 10)
-      setMaxBeds(temp !== 10 ? temp : 10)
+      setMinBaths(temp !== 10 ? temp : 10)
+      setMaxBaths(temp !== 10 ? temp : 10)
     }
     if (temp <= parseInt(selectRight)) {
       setError(false)
@@ -185,7 +185,7 @@ const FilterBaths = ({
   const handleChangeStudioRight = (e) => {
     var temp = parseInt(e.target.value)
     setselectRight(temp)
-    setMaxBeds(temp)
+    setMaxBaths(temp)
     if (parseInt(valueOption) <= temp) {
       setError(false)
     } else {
@@ -217,20 +217,20 @@ const FilterBaths = ({
         />
       </div>
       <Checkbox
-        className="margin-checkbox-beds"
+        className="margin-checkbox-Baths"
         onChange={onChangeExact}
         checked={exactMatch}
       >
         Use exact match
       </Checkbox>
       <div className="ms-line-br">
-        <span>Or Select Bedrooms Range</span>
+        <span>Or Select Bathrooms Range</span>
       </div>
       <div className="ms-flex">
         <div className="ms-item">
           <select
             style={error ? { border: '1px solid var(--color-red)' } : null}
-            className="select-beds"
+            className="select-Baths"
             value={selectLeft}
             onChange={handleChangeStudioLeft}
           >
@@ -247,7 +247,7 @@ const FilterBaths = ({
         <div className="ms-item">
           <select
             style={error ? { border: '1px solid var(--color-red)' } : null}
-            className="select-beds"
+            className="select-Baths"
             value={selectRight}
             onChange={handleChangeStudioRight}
           >

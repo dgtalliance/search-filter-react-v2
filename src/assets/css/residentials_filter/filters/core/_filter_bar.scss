@@ -835,6 +835,7 @@
 				}
 			}
 
+			.select-Baths,
 			.select-beds{
 				width: 100%;
 				padding: 10px 15px;
@@ -1501,5 +1502,21 @@
     font-family: var(--icons-font);
     font-size: 15px;
     margin-right: 8px;
+	}
+}
+
+.ib-guests-search{
+	.ib-wrapper-item{
+		.ib-wrapper-dropdown{
+			.ib-action{
+				#text-types{
+					overflow: hidden;
+					-o-text-overflow: ellipsis;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					max-width: 300px;
+				}
+			}
+		}
 	}
 }

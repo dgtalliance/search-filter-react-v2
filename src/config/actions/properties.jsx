@@ -13,10 +13,12 @@ export const fetchAsyncSearch = createAsyncThunk(
     const query_params = '' != location.search ? location.search.substr(1) : location.search
     const post_params = encodeURIComponent(generateSlug(properties.params))
     const event_triggered = properties.event_triggered
+
+    var query_params_val  =  'no' !== event_triggered.toString() ? query_params : ''
   
     const flex_credentials = Cookies.get('ib_lead_token')
     try {
-      const body = `access_token=${ACCESS_TOKEN}&search_filter_id=${filter_id}&flex_credentials=${flex_credentials}&event_triggered=${event_triggered}&query_params=${query_params}&device_width=${window.innerWidth}&post_params=${post_params}`
+      const body = `access_token=${ACCESS_TOKEN}&search_filter_id=${filter_id}&flex_credentials=${flex_credentials}&event_triggered=${event_triggered}&query_params=${query_params_val}&device_width=${window.innerWidth}&post_params=${post_params}`
     
       const response = await axios.post(API_SEARCH_URL, body)
 

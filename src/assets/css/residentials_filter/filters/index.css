@@ -815,7 +815,9 @@
     .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:before {
       background-color: var(--color-gray);
       border-color: var(--color-gray); }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .select-Baths,
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .select-beds,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .select-Baths,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .select-beds {
     width: 100%;
     padding: 10px 15px;
@@ -1469,6 +1471,13 @@
     font-family: var(--icons-font);
     font-size: 15px;
     margin-right: 8px; }
+
+.ib-guests-search .ib-wrapper-item .ib-wrapper-dropdown .ib-action #text-types {
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px; }
 
 .ib-guests-search-modal {
   position: fixed;
