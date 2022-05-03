@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import { updateForm } from '../../config/slices/properties'
-import FilterBeds from './FilterBeds'
+import FilterBaths from './FilterBaths'
 
-function ContainerFilterBeds() {
-  const [title, settitle] = useState('Any Beds')
+const ContainerFilterBaths = () => {
+  const [title, settitle] = useState('Any Baths')
   const [minBeds, setMinBeds] = useState(0)
   const [maxBeds, setMaxBeds] = useState(0)
   const [activeMatch, setActiveMatch] = useState(false)
@@ -16,26 +16,26 @@ function ContainerFilterBeds() {
     console.log('TitleChange', minBeds, maxBeds, activeMatch)
     if (parseInt(minBeds) !== 10) {
       if (activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
-        settitle('Studio Beds')
+        settitle('Studio Baths')
       }
 
       if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
-        settitle('Any Beds')
+        settitle('Any Baths')
       }
 
       if (activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Beds: ' + minBeds)
+        settitle('Baths: ' + minBeds)
       }
       if (!activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Beds: ' + minBeds + '+')
+        settitle('Baths: ' + minBeds + '+')
       }
       if (activeMatch && parseInt(minBeds) !== 0 && parseInt(maxBeds) !== 0) {
         if (parseInt(maxBeds) !== 10) {
-          settitle('Beds: ' + minBeds + '-' + maxBeds)
+          settitle('Baths: ' + minBeds + '-' + maxBeds)
         }
       }
     } else {
-      settitle('Any Beds')
+      settitle('Any Baths')
     }
   }
 
@@ -47,7 +47,7 @@ function ContainerFilterBeds() {
     var beds = { min_beds: '', max_beds: '', page: 1 }
     dispatch(updateForm(beds))
     dispatch(fetchAsyncSearch())
-    settitle('Any Beds')
+    settitle('Any Baths')
     setActiveMatch(false)
     setMinBeds(0)
     setMaxBeds(0)
@@ -78,17 +78,17 @@ function ContainerFilterBeds() {
   }
   return (
     <>
-      <div className="ib-wrapper-dropdown -beds">
-        <button className="ib-action -beds js-show-basic-filter">
-          <span id="text-beds" data-text={title}>
-            {title}
+      <div className="ib-wrapper-dropdown -baths">
+        <button className="ib-action -baths js-show-basic-filter">
+          <span id="text-baths" data-text="Any Baths">
+            Any Baths
           </span>
         </button>
         <div className="ib-dropdown">
-          <div className="ib-wrapper-title">Bedrooms</div>
+          <div className="ib-wrapper-title">Bathrooms</div>
           <div className="ib-wrapper">
             <div className="ib-flex-wrapper">
-              <FilterBeds
+              <FilterBaths
                 setMinBeds={setMinBeds}
                 setMaxBeds={setMaxBeds}
                 setActiveMatch={setActiveMatch}
@@ -115,4 +115,4 @@ function ContainerFilterBeds() {
   )
 }
 
-export default ContainerFilterBeds
+export default ContainerFilterBaths

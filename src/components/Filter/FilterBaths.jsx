@@ -20,7 +20,7 @@ const optionsStudio = [
   { label: '5', value: 5 },
 ]
 
-const FilterBeds = ({
+const FilterBaths = ({
   error,
   setMinBeds,
   setMaxBeds,
@@ -270,4 +270,4 @@ const FilterBeds = ({
   )
 }
 
-export default memo(FilterBeds)
+export default memo(FilterBaths)

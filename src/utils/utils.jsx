@@ -26,7 +26,7 @@ export const formatPrice = (value, n, x, d, c, s, p) => {
   )
 }
 
-function pluck(arr, key) {
+export function pluck(arr, key) {
   return arr.map((o) => o[key])
 }
 

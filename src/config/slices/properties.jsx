@@ -65,11 +65,20 @@ export const propertySlice = createSlice({
       state.loading = true
     },
     [fetchAsyncSearch.fulfilled]: (state, actions) => {
-      console.log('Success', actions.payload.data)
+     
       state.loading = false
-      if (actions.payload.status) {
-        state.properties_data = actions.payload.data
+      if(actions.payload.data.success === false) {
+        console.log('Success False',actions.payload.data);
+        state.error = {
+          status: false,
+          code: actions.payload.data.error_code,
+          message: actions.payload.data.error_message,
+        }
+      }
 
+      if (actions.payload.status && Object.keys(actions.payload.data).length>0) {
+        state.properties_data = actions.payload.data
+        console.log('Success', actions.payload.data)
         var params = {
           sale_type:
             actions.payload.data.params.sale_type !== null

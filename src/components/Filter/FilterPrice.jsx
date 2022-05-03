@@ -28,6 +28,7 @@ const FilterPrice = ({
     } = params
     setSalesType(parseInt(sale_type))
     if (parseInt(sale_type) === 0) {
+      console.log('params', params)
       setmaxPriceDefault(maxPriceDefaultSales)
       setMinPrice(min_sale_price !== '' ? parseInt(min_sale_price) : 0)
       setMaxPrice(
@@ -41,8 +42,7 @@ const FilterPrice = ({
       )
     }
     updateTitle(minPrice, maxPrice)
-    console.log('FilterPrice')
-  }, [params])
+  }, [params, minPrice, maxPrice])
 
   const onChangeMin = (e) => {
     if ('' === e.target.value) {
@@ -57,8 +57,6 @@ const FilterPrice = ({
       setMinPrice(parseInt(inputValue))
       updateTitle(parseInt(inputValue), maxPrice)
     }
-    /* if (parseInt(maxPrice) > parseInt(inputValue)) {
-    } */
   }
 
   const onChangeMax = (e) => {
@@ -75,8 +73,6 @@ const FilterPrice = ({
       setMaxPrice(parseInt(inputValue))
       updateTitle(minPrice, parseInt(inputValue))
     }
-    /*  if (parseInt(minPrice) < parseInt(inputValue)) {
-    } */
   }
 
   //function tools
@@ -155,7 +151,11 @@ const FilterPrice = ({
           value={transformPrice(maxPrice)}
         />
       </div>
-      {error && <div className="error-label">The Min. value should be lower or equal to the Max. value.</div>}
+      {error && (
+        <div className="error-label">
+          The Min. value should be lower or equal to the Max. value.
+        </div>
+      )}
 
       <Slider
         style={{ margin: '2rem' }}

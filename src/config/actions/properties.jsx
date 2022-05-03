@@ -3,8 +3,9 @@ import axios from 'axios'
 import { generateSlug } from '../../utils/utils'
 import { ACCESS_TOKEN, API_SEARCH_URL } from '../config'
 import Cookies from 'js-cookie'
+import { defaultPropsShortCode } from '../../App'
 
-const filter_id = 'ZTM1Y2RK'
+const filter_id = defaultPropsShortCode.filter
 export const fetchAsyncSearch = createAsyncThunk(
   'properties/fetchAsyncSearch',
   async (arg, { getState }) => {
@@ -18,11 +19,19 @@ export const fetchAsyncSearch = createAsyncThunk(
       const body = `access_token=${ACCESS_TOKEN}&search_filter_id=${filter_id}&flex_credentials=${flex_credentials}&event_triggered=${event_triggered}&query_params=${query_params}&device_width=${window.innerWidth}&post_params=${post_params}`
     
       const response = await axios.post(API_SEARCH_URL, body)
+
       if (response.data.length != 0) {
-        return {
-          data: response.data,
-          status: true,
-        }
+        if(response.data?.success !== false){
+          return {
+            data: response.data,
+            status: true,
+          }
+        }else{
+          return {
+            data: response.data,
+            status: false,
+          }
+        }      
       } else {
         return {
           message: 'No Data',
