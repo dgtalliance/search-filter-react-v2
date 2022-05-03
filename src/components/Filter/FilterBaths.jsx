@@ -98,7 +98,7 @@ const FilterBaths = ({
       setselectLeft(valueOption)
       setselectRight(10)
       setMinBaths(valueOption)
-      setMaxBaths(0)
+      setMaxBaths(10)
     }
 
     if (parseInt(valueOption) === 0 && !e.target.checked) {

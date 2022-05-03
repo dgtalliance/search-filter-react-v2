@@ -12,7 +12,7 @@ const ContainerFilterBaths = () => {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = () => {
+  const TitleChange = (minBaths, maxBaths, activeMatch) => {
     console.log('TitleChange', minBaths, maxBaths, activeMatch)
     if (parseInt(minBaths) !== 10) {
       if (activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 0) {
@@ -20,6 +20,9 @@ const ContainerFilterBaths = () => {
       }
 
       if (!activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 0) {
+        settitle('Any Baths')
+      }
+      if (!activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 10) {
         settitle('Any Baths')
       }
 
@@ -40,7 +43,7 @@ const ContainerFilterBaths = () => {
   }
 
   useEffect(() => {
-    TitleChange()
+    TitleChange(minBaths, maxBaths, activeMatch)
   }, [minBaths, maxBaths, activeMatch])
 
   const cleanBaths = () => {
@@ -56,7 +59,7 @@ const ContainerFilterBaths = () => {
   const handleClick = () => {
     var min = parseInt(minBaths)
     var max = parseInt(maxBaths)
-     if (min > max) {
+     if (min > max && max !==10) {
       return
     } /*else {
       setError(false)

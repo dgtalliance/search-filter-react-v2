@@ -12,7 +12,7 @@ function ContainerFilterBeds() {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = () => {
+  const TitleChange = (minBeds, maxBeds, activeMatch) => {
     console.log('TitleChange', minBeds, maxBeds, activeMatch)
     if (parseInt(minBeds) !== 10) {
       if (activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
@@ -20,6 +20,9 @@ function ContainerFilterBeds() {
       }
 
       if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+        settitle('Any Beds')
+      }
+      if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 10) {
         settitle('Any Beds')
       }
 
@@ -40,7 +43,8 @@ function ContainerFilterBeds() {
   }
 
   useEffect(() => {
-    TitleChange()
+    TitleChange(minBeds, maxBeds, activeMatch)
+    console.log('my change',minBeds, maxBeds, activeMatch)
   }, [minBeds, maxBeds, activeMatch])
 
   const cleanBeds = () => {
@@ -54,15 +58,13 @@ function ContainerFilterBeds() {
     setError(false)
   }
   const handleClick = () => {
-    var beds = {}
     var min = parseInt(minBeds)
     var max = parseInt(maxBeds)
-   if (min > max) {
+    if (min > max && max !==10) {
       return
     } /*  else {
       setError(false)
     } */
-    console.log('Click', min, max)
     var min_temp = min !== 10 ? min : ''
     var max_temp = max !== 10 ? max : ''
 
@@ -71,7 +73,7 @@ function ContainerFilterBeds() {
       max_temp = max_temp === 0 ? '' : max_temp
     }
 
-    beds = { min_beds: min_temp, max_beds: max_temp, page: 1 }
+    var beds = { min_beds: min_temp, max_beds: max_temp, page: 1 }
     dispatch(updateForm(beds))
     dispatch(fetchAsyncSearch())
   }

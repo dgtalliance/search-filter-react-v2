@@ -49,7 +49,6 @@ const FilterPrice = ({
         max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent,
       )
     }
-    console.log('Prices----', min, max)
     updateTitle(min, max)
   }, [params])
 
@@ -119,20 +118,6 @@ const FilterPrice = ({
   }
 
   const updateTitle = (min, max) => {
-    console.log('min-max:', min, max)
-    
- /*    if (min === 0) {
-      settitle('Any' + '- $' + formatShortPriceX(max))
-    }
-    if (min > 0 && max === maxPriceDefault) {
-      settitle('$' + formatShortPriceX(min) + '- Any')
-    }
-    if (min > 0 && max < maxPriceDefault) {
-      settitle('$' + formatShortPriceX(min) + '- $' + formatShortPriceX(max))
-    }
-    if (min === 0 && max === maxPriceDefault) {
-      settitle('Any Price')
-    } */
     setMinPriceParent(min)
     setMaxPriceParent(max)
   }

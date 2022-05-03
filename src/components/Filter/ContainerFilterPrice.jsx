@@ -16,8 +16,6 @@ const ContainerFilterPrice = () => {
   const [maxPriceDefault, setMaxPriceDefault] = useState(maxPriceDefaultSales)
 
   const updateTitle = (min, max) => {
-    console.log('min-max:', min, max)
-    
     if (min === 0) {
       settitle('Any' + '- $' + formatShortPriceX(max))
     }
@@ -32,13 +30,9 @@ const ContainerFilterPrice = () => {
     }
   }
 
-
-
-
   useEffect(() => {
-    console.log('ContainerFilterPrice-----------')
-    updateTitle(minPrice,maxPrice)
-  }, [minPrice,maxPrice])
+    updateTitle(minPrice, maxPrice)
+  }, [minPrice, maxPrice])
 
   const searchByPrice = () => {
     var tempPrice = {}

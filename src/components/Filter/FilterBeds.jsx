@@ -34,13 +34,15 @@ const FilterBeds = ({
   const [selectRight, setselectRight] = useState(10)
 
   const params = useSelector(getparams)
+
+  
   useEffect(() => {
     var { min_beds, max_beds } = params
     var min_v = parseInt(min_beds)
     var max_v = parseInt(max_beds)
 
     if (isNaN(min_v) && isNaN(max_v)) {
-      console.log('1', min_v, max_v)
+      console.log('1 Beds', min_v, max_v)
       setOptions(optionsAny)
       setexactMatch(false)
       setvalueOption(0)
@@ -55,7 +57,7 @@ const FilterBeds = ({
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
-      console.log('2', min_v, max_v)
+      console.log('2 Beds', min_v, max_v)
     }
 
     if (!isNaN(min_v) && !isNaN(max_v) && max_v !== min_v) {
@@ -64,7 +66,7 @@ const FilterBeds = ({
       setselectRight(max_v)
       setOptions(optionsAny)
       setActiveMatch(false)
-      console.log('3', min_v, max_v)
+      console.log('3 Beds', min_v, max_v)
     }
 
     if (!isNaN(min_v) && isNaN(max_v)) {
@@ -73,10 +75,10 @@ const FilterBeds = ({
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(10)
-      console.log('4', min_v, max_v)
+      console.log('4 Beds', min_v, max_v)
     }
     if (isNaN(min_v) && !isNaN(max_v)) {
-      console.log('5', min_v, max_v)
+      console.log('5 Beds', min_v, max_v)
       setOptions(optionsAny)
       setvalueOption(max_v)
       setexactMatch(false)
@@ -98,11 +100,10 @@ const FilterBeds = ({
       setselectLeft(valueOption)
       setselectRight(10)
       setMinBeds(valueOption)
-      setMaxBeds(0)
+      setMaxBeds(10)
     }
 
     if (parseInt(valueOption) === 0 && !e.target.checked) {
-      console.log('my change')
       setselectLeft(10)
       setselectRight(10)
     }
