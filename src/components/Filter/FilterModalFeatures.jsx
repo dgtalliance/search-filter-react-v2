@@ -3,20 +3,20 @@ import { useEffect, useState } from 'react'
 import { getparams, updateForm } from '../../config/slices/properties'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import CheckboxGroup from '../common/Checkbox'
-import { property_type_d } from '../../config/config'
+import { amenities_d, property_type_d } from '../../config/config'
 
-const FilterPropertyType = () => {
+const FilterModalFeatures = () => {
   const dispatch = useDispatch()
   const [listCheck, setlistCheck] = useState([])
   var params = useSelector(getparams)
-  var property_type
+  var amenities
 
   useEffect(() => {
-    property_type = params.property_type
-    if (Array.isArray(property_type)) {
-      setlistCheck(property_type)
+    amenities = params.amenities
+    if (Array.isArray(amenities)) {
+      setlistCheck(amenities)
     } else {
-      var temp = property_type.split(',')
+      var temp = amenities.split(',')
       setlistCheck(temp)
     }
   }, [params])
@@ -38,14 +38,14 @@ const FilterPropertyType = () => {
   }
 
   const handleSubmit = (temp) => {
-    var pt = { property_type: temp.join(','), page: 1 }
+    var pt = { amenities: temp.join(','), page: 1 }
     dispatch(updateForm(pt))
     dispatch(fetchAsyncSearch())
   }
   return (
     <>
       <CheckboxGroup
-        dataValue={property_type_d}
+        dataValue={amenities_d}
         defaultValue={listCheck}
         changeClick={handleChangeItem}
         labelTitle={''}
@@ -55,4 +55,4 @@ const FilterPropertyType = () => {
   )
 }
 
-export default FilterPropertyType
+export default FilterModalFeatures

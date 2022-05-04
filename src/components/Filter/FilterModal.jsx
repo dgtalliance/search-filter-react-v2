@@ -1,6 +1,56 @@
+import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { fetchAsyncSearch } from "../../config/actions/properties"
+import { getpropertiesItems, updateForm, updateTriggered } from "../../config/slices/properties"
+import { formatShortPriceX } from "../../utils/utils"
+import FilterModalFeatures from "./FilterModalFeatures"
+import FilterPropertyType from "./FilterPropertyType"
 import FilterSaleType from "./FilterSaleType"
 
 const FilterModal = ()=> {
+  const propertiesItems = useSelector(getpropertiesItems)
+  const dispatch = useDispatch()
+  const [itemscount, setItems] = useState(0)
+
+  useEffect(() => {
+    var {pagination} = propertiesItems
+    setItems(pagination.count)
+  },[propertiesItems])
+
+  const handleClean = () => {
+    var params = {
+      sale_type: '',
+      property_type: [],
+      filter_search_keyword_label: '',
+      filter_search_keyword_type: '',
+      waterfront_options: '',
+      polygon_search: '',
+      rect: '',
+      zm: '',
+      parking_options: '',
+      amenities: '',
+      min_sale_price: '',
+      max_sale_price: '',
+      min_rent_price: '',
+      max_rent_price: '',
+      min_beds: '',
+      max_beds: '',
+      min_baths: '',
+      max_baths: '',
+      min_living_size: '',
+      max_living_size: '',
+      min_lot_size: '',
+      max_lot_size: '',
+      min_year: '',
+      max_year: '',
+      sort_type: '',
+      page: '',
+    }
+    dispatch(updateTriggered('no'))
+    dispatch(updateForm(params))
+    dispatch(fetchAsyncSearch())
+  }
+
   return (
     <>
       <div className="ib-guests-search-modal">
@@ -358,55 +408,9 @@ const FilterModal = ()=> {
             <div className="ib-gs-item">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
-                  <span className="ib-title">Type</span>
+                  <span className="ib-title">Property Type</span>
                   <div className="ib-typesList">
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-ppt-outer_min_0"
-                        name="any_types"
-                        value="0"
-                      />
-                      <label htmlFor="ib-ppt-outer_min_0">
-                        Single Family Homes
-                      </label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-ppt-outer_min_1"
-                        name="any_types"
-                        value="1"
-                      />
-                      <label htmlFor="ib-ppt-outer_min_1">Condominiums</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-ppt-outer_min_2"
-                        name="any_types"
-                        value="2"
-                      />
-                      <label htmlFor="ib-ppt-outer_min_2">Townhouses</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-ppt-outer_min_3"
-                        name="any_types"
-                        value="3"
-                      />
-                      <label htmlFor="ib-ppt-outer_min_3">Multi-Family</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-ppt-outer_min_4"
-                        name="any_types"
-                        value="4"
-                      />
-                      <label htmlFor="ib-ppt-outer_min_4">Vacant Land</label>
-                    </div>
+                  <FilterPropertyType />
                   </div>
                 </div>
               </div>
@@ -416,107 +420,7 @@ const FilterModal = ()=> {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Features</span>
                   <div className="ib-typesList">
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_0"
-                        name="any_features"
-                        value="pool"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_0">Swimming Pool</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_1"
-                        name="any_features"
-                        value="golf"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_1">Golf Course</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_2"
-                        name="any_features"
-                        value="tennis"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_2">Tennis Courts</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_3"
-                        name="any_features"
-                        value="gated_community"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_3">
-                        Gated Community
-                      </label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_4"
-                        name="any_features"
-                        value="penthouse"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_4">Penthouse</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_5"
-                        name="any_features"
-                        value="water_front"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_5">Waterfront</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_6"
-                        name="any_features"
-                        value="pets"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_6">Pets</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_7"
-                        name="any_features"
-                        value="furnished"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_7">Furnished</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_8"
-                        name="any_features"
-                        value="boat_dock"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_8">Boat Dock</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_9"
-                        name="any_features"
-                        value="short_sale"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_9">Short Sales</label>
-                    </div>
-                    <div className="ib-chk-wrapper">
-                      <input
-                        type="checkbox"
-                        id="ib-amt-inner-amt_10"
-                        name="any_features"
-                        value="foreclosure"
-                      />
-                      <label htmlFor="ib-amt-inner-amt_10">Foreclosures</label>
-                    </div>
+                   <FilterModalFeatures/>
                   </div>
                 </div>
               </div>
@@ -524,11 +428,11 @@ const FilterModal = ()=> {
           </div>
 
           <div className="ib-modal-footer">
-            <a href="#" className="ib-link">
+            <a onClick={() =>handleClean()} className="ib-link">
               Clear
             </a>
             <button className="ib-btn js-submit-filter">
-              View 4K Listings
+              View {formatShortPriceX(itemscount)} Listings
             </button>
           </div>
         </div>

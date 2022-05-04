@@ -1,6 +1,140 @@
+import { convertParamsArray } from '../utils/utils'
+
 export const API_SEARCH_URL = 'https://api.idxboost.dev/search_filter_lookup'
-export const ACCESS_TOKEN = window.location.host === 'localhost:3000' ?  "YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ" : window.__flex_g_settings.accessToken
+export const ACCESS_TOKEN =
+  window.location.host === 'localhost:3000'
+    ? 'YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ'
+    : window.__flex_g_settings.accessToken
 export const API_PROPERTIES_DETAIL = 'https://api.idxboost.dev/listings/'
-export const API_PROPERTIES_DETAIL_CHART = 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details';
-export const ACCESS_TOKEN_FORM = window.location.host === 'localhost:3000' ?  "YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ" : window.__flex_g_settings.accessToken
-export const API_AUTOCOMPLETE_URL = 'https://api.idxboost.dev/rentals_autocomplete_lookup'
+export const API_PROPERTIES_DETAIL_CHART =
+  'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details'
+export const ACCESS_TOKEN_FORM =
+  window.location.host === 'localhost:3000'
+    ? 'YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ'
+    : window.__flex_g_settings.accessToken
+export const API_AUTOCOMPLETE_URL =
+  'https://api.idxboost.dev/rentals_autocomplete_lookup'
+
+var temp_property_type = [
+  {
+    label: 'Single Family Homes',
+    value: 2,
+  },
+  {
+    label: 'Condominiums',
+    value: 1,
+  },
+  {
+    label: 'Townhouses',
+    value: 'tw',
+  },
+  {
+    label: 'Multi-Family',
+    value: 'mf',
+  },
+  {
+    label: 'Vacant Land',
+    value: 'valand',
+  },
+]
+
+export const property_type_d =
+  window.location.host === 'localhost:3000'
+    ? temp_property_type
+    : window.__flex_g_settings.params.property_types
+
+const amenities = [
+  {
+    name: 'Swimming Pool',
+    code: 'pool',
+  },
+  {
+    name: 'Golf Course',
+    code: 'golf',
+  },
+  {
+    name: 'Tennis Courts',
+    code: 'tennis',
+  },
+  {
+    name: 'Gated Community',
+    code: 'gated_community',
+  },
+  {
+    name: 'Penthouse',
+    code: 'penthouse',
+  },
+  {
+    name: 'Waterfront',
+    code: 'water_front',
+  },
+  {
+    name: 'Pets',
+    code: 'pets',
+  },
+  {
+    name: 'Furnished',
+    code: 'furnished',
+  },
+  {
+    name: 'Equestrian',
+    code: 'equestrian',
+  },
+  {
+    name: 'Boat Dock',
+    code: 'boat_dock',
+  },
+  {
+    name: 'Short Sales',
+    code: 'short_sale',
+  },
+  {
+    name: 'Foreclosures',
+    code: 'foreclosure',
+  },
+]
+
+export const amenities_d =
+  window.location.host === 'localhost:3000'
+    ? convertParamsArray(amenities)
+    : convertParamsArray(window.__flex_g_settings.params.amenities)
+
+const waterfront_options = [
+  {
+    name: 'Bay',
+    code: 'bay',
+  },
+  {
+    name: 'Canal',
+    code: 'canal',
+  },
+  {
+    name: 'Fixed Bridge',
+    code: 'fixed-bridge',
+  },
+  {
+    name: 'Intracoastal',
+    code: 'intracoastal',
+  },
+  {
+    name: 'Lake Front',
+    code: 'lake',
+  },
+  {
+    name: 'Ocean Access',
+    code: 'ocean-access',
+  },
+  {
+    name: 'Point Lot',
+    code: 'point-lot',
+  },
+  {
+    name: 'River Front',
+    code: 'river',
+  },
+]
+
+export const waterfront_options_d =
+  window.location.host === 'localhost:3000'
+    ? convertParamsArray(waterfront_options)
+    : convertParamsArray(window.__flex_g_settings.params.waterfront_options)
