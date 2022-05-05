@@ -57,3 +57,12 @@
 .ant-tabs-tab-btn {
   box-shadow: none !important;
 }
+.ant-tabs-nav-list{
+  width: 100%;
+}
+.ant-tabs-tab {
+  width: 35%;
+  /* display: flex;
+  justify-content: center; */
+}
+
