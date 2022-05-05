@@ -5,6 +5,7 @@ import {
   getpropertiesItems,
   getloading,
   updateForm,
+  updateTriggered,
 } from '../../config/slices/properties'
 import FilterContext from '../../Contexts/FilterContext'
 import PropertiesItem from './PropertiesItem'
@@ -24,6 +25,43 @@ function Properties() {
     dispatch(updateForm({ page: 1, sort_type: query }))
     dispatch(fetchAsyncSearch())
   }
+
+  
+  const handleClean = () => {
+    var params = {
+      sale_type: '',
+      property_type: [],
+      filter_search_keyword_label: '',
+      filter_search_keyword_type: '',
+      waterfront_options: '',
+      polygon_search: '',
+      rect: '',
+      zm: '',
+      parking_options: '',
+      amenities: '',
+      min_sale_price: '',
+      max_sale_price: '',
+      min_rent_price: '',
+      max_rent_price: '',
+      min_beds: '',
+      max_beds: '',
+      min_baths: '',
+      max_baths: '',
+      min_living_size: '',
+      max_living_size: '',
+      min_lot_size: '',
+      max_lot_size: '',
+      min_year: '',
+      max_year: '',
+      sort_type: '',
+      page: '',
+    }
+    dispatch(updateTriggered('no'))
+    dispatch(updateForm(params))
+    dispatch(fetchAsyncSearch())
+  }
+
+
   const renderItem = (index, itemData, hackbox) => {
     return (
       <PropertiesItem
@@ -117,7 +155,7 @@ function Properties() {
             <span className="ib-gnpno">No matching results...</span>Modify
             your <span className="ib-gnpoall">filter</span> preferences to
             get new results or{' '}
-            <span className="ib-gnpclear" onClick={null}>
+            <span className="ib-gnpclear" onClick={handleClean}>
               clear
             </span>{' '}
             your search.

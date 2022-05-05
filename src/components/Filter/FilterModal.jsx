@@ -1,21 +1,27 @@
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { fetchAsyncSearch } from "../../config/actions/properties"
-import { getpropertiesItems, updateForm, updateTriggered } from "../../config/slices/properties"
-import { formatShortPriceX } from "../../utils/utils"
-import FilterModalFeatures from "./FilterModalFeatures"
-import FilterPropertyType from "./FilterPropertyType"
-import FilterSaleType from "./FilterSaleType"
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAsyncSearch } from '../../config/actions/properties'
 
-const FilterModal = ()=> {
+import {
+  getpropertiesItems,
+  updateForm,
+  updateTriggered,
+} from '../../config/slices/properties'
+import { formatShortPriceX } from '../../utils/utils'
+import FilterModalFeatures from './FilterModalFeatures'
+import FilterModalWaterfront from './FilterModalWaterfront'
+import FilterPropertyType from './FilterPropertyType'
+import FilterSaleType from './FilterSaleType'
+
+const FilterModal = () => {
   const propertiesItems = useSelector(getpropertiesItems)
   const dispatch = useDispatch()
   const [itemscount, setItems] = useState(0)
 
   useEffect(() => {
-    var {pagination} = propertiesItems
+    var { pagination } = propertiesItems
     setItems(pagination.count)
-  },[propertiesItems])
+  }, [propertiesItems])
 
   const handleClean = () => {
     var params = {
@@ -382,25 +388,7 @@ const FilterModal = ()=> {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Waterfront Description</span>
                   <div className="ms-flex-wp">
-                    <select
-                      style={{
-                        width: '100%',
-                        padding: '15px',
-                        fontSize: '14px',
-                        border: '1px solid #e3e3e3',
-                        borderRadius: '6px',
-                      }}
-                    >
-                      <option value="--">Any</option>
-                      <option value="bay">Bay</option>
-                      <option value="canal">Canal</option>
-                      <option value="fixed-bridge">Fixed Bridge</option>
-                      <option value="intracoastal">Intracoastal</option>
-                      <option value="lake">Lake Front</option>
-                      <option value="ocean-access">Ocean Access</option>
-                      <option value="point-lot">Point Lot</option>
-                      <option value="river">River Front</option>
-                    </select>
+                    <FilterModalWaterfront/>
                   </div>
                 </div>
               </div>
@@ -410,7 +398,7 @@ const FilterModal = ()=> {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Property Type</span>
                   <div className="ib-typesList">
-                  <FilterPropertyType />
+                    <FilterPropertyType />
                   </div>
                 </div>
               </div>
@@ -420,7 +408,7 @@ const FilterModal = ()=> {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Features</span>
                   <div className="ib-typesList">
-                   <FilterModalFeatures/>
+                    <FilterModalFeatures />
                   </div>
                 </div>
               </div>
@@ -428,7 +416,7 @@ const FilterModal = ()=> {
           </div>
 
           <div className="ib-modal-footer">
-            <a onClick={() =>handleClean()} className="ib-link">
+            <a onClick={() => handleClean()} className="ib-link">
               Clear
             </a>
             <button className="ib-btn js-submit-filter">

@@ -138,3 +138,34 @@ export const waterfront_options_d =
   window.location.host === 'localhost:3000'
     ? convertParamsArray(waterfront_options)
     : convertParamsArray(window.__flex_g_settings.params.waterfront_options)
+
+const parking_options = [
+  {
+    label: '1',
+    value: 1,
+  },
+  {
+    label: '2',
+    value: 2,
+  },
+  {
+    label: '3',
+    value: 3,
+  },
+  {
+    label: '4',
+    value: 4,
+  },
+  {
+    label: '5',
+    value: 5,
+  },
+  {
+    label: '5+',
+    value: 6,
+  },
+]
+export const parking_options_d =
+  window.location.host === 'localhost:3000'
+    ? parking_options
+    : window.__flex_g_settings.params.parking_options
