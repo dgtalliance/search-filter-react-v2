@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ModalPropertyMap from "../common/ModalPropertyMap";
 import axios from "axios";
 import { fetchAsyncDetails } from "../../config/actions/propertiesDetails";
-import { Select } from "antd";
+import { Select, Spin } from "antd";
 import { Segmented } from "antd";
 
 import {
@@ -20,7 +20,7 @@ import ModalSendToFriend from "./ModalSendToFriend";
 import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
 import { Chart } from "./Chart";
 
-import { Tabs } from "antd";
+import { ChartTabs } from "./ChartTabs";
 
 export const ModalDetailProperties = () => {
   const { closeModal, openModal, setSlug, slug, modalData } =
@@ -38,6 +38,8 @@ export const ModalDetailProperties = () => {
   const [chartDataApi, setChartDataApi] = useState([]);
   const [chartDataShow, setChartDataShow] = useState({});
   const [defaultHome, setDefaultHome] = useState("1");
+  const [defaultCity, setDefaultCity] = useState("city");
+  const [loadingDataChart, setLoadingDataChart] = useState(true);
   const [defaultTab, setDefaultTab] = useState("media_price");
   const [defaultYears, setDefaultYears] = useState(1);
   const [defaultYearsSegment, setDefaultYearsSegment] = useState("1 year");
@@ -136,6 +138,13 @@ export const ModalDetailProperties = () => {
   }, [propertiesData]);
 
   const chartsDetails = async () => {
+    setDefaultHome("1");
+    setDefaultTab("media_price");
+    setDefaultYears(1);
+    setDefaultYearsSegment("1 year");
+    setLoadingDataChart(true);
+    setDefaultCity("city");
+
     const response = await axios.get(
       API_PROPERTIES_DETAIL_CHART +
         `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
@@ -143,15 +152,16 @@ export const ModalDetailProperties = () => {
 
     if (response.data.length != 0) {
       setChartDataApi(response.data);
+      setChartDataShow({});
       setChartDataShow({
         categories: response.data.value.city.month,
-        series: response.data.value.city.metadata[defaultHome][defaultTab],
+        series: response.data.value.city.metadata["1"]["media_price"],
       });
+      setLoadingDataChart(false);
     }
   };
 
   //cart events
-  const { TabPane } = Tabs;
 
   const { Option } = Select;
 
@@ -159,9 +169,17 @@ export const ModalDetailProperties = () => {
     console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
-      series: chartDataApi.value.city.metadata[value][defaultTab],
+      series: chartDataApi.value[defaultCity].metadata[value][defaultTab],
     });
     setDefaultHome(value);
+  }
+  function onChangeCity(value) {
+    console.log(`selected ${value}`);
+    setChartDataShow({
+      ...chartDataShow,
+      series: chartDataApi.value[value].metadata[defaultHome][defaultTab],
+    });
+    setDefaultCity(value);
   }
   function changeYear(value) {
     setDefaultYears(value.charAt(0));
@@ -175,7 +193,7 @@ export const ModalDetailProperties = () => {
   function callback(key) {
     setChartDataShow({
       ...chartDataShow,
-      series: chartDataApi.value.city.metadata[defaultHome][key],
+      series: chartDataApi.value[defaultCity].metadata[defaultHome][key],
     });
     setDefaultTab(key);
   }
@@ -456,6 +474,8 @@ export const ModalDetailProperties = () => {
                         setDefaultTab("media_price");
                         setDefaultYears(1);
                         setDefaultYearsSegment("1 year");
+                        setChartDataShow({});
+                        setDefaultCity("city");
                         closeModal();
                       }}
                     ></button>
@@ -1098,7 +1118,6 @@ export const ModalDetailProperties = () => {
                                     onClick={() =>
                                       handleOpenModal(element.mls_num)
                                     }
-                                    href="#"
                                   >
                                     Details of
                                     {element.address_short}
@@ -1335,117 +1354,73 @@ export const ModalDetailProperties = () => {
                     </div> */}
 
                     {Object.keys(chartDataShow).length > 0 && (
-                      <div style={{ padding: 12 }}>
-                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                          <Select
-                            style={{ width: 300, marginBottom: 12 }}
-                            showSearch
-                            placeholder="Select a home type"
-                            optionFilterProp="children"
-                            onChange={onChange}
-                            value={defaultHome}
-                            onSearch={onSearch}
-                            filterOption={(input, option) =>
-                              option.children
-                                .toLowerCase()
-                                .indexOf(input.toLowerCase()) >= 0
-                            }
+                      <Spin spinning={loadingDataChart}>
+                        <div style={{ padding: 12 }}>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              marginBottom: '15px'
+                            }}
                           >
-                            <Option value="1">Condos</Option>
-                            <Option value="2">Homes</Option>
-                            <Option value="26">Lands</Option>
-                            <Option value="100">TownHomes</Option>
-                          </Select>
-                          <Segmented
-                            options={["1 year", "2 years", "3 years"]}
-                            value={defaultYearsSegment}
-                            onChange={changeYear}
-                          />
+                            <div>
+                            <Select
+                              style={{ width: 200, marginRight: 10}}
+                              showSearch
+                              placeholder="Select"
+                              optionFilterProp="children"
+                              onChange={onChangeCity}
+                              value={defaultCity}
+                              onSearch={onSearch}
+                              filterOption={(input, option) =>
+                                option.children
+                                  .toLowerCase()
+                                  .indexOf(input.toLowerCase()) >= 0
+                              }
+                            >
+                              <Option value="city">City</Option>
+                              <Option value="zip">Zip</Option>
+                            </Select>
+                            <Select
+                              style={{ width: 200 }}
+                              showSearch
+                              placeholder="Select a home type"
+                              optionFilterProp="children"
+                              onChange={onChange}
+                              value={defaultHome}
+                              onSearch={onSearch}
+                              filterOption={(input, option) =>
+                                option.children
+                                  .toLowerCase()
+                                  .indexOf(input.toLowerCase()) >= 0
+                              }
+                            >
+                              <Option value="1">Condos</Option>
+                              <Option value="2">Homes</Option>
+                              <Option value="26">Lands</Option>
+                              <Option value="100">TownHomes</Option>
+                            </Select>
+                            </div>
+                            
+                            <Segmented
+                              options={["1 year", "2 years", "3 years"]}
+                              value={defaultYearsSegment}
+                              onChange={changeYear}
+                            />
+                          </div>
+
+                          <ChartTabs
+                            callback={callback}
+                            defaultTab={defaultTab}
+                            chartDataApi={chartDataApi}
+                            defaultHome={defaultHome}
+                            chartDataShow={chartDataShow}
+                            defaultYears={defaultYears}
+                            defaultCity={defaultCity}
+                          ></ChartTabs>
                         </div>
-                        <Tabs onChange={callback} type="card">
-                          <TabPane
-                            tab={
-                              <div>
-                                <h3>Median Sale Price</h3>
-                                <h3>$800,200</h3>
-                                <h5>
-                                  <span>
-                                    +
-                                    {
-                                      chartDataApi.value.city.metadata[
-                                        defaultHome
-                                      ].percent.media_price_percent
-                                    }
-                                    %
-                                  </span>{" "}
-                                  year-over-year
-                                </h5>
-                              </div>
-                            }
-                            key="media_price"
-                          >
-                            <Chart
-                              chartData={chartDataShow}
-                              con={"media_price"}
-                              years={defaultYears}
-                            />
-                          </TabPane>
-                          <TabPane
-                            tab={
-                              <div>
-                                <h3># of Homes Sold</h3>
-                                <h3>12</h3>
-                                <h5>
-                                  <span>
-                                    +
-                                    {
-                                      chartDataApi.value.city.metadata[
-                                        defaultHome
-                                      ].percent.sold_cant_percent
-                                    }
-                                    %
-                                  </span>{" "}
-                                  year-over-year
-                                </h5>
-                              </div>
-                            }
-                            key="sold_cant"
-                          >
-                            <Chart
-                              chartData={chartDataShow}
-                              con={"sold_cant"}
-                              years={defaultYears}
-                            />
-                          </TabPane>
-                          <TabPane
-                            tab={
-                              <div>
-                                <h3>Median Days on Market</h3>
-                                <h3>12</h3>
-                                <h5>
-                                  <span>
-                                    +
-                                    {
-                                      chartDataApi.value.city.metadata[
-                                        defaultHome
-                                      ].percent.media_price_percent
-                                    }
-                                    %
-                                  </span>{" "}
-                                  year-over-year
-                                </h5>
-                              </div>
-                            }
-                            key="media_adom"
-                          >
-                            <Chart
-                              chartData={chartDataShow}
-                              con={"media_adom"}
-                              years={defaultYears}
-                            />
-                          </TabPane>
-                        </Tabs>
-                      </div>
+                      </Spin>
                     )}
 
                     <div className="ib-plist-details -map">
