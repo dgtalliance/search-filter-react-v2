@@ -1,27 +1,26 @@
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
-import { waterfront_options_d } from '../../config/config'
+import { parking_options_d } from '../../config/config'
 import { getparams, updateForm } from '../../config/slices/properties'
-const FilterModalWaterfront = () => {
+const FilterModalParking = () => {
   const dispatch = useDispatch()
-  
   const [selected, setSelected] = useState('--')  
   const params = useSelector(getparams)
 
   useEffect(() => {
-    setSelected(params.waterfront_options)
+    setSelected(params.parking_options)
   },[params])
 
   const onChangeValue = (e) => {
     var params = {
-      waterfront_options: e.target.value,
+      parking_options: e.target.value,
     }
     var temp = e.target.value
 
     if (temp === '--') {
       params = {
-        waterfront_options: '',
+        parking_options: '',
       }
     }
 
@@ -38,13 +37,13 @@ const FilterModalWaterfront = () => {
           border: '1px solid #e3e3e3',
           borderRadius: '6px',
         }}
-        value= {selected}
+        value={selected}
         onChange={onChangeValue}
       >
         <option value="--">Any</option>
-        {Object.keys(waterfront_options_d).length > 0 && (
+        {Object.keys(parking_options_d).length > 0 && (
           <>
-            {waterfront_options_d.map((item, index) => {
+            {parking_options_d.map((item, index) => {
               return (
                 <option key={index} value={item.value}>
                   {item.label}
@@ -58,4 +57,4 @@ const FilterModalWaterfront = () => {
   )
 }
 
-export default FilterModalWaterfront
+export default FilterModalParking

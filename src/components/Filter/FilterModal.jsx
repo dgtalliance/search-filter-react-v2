@@ -9,6 +9,7 @@ import {
 } from '../../config/slices/properties'
 import { formatShortPriceX } from '../../utils/utils'
 import FilterModalFeatures from './FilterModalFeatures'
+import FilterModalParking from './FilterModalParking'
 import FilterModalWaterfront from './FilterModalWaterfront'
 import FilterPropertyType from './FilterPropertyType'
 import FilterSaleType from './FilterSaleType'
@@ -362,23 +363,7 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Parking Spaces</span>
                   <div className="ms-flex-wp">
-                    <select
-                      style={{
-                        width: '100%',
-                        padding: '15px',
-                        fontSize: '14px',
-                        border: '1px solid #e3e3e3',
-                        borderRadius: '6px',
-                      }}
-                    >
-                      <option value="--">Any</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">5+</option>
-                    </select>
+                    <FilterModalParking/>
                   </div>
                 </div>
               </div>
