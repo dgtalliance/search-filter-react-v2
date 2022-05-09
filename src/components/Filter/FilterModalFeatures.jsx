@@ -16,8 +16,10 @@ const FilterModalFeatures = () => {
     if (Array.isArray(amenities)) {
       setlistCheck(amenities)
     } else {
-      var temp = amenities.split(',')
-      setlistCheck(temp)
+      if(amenities!== undefined){
+        var temp = amenities.split(',')
+        setlistCheck(temp)
+      }
     }
   }, [params])
 

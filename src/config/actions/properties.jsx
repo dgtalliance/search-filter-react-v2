@@ -1,7 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { generateSlug } from '../../utils/utils'
-import { ACCESS_TOKEN, API_SEARCH_URL } from '../config'
+import { ACCESS_TOKEN, API_SEARCH_FILTER_URL } from '../config'
 import Cookies from 'js-cookie'
 import { defaultPropsShortCode } from '../../App'
 
@@ -20,7 +20,7 @@ export const fetchAsyncSearch = createAsyncThunk(
     try {
       const body = `access_token=${ACCESS_TOKEN}&search_filter_id=${filter_id}&flex_credentials=${flex_credentials}&event_triggered=${event_triggered}&query_params=${query_params_val}&device_width=${window.innerWidth}&post_params=${post_params}`
     
-      const response = await axios.post(API_SEARCH_URL, body)
+      const response = await axios.post(API_SEARCH_FILTER_URL, body)
 
       if (response.data.length != 0) {
         if(response.data?.success !== false){
