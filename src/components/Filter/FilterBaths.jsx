@@ -70,6 +70,7 @@ const FilterBaths = ({
     if (!isNaN(min_v) && isNaN(max_v)) {
       setOptions(optionsAny)
       setexactMatch(false)
+      setActiveMatch(false)
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(10)
@@ -80,6 +81,7 @@ const FilterBaths = ({
       setOptions(optionsAny)
       setvalueOption(max_v)
       setexactMatch(false)
+      setActiveMatch(false)
     }
     setMinBaths(!isNaN(min_v) ? min_v : 0)
     setMaxBaths(!isNaN(max_v) ? max_v : 10)
