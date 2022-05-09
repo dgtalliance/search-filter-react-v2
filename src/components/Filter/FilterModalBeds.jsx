@@ -1,7 +1,8 @@
 import { memo, useEffect, useState } from 'react'
 import { Checkbox, Radio } from 'antd'
-import { getparams } from '../../config/slices/properties'
-import { useSelector } from 'react-redux'
+import { getparams, updateForm } from '../../config/slices/properties'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchAsyncSearch } from '../../config/actions/properties'
 
 const optionsAny = [
   { label: 'Any', value: 0 },
@@ -20,19 +21,16 @@ const optionsStudio = [
   { label: '5', value: 5 },
 ]
 
-const FilterModalBeds = ({
-
-  setMinBeds,
-  setMaxBeds,
-  setActiveMatch,
-}) => {
+const FilterModalBeds = () => {
   const [exactMatch, setexactMatch] = useState(false)
   const [options, setOptions] = useState(optionsAny)
   const [valueOption, setvalueOption] = useState(0)
   const [selectLeft, setselectLeft] = useState(10)
   const [selectRight, setselectRight] = useState(10)
-  const [error, setError] = useState(false)
 
+  const [error, setError] = useState(false)
+  const [typingTimeout, setTypingTimeout] = useState(0)
+  const dispatch = useDispatch()
   const params = useSelector(getparams)
 
   useEffect(() => {
@@ -48,23 +46,19 @@ const FilterModalBeds = ({
       setselectLeft(10)
       setselectRight(10)
     }
-
     if (!isNaN(min_v) && !isNaN(max_v) && max_v === min_v) {
       setexactMatch(true)
       setOptions(optionsStudio)
-     // setActiveMatch(true)
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
       console.log('2 Beds', min_v, max_v)
     }
-
     if (!isNaN(min_v) && !isNaN(max_v) && max_v !== min_v) {
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
       setOptions(optionsAny)
-     // setActiveMatch(false)
       console.log('3 Beds', min_v, max_v)
     }
 
@@ -82,24 +76,47 @@ const FilterModalBeds = ({
       setvalueOption(max_v)
       setexactMatch(false)
     }
-  //  setMinBeds(!isNaN(min_v) ? min_v : 0)
-   // setMaxBeds(!isNaN(max_v) ? max_v : 10)
   }, [params])
+
+  const updateQuery = (min, max) => {
+    if (typingTimeout) {
+      clearTimeout(typingTimeout)
+    }
+    setTypingTimeout(
+      setTimeout(function () {
+        console.log('typingTimeout', min, max)
+
+        var temp = {
+          min_beds: parseInt(min) === 10 ? '' : min,
+          max_beds: parseInt(max) === 10 ? '' : max,
+          page: 1,
+        }
+        if (min > max) {
+          setError(true)
+          return
+        } else {
+          setError(false)
+          dispatch(updateForm(temp))
+          dispatch(fetchAsyncSearch())
+        }
+      }, 1000),
+    )
+  }
 
   const onChangeExact = (e) => {
     setexactMatch(e.target.checked)
-   // setActiveMatch(e.target.checked)
+    var min, max
     !e.target.checked ? setOptions(optionsAny) : setOptions(optionsStudio)
     if (e.target.checked) {
       setselectLeft(valueOption)
       setselectRight(valueOption)
-     // setMinBeds(valueOption)
-     // setMaxBeds(valueOption)
+      min = valueOption !== 10 ? valueOption : 10
+      max = valueOption !== 10 ? valueOption : 10
     } else {
       setselectLeft(valueOption)
       setselectRight(10)
-    //  setMinBeds(valueOption)
-    //  setMaxBeds(10)
+      min = valueOption !== 10 ? valueOption : 10
+      max = 10
     }
 
     if (parseInt(valueOption) === 0 && !e.target.checked) {
@@ -109,51 +126,54 @@ const FilterModalBeds = ({
 
     if (parseInt(valueOption) <= parseInt(selectRight)) {
       setError(false)
+      updateQuery(min, max)
     } else {
       setError(true)
     }
   }
   const onChangeBtn = (e) => {
     var temp = parseInt(e.target.value)
-    setvalueOption(temp)
-    if (exactMatch) {
-      setselectLeft(temp)
-      setselectRight(temp)
 
-     // setMinBeds(temp)
-     // setMaxBeds(temp)
-    } else {
-      setselectLeft(temp)
-      setselectRight(10)
-
-    //  setMinBeds(temp)
-    //  setMaxBeds(10)
-    }
-    if (parseInt(temp) === 0) {
-      setselectLeft(10)
-      setselectRight(10)
-
-    //  setMinBeds(temp)
-   //  setMaxBeds(temp)
-    }
-    if (parseInt(temp) === 0 && exactMatch) {
-      setselectLeft(0)
-      setselectRight(0)
-
-    //  setMinBeds(temp)
-    //  setMaxBeds(temp)
-    }
     if (parseInt(valueOption) <= parseInt(selectRight)) {
       setError(false)
     } else {
       setError(true)
+      return
     }
+    var min, max
+
+    setvalueOption(temp)
+    if (exactMatch) {
+      setselectLeft(temp)
+      setselectRight(temp)
+      min = temp
+      max = temp
+    } else {
+      setselectLeft(temp)
+      setselectRight(10)
+      min = temp
+      max = 10
+    }
+    if (parseInt(temp) === 0) {
+      setselectLeft(10)
+      setselectRight(10)
+      min = 10
+      max = 10
+    }
+    if (parseInt(temp) === 0 && exactMatch) {
+      setselectLeft(0)
+      setselectRight(0)
+      min = temp
+      max = temp
+    }
+    updateQuery(min, max)
   }
   const handleChangeStudioLeft = (e) => {
     var temp = parseInt(e.target.value)
     setselectLeft(temp !== 10 ? temp : 10)
-   // setMinBeds(temp !== 10 ? temp : 10)
     setvalueOption(temp !== 10 ? temp : 10)
+    var min = temp !== 10 ? temp : 10
+    var max = selectRight !== 10 ? selectRight : 10
 
     if (parseInt(temp) === 10) {
       setvalueOption(0)
@@ -164,41 +184,41 @@ const FilterModalBeds = ({
     if (parseInt(temp) === 0) {
       setexactMatch(true)
       setOptions(optionsStudio)
-     // setActiveMatch(true)
       setvalueOption(0)
       setselectRight(0)
-    //  setMinBeds(temp !== 10 ? temp : 10)
-    //  setMaxBeds(temp !== 10 ? temp : 10)
+      min = temp !== 10 ? temp : 10
+      max = temp !== 10 ? temp : 10
     }
     if (exactMatch) {
       setselectRight(temp)
-    //  setMinBeds(temp !== 10 ? temp : 10)
-     // setMaxBeds(temp !== 10 ? temp : 10)
+      min = temp !== 10 ? temp : 10
+      max = temp !== 10 ? temp : 10
     }
-    if (temp <= parseInt(selectRight)) {
+    if (temp <= max) {
       setError(false)
+      updateQuery(min, max)
     } else {
       setError(true)
+      return
     }
   }
   const handleChangeStudioRight = (e) => {
     var temp = parseInt(e.target.value)
-    setselectRight(temp)
-    //setMaxBeds(temp)
+    setselectRight(temp)    
     if (parseInt(valueOption) <= temp) {
       setError(false)
+      updateQuery(valueOption, temp !== 10 ? temp : 10)
     } else {
       setError(true)
+      return
     }
 
     if (temp === valueOption) {
-    //  setActiveMatch(true)
       setOptions(optionsStudio)
       setexactMatch(true)
       setvalueOption(temp)
     }
     if (parseInt(valueOption) < temp) {
-     // setActiveMatch(false)
       setOptions(optionsAny)
       setexactMatch(false)
     }

@@ -1,4 +1,4 @@
-import { memo, useContext, useEffect } from 'react'
+import { memo, useContext, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import {
@@ -21,10 +21,10 @@ function Properties() {
   useEffect(() => {
     setSlug(propertiesItems.slug)
   }, [propertiesItems])
-
-  
-
+  const infoSearch = useRef() 
+ 
   const handleClean = () => {
+   
     var params = {
       sale_type: '',
       property_type: [],
@@ -73,7 +73,7 @@ function Properties() {
       <>
         {Object.keys(propertiesItems?.items).length > 0 ? (
           <>
-            <div className="ib-wrapper-info-search">
+            <div className="ib-wrapper-info-search" ref={infoSearch}>
               <span className="ib-text-info">
                 {`Showing ${propertiesItems.pagination.start} to ${propertiesItems.pagination.end} of ${propertiesItems.pagination.count} Properties.`}
               </span>
