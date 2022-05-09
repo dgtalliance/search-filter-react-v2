@@ -12,7 +12,7 @@ export const fetchAsyncDetails = createAsyncThunk(
     
       const response = await axios.post(API_PROPERTIES_DETAIL + arg, body)
 
-      console.log(response.status)
+      // console.log(response.status)
       if (response.data.length != 0) {
         return {
           data: response.data,

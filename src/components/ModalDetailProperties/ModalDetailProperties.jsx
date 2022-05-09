@@ -149,7 +149,7 @@ export const ModalDetailProperties = () => {
 
     const response = await axios.get(
       API_PROPERTIES_DETAIL_CHART +
-        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+      `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
     );
 
     if (response.data.length != 0) {
@@ -168,7 +168,7 @@ export const ModalDetailProperties = () => {
   const { Option } = Select;
 
   function onChange(value) {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[defaultCity].metadata[value][defaultTab],
@@ -176,7 +176,7 @@ export const ModalDetailProperties = () => {
     setDefaultHome(value);
   }
   function onChangeCity(value) {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[value].metadata[defaultHome][defaultTab],
@@ -189,7 +189,7 @@ export const ModalDetailProperties = () => {
   }
 
   function onSearch(val) {
-    console.log("search:", val);
+    // console.log("search:", val);
   }
 
   function callback(key) {
@@ -286,7 +286,7 @@ export const ModalDetailProperties = () => {
     for (const prop in params) {
       shareURL += `&${prop}=${encodeURIComponent(params[prop])}`;
     }
-    console.log(shareURL);
+    // console.log(shareURL);
     const wo = window.open(
       shareURL,
       "",

@@ -18,7 +18,14 @@ export const ChartTabs = ({
   const median = (arr) => {
     const mid = Math.floor(arr.length / 2),
       nums = [...arr].sort((a, b) => a - b);
-    return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+    let m = arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+     return(
+       <>
+       {
+         m === 0 ? <span style={{color: 'red'}}>N/A</span> : <>${m}</>
+       }
+       </>
+     );
   };
 
   const sold = (arr) => {
@@ -37,7 +44,6 @@ export const ChartTabs = ({
           <div>
             <h3>Median Sale Price</h3>
             <h3>
-              $
               {median(
                 chartDataApi.value[defaultCity].metadata[defaultHome][
                   "media_price"
@@ -124,7 +130,8 @@ export const ChartTabs = ({
           <div>
             <h3>Median Days on Market</h3>
             <h3>
-              {median(
+              
+               {median(
                 chartDataApi.value[defaultCity].metadata[defaultHome][
                   "media_adom"
                 ].slice(-12 * defaultYears)
