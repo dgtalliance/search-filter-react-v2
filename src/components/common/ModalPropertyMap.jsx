@@ -1,5 +1,6 @@
 import React, { useRef,useEffect  } from 'react';
 import GoogleMapReact from 'google-map-react';
+import { GOOGLEMAPREACTKEY } from '../../config/config';
 
 
 const ModalPropertyMap = (
@@ -179,7 +180,7 @@ const ModalPropertyMap = (
          
         <GoogleMapReact
           bootstrapURLKeys={{
-            key: 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4',
+            key: GOOGLEMAPREACTKEY,
             language: 'en',
             region: 'us',
           }}
