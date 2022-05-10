@@ -90,6 +90,7 @@ function Properties() {
               <PropertiesPaginate
                 pagination={propertiesItems.pagination}
                 current={propertiesItems.currentpage}
+                infoSearch={infoSearch}
               />
             </div>
           </>

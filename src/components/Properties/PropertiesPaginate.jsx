@@ -1,15 +1,19 @@
-import { memo, useCallback } from 'react'
+import { memo, useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import { updateForm } from '../../config/slices/properties'
 
-function PropertiesPaginate({ pagination, current }) {
+function PropertiesPaginate({ pagination, current,infoSearch }) {
   const { prev, next, range } = pagination
   const dispatch = useDispatch()
+  useEffect(() => {
+    infoSearch.current.scrollIntoView({behavior: "smooth"})
+  },[pagination])
 
   console.log('Render PropertiesPaginate')
   const paginate = useCallback((page) => {
     console.log('page', page)
+    
     dispatch(updateForm({ page }))
     dispatch(fetchAsyncSearch())
   })
