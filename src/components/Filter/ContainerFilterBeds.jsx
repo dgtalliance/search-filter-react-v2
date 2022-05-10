@@ -12,26 +12,29 @@ function ContainerFilterBeds() {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = () => {
-    console.log('TitleChange', minBeds, maxBeds, activeMatch)
-    if (parseInt(minBeds) !== 10) {
-      if (activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+  const TitleChange = (minBedsv, maxBedsv, activeMatchv) => {
+    console.log('TitleChange', minBedsv, maxBedsv, activeMatchv)
+    if (parseInt(minBedsv) !== 10) {
+      if (activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 0) {
         settitle('Studio Beds')
       }
 
-      if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+      if (!activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 0) {
+        settitle('Any Beds')
+      }
+      if (!activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 10) {
         settitle('Any Beds')
       }
 
-      if (activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Beds: ' + minBeds)
+      if (activeMatchv && parseInt(minBedsv) !== 0) {
+        settitle('Beds: ' + minBedsv)
       }
-      if (!activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Beds: ' + minBeds + '+')
+      if (!activeMatch && parseInt(minBedsv) !== 0) {
+        settitle('Beds: ' + minBedsv + '+')
       }
-      if (activeMatch && parseInt(minBeds) !== 0 && parseInt(maxBeds) !== 0) {
-        if (parseInt(maxBeds) !== 10) {
-          settitle('Beds: ' + minBeds + '-' + maxBeds)
+      if (activeMatch && parseInt(minBedsv) !== 0 && parseInt(maxBedsv) !== 0) {
+        if (parseInt(maxBedsv) !== 10) {
+          settitle('Beds: ' + minBedsv + '-' + maxBedsv)
         }
       }
     } else {
@@ -40,7 +43,8 @@ function ContainerFilterBeds() {
   }
 
   useEffect(() => {
-    TitleChange()
+    TitleChange(minBeds, maxBeds, activeMatch)
+    console.log('my change',minBeds, maxBeds, activeMatch)
   }, [minBeds, maxBeds, activeMatch])
 
   const cleanBeds = () => {
@@ -49,18 +53,18 @@ function ContainerFilterBeds() {
     dispatch(fetchAsyncSearch())
     settitle('Any Beds')
     setActiveMatch(false)
+    setMinBeds(0)
+    setMaxBeds(0)
+    setError(false)
   }
   const handleClick = () => {
-    var beds = {}
     var min = parseInt(minBeds)
     var max = parseInt(maxBeds)
-    if (min > max) {
-      setError(true)
+    if (min > max && max !==10) {
       return
-    } else {
+    } /*  else {
       setError(false)
-    }
-    console.log('Click', min, max)
+    } */
     var min_temp = min !== 10 ? min : ''
     var max_temp = max !== 10 ? max : ''
 
@@ -69,7 +73,7 @@ function ContainerFilterBeds() {
       max_temp = max_temp === 0 ? '' : max_temp
     }
 
-    beds = { min_beds: min_temp, max_beds: max_temp, page: 1 }
+    var beds = { min_beds: min_temp, max_beds: max_temp, page: 1 }
     dispatch(updateForm(beds))
     dispatch(fetchAsyncSearch())
   }

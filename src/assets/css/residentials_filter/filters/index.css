@@ -464,10 +464,10 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 15px 20px;
+  padding: 15px 0 0;
   background-color: var(--color-white);
   border-top: 1px solid var(--color-border);
-  margin-top: -1px; }
+  margin-top: 15px; }
   .ib-dropdown .ib-modal-footer .ib-btn,
   .ib-guests-search-modal .ib-modal-footer .ib-btn {
     border-radius: 4px;
@@ -659,10 +659,10 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 15px 20px;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  position: relative; }
+  position: relative;
+  padding: 0; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-flex-item,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-flex-item {
     width: 48%;
@@ -729,11 +729,14 @@
     margin-bottom: 5px; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-title,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-title {
-    font-size: 15px;
-    font-weight: 600;
     display: block;
-    margin-bottom: 10px;
-    width: 100%; }
+    width: 100%;
+    background-color: var(--color-gray-title);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 13px 20px;
+    margin-bottom: 0; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-flex,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-flex {
     width: 100%;
@@ -762,6 +765,92 @@
   .ib-dropdown .ib-wrapper .ib-flex-wrapper.-border-top,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper.-border-top {
     border-top: 1px solid var(--color-border); }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper {
+    margin-top: 15px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start; }
+    .ib-dropdown .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper .ant-checkbox-inner,
+    .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper .ant-checkbox-inner {
+      display: none; }
+    .ib-dropdown .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper:before,
+    .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper:before {
+      content: "";
+      display: block;
+      width: 24px;
+      height: 24px;
+      border: 1px solid #b0b0b0;
+      border-radius: 4px;
+      position: relative;
+      -webkit-transition: all .3s;
+      -o-transition: all .3s;
+      transition: all .3s; }
+    .ib-dropdown .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:after,
+    .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:after {
+      content: "\e939";
+      font-family: var(--icons-font);
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: var(--color-white);
+      font-size: 12px;
+      padding-top: 1px; }
+    .ib-dropdown .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:before,
+    .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:before {
+      background-color: var(--color-gray);
+      border-color: var(--color-gray); }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper select,
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .select-Baths,
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .select-beds,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper select,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .select-Baths,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .select-beds {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    background: url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='%23000000' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>") no-repeat;
+    background-position: calc(100% - 0.75rem) center; }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-chk-list,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-chk-list {
+    padding: 15px; }
+    .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-chk-list.-round,
+    .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-chk-list.-round {
+      padding: 0; }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ms-flex-wp,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ms-flex-wp {
+    padding: 15px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between; }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-typesList,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-typesList {
+    padding: 15px; }
 
 .ib-dropdown .ib-wrapper .ib-chk-list.-round .ant-radio-group,
 .ib-guests-search-modal .ib-wrapper .ib-chk-list.-round .ant-radio-group {
@@ -801,6 +890,12 @@
   .ib-guests-search-modal .ib-wrapper .ms-flex .ms-txt {
     color: var(--color-gray);
     font-size: 14px; }
+
+.ib-guests-search-modal .ib-modal-footer {
+  padding: 15px 20px;
+  margin-top: -1px; }
+  .ib-guests-search-modal .ib-modal-footer .ant-btn {
+    height: auto; }
 
 .ant-select-dropdown {
   border-radius: 10px;
@@ -1085,6 +1180,10 @@
   padding: 13px 20px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px; }
+
+.ib-dropdown .ib-plsifb:before,
+.ib-dropdown .ib-plsitw:before {
+  display: none; }
 
 .ant-picker-range .ant-picker-active-bar {
   height: 4px; }
@@ -1380,6 +1479,33 @@
               -ms-transform: rotate(45deg);
               transform: rotate(45deg); }
 
+.error-label {
+  font-size: 13px;
+  line-height: 1.1;
+  color: red;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 10px 0;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start; }
+  .error-label:before {
+    content: "\ea07";
+    font-family: var(--icons-font);
+    font-size: 15px;
+    margin-right: 8px; }
+
+.ib-guests-search .ib-wrapper-item .ib-wrapper-dropdown .ib-action #text-types {
+  overflow: hidden;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 300px; }
+
 .ib-guests-search-modal {
   position: fixed;
   top: 0;
@@ -1496,7 +1622,20 @@
       @media screen and (min-width: 768px) {
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests {
           height: auto;
-          max-height: calc(100vh - 139px); } }
+          max-height: calc(100vh - 139px);
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+          -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+          justify-content: space-between; }
+          .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item {
+            width: 50%;
+            border-right: 1px solid #ebebeb; }
+            .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-full {
+              width: 100%; } }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item {
         border-bottom: 1px solid #ebebeb !important; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item:last-child {
@@ -1644,7 +1783,7 @@
       background-color: rgba(0, 0, 0, 0.25); }
       .ib-guests-search-modal .ib-wrapper-modal {
         padding-bottom: 0;
-        width: 600px;
+        width: 760px;
         margin: auto;
         height: auto;
         max-height: 90vh;

@@ -1,15 +1,41 @@
-import React, {useEffect, useLayoutEffect} from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 
 import { Tabs } from "antd";
 import { Chart } from "./Chart";
-export const ChartTabs = ({defaultTab,defaultCity, callback, chartDataApi, defaultHome, chartDataShow, defaultYears}) => {
+export const ChartTabs = ({
+  defaultTab,
+  defaultCity,
+  callback,
+  chartDataApi,
+  defaultHome,
+  chartDataShow,
+  defaultYears,
+}) => {
   const { TabPane } = Tabs;
 
- 
-  useEffect(()=>{
-   console.log('dddddddddddd', chartDataShow)
-  }, [])
-  
+  useEffect(() => {}, []);
+
+  const median = (arr) => {
+    const mid = Math.floor(arr.length / 2),
+      nums = [...arr].sort((a, b) => a - b);
+    let m = arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+     return(
+       <>
+       {
+         m === 0 ? <span style={{color: 'red'}}>N/A</span> : <>${m}</>
+       }
+       </>
+     );
+  };
+
+  const sold = (arr) => {
+    let sum = 0;
+    arr.forEach((element) => {
+      sum = sum + element;
+    });
+
+    return sum;
+  };
 
   return (
     <Tabs onChange={callback} type="card">
@@ -17,10 +43,27 @@ export const ChartTabs = ({defaultTab,defaultCity, callback, chartDataApi, defau
         tab={
           <div>
             <h3>Median Sale Price</h3>
-            <h3>${chartDataApi.value[defaultCity].metadata[defaultHome]['media_price'][chartDataApi.value[defaultCity].metadata[defaultHome]['media_price'].length - 1]}</h3>
+            <h3>
+              {median(
+                chartDataApi.value[defaultCity].metadata[defaultHome][
+                  "media_price"
+                ].slice(-12 * defaultYears)
+              )}
+            </h3>
             <h5>
-              <span>
-                +
+              <span
+                style={{
+                  color:
+                    chartDataApi.value[defaultCity].metadata[defaultHome]
+                      .percent.media_price_percent >= 0
+                      ? "#75b945"
+                      : "red",
+                }}
+              >
+                {chartDataApi.value[defaultCity].metadata[defaultHome].percent
+                  .media_price_percent > 0
+                  ? "+"
+                  : ""}
                 {
                   chartDataApi.value[defaultCity].metadata[defaultHome].percent
                     .media_price_percent
@@ -43,10 +86,27 @@ export const ChartTabs = ({defaultTab,defaultCity, callback, chartDataApi, defau
         tab={
           <div>
             <h3># of Homes Sold</h3>
-            <h3>{chartDataApi.value[defaultCity].metadata[defaultHome]['sold_cant'][chartDataApi.value[defaultCity].metadata[defaultHome]['sold_cant'].length - 1]}</h3>
+            <h3>
+              {sold(
+                chartDataApi.value[defaultCity].metadata[defaultHome][
+                  "sold_cant"
+                ].slice(-12 * defaultYears)
+              )}
+            </h3>
             <h5>
-              <span>
-                +
+              <span
+                style={{
+                  color:
+                    chartDataApi.value[defaultCity].metadata[defaultHome]
+                      .percent.sold_cant_percent >= 0
+                      ? "#75b945"
+                      : "red",
+                }}
+              >
+                {chartDataApi.value[defaultCity].metadata[defaultHome].percent
+                  .sold_cant_percent > 0
+                  ? "+"
+                  : ""}
                 {
                   chartDataApi.value[defaultCity].metadata[defaultHome].percent
                     .sold_cant_percent
@@ -69,10 +129,28 @@ export const ChartTabs = ({defaultTab,defaultCity, callback, chartDataApi, defau
         tab={
           <div>
             <h3>Median Days on Market</h3>
-            <h3>{chartDataApi.value[defaultCity].metadata[defaultHome]['media_adom'][chartDataApi.value[defaultCity].metadata[defaultHome]['media_adom'].length - 1]}</h3>
+            <h3>
+              
+               {median(
+                chartDataApi.value[defaultCity].metadata[defaultHome][
+                  "media_adom"
+                ].slice(-12 * defaultYears)
+              )}
+            </h3>
             <h5>
-              <span>
-                +
+              <span
+                style={{
+                  color:
+                    chartDataApi.value[defaultCity].metadata[defaultHome]
+                      .percent.media_price_percent >= 0
+                      ? "#75b945"
+                      : "red",
+                }}
+              >
+                {chartDataApi.value[defaultCity].metadata[defaultHome].percent
+                  .media_price_percent > 0
+                  ? "+"
+                  : ""}
                 {
                   chartDataApi.value[defaultCity].metadata[defaultHome].percent
                     .media_price_percent

@@ -666,7 +666,7 @@
 				top: 100%;
 				right: 0;
 				font-size: 13px;
-				min-width: 140px;
+				min-width: 170px;
 				transition: all .3s;
 				opacity: 0;
 				visibility: hidden;
@@ -678,6 +678,7 @@
 						display: block;
 						border-bottom: 1px solid var(--color-border);
 						transition: all .3s;
+						color: var(--color-black);
 						&.active{
 							background-color: var(--color-black);
 							color: var(--color-white);
@@ -793,7 +794,7 @@
 
 .ant-slider{
 	width: 100%;
-	margin-bottom: 0;
+	margin: 15px 0 !important;
 	.ant-slider-track {
 		background-color: var(--color-black) !important;
 	}

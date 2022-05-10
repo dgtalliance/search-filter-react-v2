@@ -65,11 +65,20 @@ export const propertySlice = createSlice({
       state.loading = true
     },
     [fetchAsyncSearch.fulfilled]: (state, actions) => {
-      console.log('Success', actions.payload.data)
+     
       state.loading = false
-      if (actions.payload.status) {
-        state.properties_data = actions.payload.data
+      if(actions.payload.data.success === false) {
+        console.log('Success False',actions.payload.data);
+        state.error = {
+          status: false,
+          code: actions.payload.data.error_code,
+          message: actions.payload.data.error_message,
+        }
+      }
 
+      if (actions.payload.status && Object.keys(actions.payload.data).length>0) {
+        state.properties_data = actions.payload.data
+        console.log('Success', actions.payload.data)
         var params = {
           sale_type:
             actions.payload.data.params.sale_type !== null
@@ -188,8 +197,7 @@ export const propertySlice = createSlice({
         state.properties = { ...state.properties, ...temp_properties }
         state.event_triggered = 'yes'
 
-        if (parseInt(actions.payload.data.params?.currentpage) === 1) {
-        }
+        
 
         //Update Url
         history.replaceState(null, null, '?' + actions.payload.data.slug)
@@ -197,7 +205,10 @@ export const propertySlice = createSlice({
         state.params = {...state.params,...params}
 
         //Load Data for map
-        /* state.params.rect = actions.payload.data.params.rect
+        /* 
+        if (parseInt(actions.payload.data.params?.currentpage) === 1) {
+        }
+        state.params.rect = actions.payload.data.params.rect
         state.params.zm = actions.payload.data.params.zm
         state.params.polygon_search = actions.payload.data.params.polygon_search
         state.params.page = actions.payload.data.params.currentpage

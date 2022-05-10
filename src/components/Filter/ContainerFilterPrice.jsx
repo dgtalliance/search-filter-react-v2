@@ -1,7 +1,8 @@
-import { memo, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import { updateForm } from '../../config/slices/properties'
+import { formatShortPriceX } from '../../utils/utils'
 import FilterPrice from './FilterPrice'
 const ContainerFilterPrice = () => {
   const dispatch = useDispatch()
@@ -12,7 +13,26 @@ const ContainerFilterPrice = () => {
   const [maxPrice, setMaxPriceParent] = useState(0)
   const [salestype, setSalesType] = useState(0)
   const [error, setError] = useState(false)
-  console.log('ContainerFilterPrice')
+  const [maxPriceDefault, setMaxPriceDefault] = useState(maxPriceDefaultSales)
+
+  const updateTitle = (min, max) => {
+    if (min === 0) {
+      settitle('Any' + '- $' + formatShortPriceX(max))
+    }
+    if (min > 0 && max === maxPriceDefault) {
+      settitle('$' + formatShortPriceX(min) + '- Any')
+    }
+    if (min > 0 && max < maxPriceDefault) {
+      settitle('$' + formatShortPriceX(min) + '- $' + formatShortPriceX(max))
+    }
+    if (min === 0 && max === maxPriceDefault) {
+      settitle('Any Price')
+    }
+  }
+
+  useEffect(() => {
+    updateTitle(minPrice, maxPrice)
+  }, [minPrice, maxPrice])
 
   const searchByPrice = () => {
     var tempPrice = {}
@@ -40,7 +60,6 @@ const ContainerFilterPrice = () => {
       // default params
       dispatch(updateForm(tempPrice))
       dispatch(fetchAsyncSearch())
-      console.log('ContainerFilterPrice-searchByPrice')
     }
   }
 
@@ -56,7 +75,6 @@ const ContainerFilterPrice = () => {
     // default params
     dispatch(updateForm(tempPrice))
     dispatch(fetchAsyncSearch())
-    console.log('ContainerFilterPrice-Clear')
   }
   return (
     <>
@@ -71,7 +89,7 @@ const ContainerFilterPrice = () => {
           <div className="ib-wrapper">
             <div className="ib-flex-wrapper">
               <FilterPrice
-                settitle={settitle}
+                setMaxPriceDefault={setMaxPriceDefault}
                 setMinPriceParent={setMinPriceParent}
                 setMaxPriceParent={setMaxPriceParent}
                 setSalesType={setSalesType}

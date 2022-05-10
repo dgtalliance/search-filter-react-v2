@@ -1,22 +1,17 @@
-import { memo, useCallback } from "react"
-import { useDispatch } from "react-redux";
-import { fetchAsyncSearch } from "../../config/actions/properties";
-import { updateForm } from "../../config/slices/properties";
+import { memo, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { fetchAsyncSearch } from '../../config/actions/properties'
+import { updateForm } from '../../config/slices/properties'
 
 function PropertiesPaginate({ pagination, current }) {
-  const { prev, next, pages, range } = pagination
+  const { prev, next, range } = pagination
   const dispatch = useDispatch()
 
-  console.log("Render PropertiesPaginate");  
-  const paginate = useCallback((page)=>{
-    console.log('page',page);
+  console.log('Render PropertiesPaginate')
+  const paginate = useCallback((page) => {
+    console.log('page', page)
     dispatch(updateForm({ page }))
     dispatch(fetchAsyncSearch())
-    document.getElementsByClassName('ib-wrapper-grid-result').scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-
   })
 
   return (
@@ -42,11 +37,10 @@ function PropertiesPaginate({ pagination, current }) {
           </li>
         ))}
         {next ? (
-          <li
-            className="ib-page-item"
-            onClick={() => paginate(current+1)}
-          >
-            <button className="ib-page-link -icon-arrow -next">Next Page</button>
+          <li className="ib-page-item" onClick={() => paginate(current + 1)}>
+            <button className="ib-page-link -icon-arrow -next">
+              Next Page
+            </button>
           </li>
         ) : null}
       </ul>

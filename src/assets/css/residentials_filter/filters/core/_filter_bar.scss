@@ -528,10 +528,10 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 15px 20px;
+		padding: 15px 0 0;
 		background-color: var(--color-white);
 		border-top: 1px solid var(--color-border);
-		margin-top: -1px;
+		margin-top: 15px;
 		.ib-btn{
 			border-radius: 4px;
 			background-color: #333;
@@ -690,9 +690,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 15px 20px;
 			flex-wrap: wrap;
 			position: relative;
+			padding: 0;
 			.ib-flex-item{
 				width: 48%;
 				position: relative;
@@ -756,11 +756,17 @@
 			}
 
 			.ib-title{
-				font-size: 15px;
-				font-weight: 600;
+				//font-size: 15px;
+				//font-weight: 600;
 				display: block;
-				margin-bottom: 10px;
 				width: 100%;
+
+				background-color: var(--color-gray-title);
+				text-transform: uppercase;
+				font-weight: 600;
+				font-size: 12px;
+				padding: 13px 20px;
+				margin-bottom: 0;
 			}
 
 			.ib-flex{
@@ -787,6 +793,82 @@
 
 			&.-border-top{
 				border-top: 1px solid var(--color-border);
+			}
+
+			.ant-checkbox-wrapper{
+				margin-top: 15px;
+				display: flex;
+				position: relative;
+				align-items: center;
+				justify-content: flex-start;
+
+				.ant-checkbox-inner{
+					display: none;
+				}
+
+				&:before{
+					content: "";
+					display: block;
+					width: 24px;
+					height: 24px;
+					border: 1px solid #b0b0b0;
+					border-radius: 4px;
+					position: relative;
+					transition: all .3s;
+				}
+
+				&.ant-checkbox-wrapper-checked{
+					&:after{
+						content: "\e939";
+						font-family: var(--icons-font);
+						display: flex;
+						align-items: center;
+						justify-content: center;
+						width: 24px;
+						height: 24px;
+						position: absolute;
+						top: 0;
+						left: 0;
+						color: var(--color-white);
+						font-size: 12px;
+						padding-top: 1px;
+					}
+
+					&:before{
+						background-color: var(--color-gray);
+						border-color: var(--color-gray);
+					}
+				}
+			}
+
+			select,
+			.select-Baths,
+			.select-beds{
+				width: 100%;
+				padding: 10px 15px;
+				font-size: 14px;
+				border: 1px solid var(--color-border);
+				border-radius: 6px;
+				background: url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='%23000000' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>") no-repeat;
+				background-position: calc(100% - 0.75rem) center;
+			}
+
+			.ib-chk-list{
+				padding: 15px;
+				&.-round{
+					padding: 0;
+				}
+			}
+
+			.ms-flex-wp{
+				padding: 15px;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+
+			.ib-typesList{
+				padding: 15px;
 			}
 		}
 
@@ -825,6 +907,16 @@
 			}
 		}
 	}
+}
+
+.ib-guests-search-modal{
+	.ib-modal-footer{
+		padding: 15px 20px;
+		margin-top: -1px;
+		.ant-btn{
+			height: auto;
+		}
+	}	
 }
 
 .ant-select-dropdown{
@@ -1121,6 +1213,13 @@
 		border-top-left-radius: 10px;
 		border-top-right-radius: 10px;
 	}
+
+	.ib-plsifb,
+	.ib-plsitw{
+		&:before{
+			display: none;
+		}
+	}
 }
 
 .ant-picker-range{
@@ -1412,6 +1511,38 @@
 							transform: rotate(45deg);
 						}
 					}
+				}
+			}
+		}
+	}
+}
+
+.error-label{
+	font-size: 13px;
+	line-height: 1.1;
+	color: red;
+	display: flex;
+	margin: 10px 0;
+	align-items: flex-start;
+	justify-content: flex-start;
+	&:before{
+		content: "\ea07";
+    font-family: var(--icons-font);
+    font-size: 15px;
+    margin-right: 8px;
+	}
+}
+
+.ib-guests-search{
+	.ib-wrapper-item{
+		.ib-wrapper-dropdown{
+			.ib-action{
+				#text-types{
+					overflow: hidden;
+					-o-text-overflow: ellipsis;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+					max-width: 300px;
 				}
 			}
 		}

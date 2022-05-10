@@ -60,7 +60,6 @@
                 background-color: var(--color-white);
                 font-size: 14px;
                 transition: all .3s;
-                width: 100%;
                 [class^="idx-icons-"], 
                 [class*=" idx-icons-"] {
                   font-size: 14px;
@@ -195,8 +194,6 @@
               left: 10px;
               font-size: 14px;
               top: 14px;
-              left: 10px;
-              font-size: 14px;
               height: auto;
               padding: 7px 12px;
               max-width: 80%;
@@ -1486,7 +1483,7 @@
       height: 40px;
       margin-bottom: 5px;
       cursor: pointer;
-      background-image: url("../img/ico-map.png");
+      background-image: url("https://idxboost-spw-assets.idxboost.us/images/rentals/ico-map.png");
       background-repeat: no-repeat;
       background-color: var(--color-white);
       box-shadow: rgba(0,0,0,0.30) 0px 1px 4px -1px;

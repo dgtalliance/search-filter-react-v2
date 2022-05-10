@@ -8,6 +8,7 @@ import axios from "axios";
 import { fetchAsyncDetails } from "../../config/actions/propertiesDetails";
 import { Select, Spin } from "antd";
 import { Segmented } from "antd";
+import { Collapse } from "antd";
 
 import {
   calculate_mortgage,
@@ -28,6 +29,7 @@ export const ModalDetailProperties = () => {
   const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch();
   const [showModalEmailThankYou, setShowModalEmailThankYou] = useState(false);
+  const { Panel } = Collapse;
 
   const [mediaElement, setMediaElement] = useState(0);
   const [propertymcpp, setPropertymcpp] = useState("$");
@@ -38,7 +40,7 @@ export const ModalDetailProperties = () => {
   const [chartDataApi, setChartDataApi] = useState([]);
   const [chartDataShow, setChartDataShow] = useState({});
   const [defaultHome, setDefaultHome] = useState("1");
-  const [defaultCity, setDefaultCity] = useState("city");
+  const [defaultCity, setDefaultCity] = useState("zip");
   const [loadingDataChart, setLoadingDataChart] = useState(true);
   const [defaultTab, setDefaultTab] = useState("media_price");
   const [defaultYears, setDefaultYears] = useState(1);
@@ -143,19 +145,19 @@ export const ModalDetailProperties = () => {
     setDefaultYears(1);
     setDefaultYearsSegment("1 year");
     setLoadingDataChart(true);
-    setDefaultCity("city");
+    setDefaultCity("zip");
 
     const response = await axios.get(
       API_PROPERTIES_DETAIL_CHART +
-        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+      `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
     );
 
     if (response.data.length != 0) {
       setChartDataApi(response.data);
       setChartDataShow({});
       setChartDataShow({
-        categories: response.data.value.city.month,
-        series: response.data.value.city.metadata["1"]["media_price"],
+        categories: response.data.value.zip.month,
+        series: response.data.value.zip.metadata["1"]["media_price"],
       });
       setLoadingDataChart(false);
     }
@@ -166,7 +168,7 @@ export const ModalDetailProperties = () => {
   const { Option } = Select;
 
   function onChange(value) {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[defaultCity].metadata[value][defaultTab],
@@ -174,7 +176,7 @@ export const ModalDetailProperties = () => {
     setDefaultHome(value);
   }
   function onChangeCity(value) {
-    console.log(`selected ${value}`);
+    // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[value].metadata[defaultHome][defaultTab],
@@ -187,7 +189,7 @@ export const ModalDetailProperties = () => {
   }
 
   function onSearch(val) {
-    console.log("search:", val);
+    // console.log("search:", val);
   }
 
   function callback(key) {
@@ -284,7 +286,7 @@ export const ModalDetailProperties = () => {
     for (const prop in params) {
       shareURL += `&${prop}=${encodeURIComponent(params[prop])}`;
     }
-    console.log(shareURL);
+    // console.log(shareURL);
     const wo = window.open(
       shareURL,
       "",
@@ -475,7 +477,7 @@ export const ModalDetailProperties = () => {
                         setDefaultYears(1);
                         setDefaultYearsSegment("1 year");
                         setChartDataShow({});
-                        setDefaultCity("city");
+                        setDefaultCity("zip");
                         closeModal();
                       }}
                     ></button>
@@ -1354,73 +1356,91 @@ export const ModalDetailProperties = () => {
                     </div> */}
 
                     {Object.keys(chartDataShow).length > 0 && (
-                      <Spin spinning={loadingDataChart}>
-                        <div style={{ padding: 12 }}>
-                          <div
-                            style={{
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                              marginBottom: '15px'
-                            }}
-                          >
-                            <div>
-                            <Select
-                              style={{ width: 200, marginRight: 10}}
-                              showSearch
-                              placeholder="Select"
-                              optionFilterProp="children"
-                              onChange={onChangeCity}
-                              value={defaultCity}
-                              onSearch={onSearch}
-                              filterOption={(input, option) =>
-                                option.children
-                                  .toLowerCase()
-                                  .indexOf(input.toLowerCase()) >= 0
-                              }
+                      <div className="ib-plist-details">
+                        <div className="ib-plist-card">
+                          <Spin spinning={loadingDataChart}>
+                            <Collapse
+                              bordered={false}
+                              defaultActiveKey={["1"]}
+                              expandIconPosition={"right"}
                             >
-                              <Option value="city">City</Option>
-                              <Option value="zip">Zip</Option>
-                            </Select>
-                            <Select
-                              style={{ width: 200 }}
-                              showSearch
-                              placeholder="Select a home type"
-                              optionFilterProp="children"
-                              onChange={onChange}
-                              value={defaultHome}
-                              onSearch={onSearch}
-                              filterOption={(input, option) =>
-                                option.children
-                                  .toLowerCase()
-                                  .indexOf(input.toLowerCase()) >= 0
-                              }
-                            >
-                              <Option value="1">Condos</Option>
-                              <Option value="2">Homes</Option>
-                              <Option value="26">Lands</Option>
-                              <Option value="100">TownHomes</Option>
-                            </Select>
-                            </div>
-                            
-                            <Segmented
-                              options={["1 year", "2 years", "3 years"]}
-                              value={defaultYearsSegment}
-                              onChange={changeYear}
-                            />
-                          </div>
+                              <Panel header={propertiesData.city_name + " Housing Market Trends"} key="1">
+                                <div style={{ padding: 12 }}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      marginBottom: "15px",
+                                    }}
+                                  >
+                                    <div>
+                                      <Select
+                                        style={{ width: 200, marginRight: 10 }}
+                                        showSearch
+                                        placeholder="Select"
+                                        optionFilterProp="children"
+                                        onChange={onChangeCity}
+                                        value={defaultCity}
+                                        onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                          option.children
+                                            .toLowerCase()
+                                            .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                      >
+                                        <Option value="zip">
+                                          Zip Code:{" "}
+                                          {chartDataApi.value.zip.zip_code}
+                                        </Option>
+                                        <Option value="city">
+                                          City:{" "}
+                                          {chartDataApi.value.city.city_name}
+                                        </Option>
+                                      </Select>
+                                      <Select
+                                        style={{ width: 200 }}
+                                        showSearch
+                                        placeholder="Select a home type"
+                                        optionFilterProp="children"
+                                        onChange={onChange}
+                                        value={defaultHome}
+                                        onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                          option.children
+                                            .toLowerCase()
+                                            .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                      >
+                                        <Option value="1">Condos</Option>
+                                        <Option value="2">Homes</Option>
+                                        <Option value="26">Lands</Option>
+                                        <Option value="100">TownHomes</Option>
+                                      </Select>
+                                    </div>
 
-                          <ChartTabs
-                            callback={callback}
-                            defaultTab={defaultTab}
-                            chartDataApi={chartDataApi}
-                            defaultHome={defaultHome}
-                            chartDataShow={chartDataShow}
-                            defaultYears={defaultYears}
-                            defaultCity={defaultCity}
-                          ></ChartTabs>
+                                    <Segmented
+                                      options={["1 year", "2 years", "3 years"]}
+                                      value={defaultYearsSegment}
+                                      onChange={changeYear}
+                                    />
+                                  </div>
+
+                                  <ChartTabs
+                                    callback={callback}
+                                    defaultTab={defaultTab}
+                                    chartDataApi={chartDataApi}
+                                    defaultHome={defaultHome}
+                                    chartDataShow={chartDataShow}
+                                    defaultYears={defaultYears}
+                                    defaultCity={defaultCity}
+                                  ></ChartTabs>
+                                </div>
+                              </Panel>
+                            </Collapse>
+                          </Spin>
                         </div>
-                      </Spin>
+                      </div>
                     )}
 
                     <div className="ib-plist-details -map">

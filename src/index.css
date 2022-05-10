@@ -57,3 +57,19 @@
 .ant-tabs-tab-btn {
   box-shadow: none !important;
 }
+.ant-tabs-nav-list{
+  width: 100%;
+}
+.ant-tabs-tab {
+  width: 34%;
+  /* display: flex;
+  justify-content: center; */
+}
+.ant-collapse-header{
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ant-collapse-content-box{
+  padding: 4px !important;
+}

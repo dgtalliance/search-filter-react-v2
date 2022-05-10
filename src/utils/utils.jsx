@@ -26,7 +26,7 @@ export const formatPrice = (value, n, x, d, c, s, p) => {
   )
 }
 
-function pluck(arr, key) {
+export const pluck = (arr, key) => {
   return arr.map((o) => o[key])
 }
 
@@ -46,11 +46,29 @@ export const ib_fetch_default_cities = (cities) => {
   return featured_cities
 }
 
+export const convertParamsArray = (data) => {
+  var temp = []
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      var t = { label: item.name, value: item.code }
+      temp.push(t)
+    })
+  } else {
+    return []
+  }
+  return temp
+}
+
 export const numberWithCommas = (x) =>
   x ? x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') : 0
 
 export const transformPrice = (price) => {
-  if (price === 0 || price === 100000000 || price === 100000 || price === null) {
+  if (
+    price === 0 ||
+    price === 100000000 ||
+    price === 100000 ||
+    price === null
+  ) {
     return 'Any'
   } else {
     return numberWithCommas(price)
@@ -62,7 +80,7 @@ export const formatShortPriceX = (value) => {
     short_price
 
   if (price < 1000) {
-    return price
+    return new String(price)
   }
 
   if (price < 10000) {
@@ -74,7 +92,7 @@ export const formatShortPriceX = (value) => {
       short_price = Math.ceil(price / 1000)
 
       if (short_price < 100) {
-        return String(short_price).substr(0, 2) + 'K'
+        return String(short_price).substring(0, 2) + 'K'
       }
 
       if (short_price >= 1000) {
@@ -91,8 +109,8 @@ export const formatShortPriceX = (value) => {
     }
   }
 
-  if (String(short_price, '.') !== -1) {
-    short_price = String(short_price).substr(0, 4)
+  if (String(short_price, '.') != -1) {
+    short_price = String(short_price).substring(0, 4)
   }
 
   return short_price + 'M'
@@ -197,6 +215,11 @@ export const initializeElement = () => {
     jQuery('body').removeClass('ms-show-guests-filter')
   })
 
+  jQuery(document).on('click', '.js-submit-filter', function (e) {
+    e.preventDefault()
+    jQuery('body').removeClass('ms-show-guests-filter')
+  })
+
   jQuery(document).on('click', '.js-show-grid', function (e) {
     e.preventDefault()
     jQuery('.ib-wrapper-float-actions').addClass('-grid')
@@ -247,64 +270,63 @@ export const initializeElement = () => {
     document.execCommand('copy')
     temp.remove()
     jQuery('.-copied').text('URL copied!').show().delay(2000).fadeOut()
-  })  
+  })
 }
 
-export const dateViewRental = (rental_stay)=>{
-  var date_stay =  rental_stay.split('-');
-  return date_stay[0]+" - "+date_stay[1];
+export const dateViewRental = (rental_stay) => {
+  var date_stay = rental_stay.split('-')
+  return date_stay[0] + ' - ' + date_stay[1]
 }
 
-export const datesConvertView = (dt)=>{
-  if(dt!== null && dt!==undefined){
-  var dat = dt.split('-');
-  var dat_y_out = dat[0];
-  var dat_m_out = dat[1];
-  var dat_d_out = dat[2];
-  return dat_m_out+"/"+dat_d_out+"/"+dat_y_out;
+export const datesConvertView = (dt) => {
+  if (dt !== null && dt !== undefined) {
+    var dat = dt.split('-')
+    var dat_y_out = dat[0]
+    var dat_m_out = dat[1]
+    var dat_d_out = dat[2]
+    return dat_m_out + '/' + dat_d_out + '/' + dat_y_out
   }
-  return {};
+  return {}
 }
 
-export const calculate_mortgage = (price, percent, year, interest) =>{
-	var price = price.replace(/[^\d]/g, "");
-	var percent = parseFloat(percent);
-	var year = year.replace(/[^\d]/g, "");
-	var interest = parseFloat(interest);
-	var month_factor = 0;
-	var month_term = year * 12;
-	var down_payment = price * (percent / 100);
-  
-	interest = interest / 100;
-  
-	var month_interest = interest / 12;
-	
-	var financing_price = price - down_payment;
-	var base_rate = 1 + month_interest;
-	var denominator = base_rate;
-	
-	for (var i = 0; i < (year * 12); i++) {
-	  month_factor += (1 / denominator);
-	  denominator *= base_rate;
-	}
-  
-	var month_payment = financing_price / month_factor;
-	var pmi_per_month = 0;
-	
-	if (percent < 20) {
-	  pmi_per_month = 55 * (financing_price / 100000);
-	}
-  
-	var total_monthly = month_payment + pmi_per_month;
-	
-	return {
-	  'mortgage': formatPrice(financing_price),
-	  'down_payment': formatPrice(down_payment),
-	  'monthly': formatPrice(month_payment, 2),
-	  'total_monthly': formatPrice(total_monthly, 2)
-	};
-}
+export const calculate_mortgage = (pricev, percentv, yearv, interestv) => {
+  var price = pricev.replace(/[^\d]/g, '')
+  var percent = parseFloat(percentv)
+  var year = yearv.replace(/[^\d]/g, '')
+  var interest = parseFloat(interestv)
+  var month_factor = 0
+  var down_payment = price * (percent / 100)
 
-export const phoneFormat = (val) =>{
-  return val.replace(/[^\d]/g, '');
+  interest = interest / 100
+
+  var month_interest = interest / 12
+
+  var financing_price = price - down_payment
+  var base_rate = 1 + month_interest
+  var denominator = base_rate
+
+  for (var i = 0; i < year * 12; i++) {
+    month_factor += 1 / denominator
+    denominator *= base_rate
   }
+
+  var month_payment = financing_price / month_factor
+  var pmi_per_month = 0
+
+  if (percent < 20) {
+    pmi_per_month = 55 * (financing_price / 100000)
+  }
+
+  var total_monthly = month_payment + pmi_per_month
+
+  return {
+    mortgage: formatPrice(financing_price),
+    down_payment: formatPrice(down_payment),
+    monthly: formatPrice(month_payment, 2),
+    total_monthly: formatPrice(total_monthly, 2),
+  }
+}
+
+export const phoneFormat = (val) => {
+  return val.replace(/[^\d]/g, '')
+}

@@ -85,6 +85,17 @@
 			@media screen and (min-width: 768px){
 				height: auto;
 				max-height: calc(100vh - 139px);
+
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+				.ib-gs-item{
+					width: 50%;
+					border-right: 1px solid #ebebeb;
+					&.-full{
+						width: 100%;
+					}
+				}
 			}
 
 			.ib-gs-item{
@@ -240,7 +251,7 @@
 		background-color: rgba(0, 0, 0, 0.25);
 		.ib-wrapper-modal{
 			padding-bottom: 0;
-			width: 600px;
+			width: 760px;
 			margin: auto;
 			height: auto;
 			max-height: 90vh;
