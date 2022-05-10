@@ -21,10 +21,6 @@ export const API_PROPERTIES_DETAIL_CHART =
   window.location.host === 'localhost:3000'
     ? 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details'
     : 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details'
-export const ACCESS_TOKEN_FORM =
-  window.location.host === 'localhost:3000'
-    ? 'YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ'
-    : window.__flex_g_settings.accessToken
 export const API_AUTOCOMPLETE_URL =
   window.location.host === 'localhost:3000'
     ? 'https://autocomplete.idxboost.dev/?board=1'
