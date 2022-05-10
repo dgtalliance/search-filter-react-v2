@@ -1,13 +1,6 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
-import { Tabs } from 'antd';
-
+import React, { useEffect } from "react";
 
 export const Chart = ({ chartData, con, years }) => {
-
-
-  let chartDataVar = [];
 
   useEffect(() => { 
       chartsDetails();
