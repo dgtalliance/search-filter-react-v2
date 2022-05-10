@@ -10,7 +10,6 @@ import {
   GoogleReCaptcha,
 } from 'react-google-recaptcha-v3'
 import Cookies from 'js-cookie'
-import { datesConvertView, dateViewRental } from '../../utils/utils'
 import { ACCESS_TOKEN } from '../../config/config'
 import axios from 'axios'
 import validator from 'validator'

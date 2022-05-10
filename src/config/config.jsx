@@ -26,6 +26,10 @@ export const API_AUTOCOMPLETE_URL =
     ? 'https://autocomplete.idxboost.dev/?board=1'
     : 'https://autocomplete.idxboost.dev/?board=1'
 
+export const GOOGLEMAPREACTKEY =
+  window.location.host === 'localhost:3000'
+    ? 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4'
+    : window.__flex_g_settings.google_recaptcha_public_key
 var temp_property_type = [
   {
     label: 'Single Family Homes',
