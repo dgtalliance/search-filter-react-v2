@@ -13,12 +13,12 @@ import { formatShortPriceX } from '../../utils/utils'
 import FilterModalBaths from './FilterModalBaths'
 import FilterModalBeds from './FilterModalBeds'
 import FilterModalFeatures from './FilterModalFeatures'
-import FilterModalLandSize from './FilterModalLandSize'
+/* import FilterModalLandSize from './FilterModalLandSize'
 import FilterModalLivingSize from './FilterModalLivingSize'
+import FilterModalYearBuilt from './FilterModalYearBuilt' */
 import FilterModalParking from './FilterModalParking'
 import FilterModalPrice from './FilterModalPrice'
 import FilterModalWaterfront from './FilterModalWaterfront'
-import FilterModalYearBuilt from './FilterModalYearBuilt'
 import FilterPropertyType from './FilterPropertyType'
 import FilterSaleType from './FilterSaleType'
 
@@ -122,7 +122,7 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Living Size</span>
                   <div className="ms-flex-wp">
-                    <FilterModalLivingSize />
+                    {/* <FilterModalLivingSize /> */}
                   </div>
                 </div>
               </div>
@@ -132,7 +132,7 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Land Size</span>
                   <div className="ms-flex-wp">
-                    <FilterModalLandSize />
+                    {/* <FilterModalLandSize /> */}
                   </div>
                 </div>
               </div>
@@ -142,7 +142,7 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Year Built</span>
                   <div className="ms-flex-wp">
-                    <FilterModalYearBuilt />
+                   {/*  <FilterModalYearBuilt /> */}
                   </div>
                 </div>
               </div>
