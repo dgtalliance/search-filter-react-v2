@@ -690,9 +690,9 @@
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
-			padding: 15px 20px;
 			flex-wrap: wrap;
 			position: relative;
+			padding: 0;
 			.ib-flex-item{
 				width: 48%;
 				position: relative;
@@ -756,11 +756,17 @@
 			}
 
 			.ib-title{
-				font-size: 15px;
-				font-weight: 600;
+				//font-size: 15px;
+				//font-weight: 600;
 				display: block;
-				margin-bottom: 10px;
 				width: 100%;
+
+				background-color: var(--color-gray-title);
+				text-transform: uppercase;
+				font-weight: 600;
+				font-size: 12px;
+				padding: 13px 20px;
+				margin-bottom: 0;
 			}
 
 			.ib-flex{
@@ -835,6 +841,7 @@
 				}
 			}
 
+			select,
 			.select-Baths,
 			.select-beds{
 				width: 100%;
@@ -844,6 +851,24 @@
 				border-radius: 6px;
 				background: url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='%23000000' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>") no-repeat;
 				background-position: calc(100% - 0.75rem) center;
+			}
+
+			.ib-chk-list{
+				padding: 15px;
+				&.-round{
+					padding: 0;
+				}
+			}
+
+			.ms-flex-wp{
+				padding: 15px;
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between;
+			}
+
+			.ib-typesList{
+				padding: 15px;
 			}
 		}
 
@@ -888,6 +913,9 @@
 	.ib-modal-footer{
 		padding: 15px 20px;
 		margin-top: -1px;
+		.ant-btn{
+			height: auto;
+		}
 	}	
 }
 

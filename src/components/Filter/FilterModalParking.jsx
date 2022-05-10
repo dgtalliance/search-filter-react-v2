@@ -30,13 +30,6 @@ const FilterModalParking = () => {
   return (
     <>
       <select
-        style={{
-          width: '100%',
-          padding: '15px',
-          fontSize: '14px',
-          border: '1px solid #e3e3e3',
-          borderRadius: '6px',
-        }}
         value={selected}
         onChange={onChangeValue}
       >

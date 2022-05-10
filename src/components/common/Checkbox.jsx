@@ -42,7 +42,6 @@ export default function CheckboxGroup({
     <>
       <div className={'ib-wrapper'}>
         <div className={'ib-flex-wrapper'}>
-          <span className={'ib-title'}>{labelTitle}</span>
           <div className={`${identificator}`}>
             <ListOptionsElements />
           </div>

@@ -27,8 +27,8 @@ export const ACCESS_TOKEN_FORM =
     : window.__flex_g_settings.accessToken
 export const API_AUTOCOMPLETE_URL =
   window.location.host === 'localhost:3000'
-    ? 'https://api.idxboost.dev/rentals_autocomplete_lookup'
-    : 'https://api.idxboost.dev/rentals_autocomplete_lookup'
+    ? 'https://autocomplete.idxboost.dev/?board=1'
+    : 'https://autocomplete.idxboost.dev/?board=1'
 
 var temp_property_type = [
   {
@@ -184,3 +184,162 @@ export const parking_options_d =
   window.location.host === 'localhost:3000'
     ? parking_options
     : window.__flex_g_settings.params.parking_options
+
+const living_size_range = [
+  {
+    label: '0',
+    value: 0,
+  },
+  {
+    label: '500',
+    value: 500,
+  },
+  {
+    label: '600',
+    value: 600,
+  },
+  {
+    label: '700',
+    value: 700,
+  },
+  {
+    label: '800',
+    value: 800,
+  },
+  {
+    label: '900',
+    value: 900,
+  },
+  {
+    label: '1000',
+    value: 1000,
+  },
+  {
+    label: '1250',
+    value: 1250,
+  },
+  {
+    label: '1500',
+    value: 1500,
+  },
+  {
+    label: '1750',
+    value: 1750,
+  },
+  {
+    label: '2000',
+    value: 2000,
+  },
+  {
+    label: '2500',
+    value: 2500,
+  },
+  {
+    label: '3000',
+    value: 3000,
+  },
+  {
+    label: '3500',
+    value: 3500,
+  },
+  {
+    label: '4000',
+    value: 4000,
+  },
+  {
+    label: '4500',
+    value: 4500,
+  },
+  {
+    label: '5000',
+    value: 5000,
+  },
+  {
+    label: '6000',
+    value: 6000,
+  },
+  {
+    label: '7000',
+    value: 7000,
+  },
+  {
+    label: '8000',
+    value: 8000,
+  },
+  {
+    label: '9000',
+    value: 9000,
+  },
+  {
+    label: '10000',
+    value: 10000,
+  },
+  {
+    label: '11000',
+    value: 11000,
+  },
+  {
+    label: '12000',
+    value: 12000,
+  },
+  {
+    label: '13000',
+    value: 13000,
+  },
+  {
+    label: '14000',
+    value: 14000,
+  },
+  {
+    label: '15000',
+    value: 15000,
+  },
+  {
+    label: '16000',
+    value: 16000,
+  },
+  {
+    label: '17000',
+    value: 17000,
+  },
+  {
+    label: '18000',
+    value: 18000,
+  },
+  {
+    label: '19000',
+    value: 19000,
+  },
+  {
+    label: '20000',
+    value: 20000,
+  },
+  {
+    label: '30000',
+    value: 30000,
+  },
+  {
+    label: '40000',
+    value: 40000,
+  },
+  {
+    label: '50000',
+    value: 50000,
+  },
+  {
+    label: '60000',
+    value: 60000,
+  },
+  {
+    label: '70000',
+    value: 70000,
+  },
+  {
+    label: '80000',
+    value: 80000,
+  },
+]
+export const living_size_range_d =
+  window.location.host === 'localhost:3000'
+    ? living_size_range
+    : window.__flex_g_settings.params.living_size_range

@@ -659,10 +659,10 @@
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  padding: 15px 20px;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  position: relative; }
+  position: relative;
+  padding: 0; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-flex-item,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-flex-item {
     width: 48%;
@@ -729,11 +729,14 @@
     margin-bottom: 5px; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-title,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-title {
-    font-size: 15px;
-    font-weight: 600;
     display: block;
-    margin-bottom: 10px;
-    width: 100%; }
+    width: 100%;
+    background-color: var(--color-gray-title);
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 13px 20px;
+    margin-bottom: 0; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-flex,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-flex {
     width: 100%;
@@ -815,8 +818,10 @@
     .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ant-checkbox-wrapper.ant-checkbox-wrapper-checked:before {
       background-color: var(--color-gray);
       border-color: var(--color-gray); }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper select,
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .select-Baths,
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .select-beds,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper select,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .select-Baths,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .select-beds {
     width: 100%;
@@ -826,6 +831,26 @@
     border-radius: 6px;
     background: url("data:image/svg+xml,<svg height='10px' width='10px' viewBox='0 0 16 16' fill='%23000000' xmlns='http://www.w3.org/2000/svg'><path d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/></svg>") no-repeat;
     background-position: calc(100% - 0.75rem) center; }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-chk-list,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-chk-list {
+    padding: 15px; }
+    .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-chk-list.-round,
+    .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-chk-list.-round {
+      padding: 0; }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ms-flex-wp,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ms-flex-wp {
+    padding: 15px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between; }
+  .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-typesList,
+  .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-typesList {
+    padding: 15px; }
 
 .ib-dropdown .ib-wrapper .ib-chk-list.-round .ant-radio-group,
 .ib-guests-search-modal .ib-wrapper .ib-chk-list.-round .ant-radio-group {
@@ -869,6 +894,8 @@
 .ib-guests-search-modal .ib-modal-footer {
   padding: 15px 20px;
   margin-top: -1px; }
+  .ib-guests-search-modal .ib-modal-footer .ant-btn {
+    height: auto; }
 
 .ant-select-dropdown {
   border-radius: 10px;
@@ -1595,7 +1622,20 @@
       @media screen and (min-width: 768px) {
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests {
           height: auto;
-          max-height: calc(100vh - 139px); } }
+          max-height: calc(100vh - 139px);
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-wrap: wrap;
+          flex-wrap: wrap;
+          -webkit-box-pack: justify;
+          -ms-flex-pack: justify;
+          justify-content: space-between; }
+          .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item {
+            width: 50%;
+            border-right: 1px solid #ebebeb; }
+            .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-full {
+              width: 100%; } }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item {
         border-bottom: 1px solid #ebebeb !important; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item:last-child {
@@ -1743,7 +1783,7 @@
       background-color: rgba(0, 0, 0, 0.25); }
       .ib-guests-search-modal .ib-wrapper-modal {
         padding-bottom: 0;
-        width: 600px;
+        width: 760px;
         margin: auto;
         height: auto;
         max-height: 90vh;

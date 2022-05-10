@@ -666,7 +666,7 @@
 				top: 100%;
 				right: 0;
 				font-size: 13px;
-				min-width: 140px;
+				min-width: 170px;
 				transition: all .3s;
 				opacity: 0;
 				visibility: hidden;
@@ -678,6 +678,7 @@
 						display: block;
 						border-bottom: 1px solid var(--color-border);
 						transition: all .3s;
+						color: var(--color-black);
 						&.active{
 							background-color: var(--color-black);
 							color: var(--color-white);
@@ -818,7 +819,7 @@
 	top: 0;
 	left: 0;
 	padding: 15px 30px;
-	background-image: url("https://idxboost-spw-assets.idxboost.us/images/rentals/buildings-shape.png");
+	background-image: url("img/buildings-shape.png");
 	background-position: bottom left;
 	background-repeat-y: no-repeat;
 	text-align: center;
@@ -834,7 +835,7 @@
 		display: block;
 		font-weight: bold;
 		font-size: 22px;
-		background-image: url("https://idxboost-spw-assets.idxboost.us/images/rentals/search_nf.png");
+		background-image: url("img/search_nf.png");
 		background-repeat: no-repeat;
     background-size: 110px;
     background-position: center;

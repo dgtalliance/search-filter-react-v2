@@ -13,9 +13,12 @@ import { formatShortPriceX } from '../../utils/utils'
 import FilterModalBaths from './FilterModalBaths'
 import FilterModalBeds from './FilterModalBeds'
 import FilterModalFeatures from './FilterModalFeatures'
+import FilterModalLandSize from './FilterModalLandSize'
+import FilterModalLivingSize from './FilterModalLivingSize'
 import FilterModalParking from './FilterModalParking'
 import FilterModalPrice from './FilterModalPrice'
 import FilterModalWaterfront from './FilterModalWaterfront'
+import FilterModalYearBuilt from './FilterModalYearBuilt'
 import FilterPropertyType from './FilterPropertyType'
 import FilterSaleType from './FilterSaleType'
 
@@ -76,21 +79,11 @@ const FilterModal = () => {
           </div>
 
           <div className="ib-body-guests">
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -full">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Property Search</span>
                   <FilterSaleType />
-                </div>
-              </div>
-            </div>
-            <div className="ib-gs-item">
-              <div className="ib-wrapper">
-                <div className="ib-flex-wrapper">
-                  <span className="ib-title">Price Range</span>
-                  <div className="ms-flex-wp">
-                    <FilterModalPrice />
-                  </div>
                 </div>
               </div>
             </div>
@@ -114,32 +107,42 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -price-range">
+              <div className="ib-wrapper">
+                <div className="ib-flex-wrapper">
+                  <span className="ib-title">Price Range</span>
+                  <div className="ms-flex-wp">
+                    <FilterModalPrice />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="ib-gs-item -living-size">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Living Size</span>
                   <div className="ms-flex-wp">
-                    Aquí va el componente en react
+                    <FilterModalLivingSize />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -land-size">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Land Size</span>
                   <div className="ms-flex-wp">
-                    Aquí va el componente en react
+                    <FilterModalLandSize />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -year-built">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Year Built</span>
                   <div className="ms-flex-wp">
-                    Aquí va el componente en react
+                    <FilterModalYearBuilt />
                   </div>
                 </div>
               </div>
