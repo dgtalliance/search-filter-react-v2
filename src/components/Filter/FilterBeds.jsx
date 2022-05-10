@@ -35,7 +35,6 @@ const FilterBeds = ({
 
   const params = useSelector(getparams)
 
-  
   useEffect(() => {
     var { min_beds, max_beds } = params
     var min_v = parseInt(min_beds)
@@ -161,7 +160,6 @@ const FilterBeds = ({
       setselectRight(10)
       setexactMatch(false)
       setOptions(optionsAny)
-    } else {
     }
     if (parseInt(temp) === 0) {
       setexactMatch(true)
@@ -193,16 +191,16 @@ const FilterBeds = ({
       setError(true)
     }
 
-    if(temp === valueOption) {
-        setActiveMatch(true) 
-        setOptions(optionsStudio)
-        setexactMatch(true)
-        setvalueOption(temp)
+    if (temp === valueOption) {
+      setActiveMatch(true)
+      setOptions(optionsStudio)
+      setexactMatch(true)
+      setvalueOption(temp)
     }
     if (parseInt(valueOption) < temp) {
-        setActiveMatch(false) 
-        setOptions(optionsAny)
-        setexactMatch(false)        
+      setActiveMatch(false)
+      setOptions(optionsAny)
+      setexactMatch(false)
     }
   }
 

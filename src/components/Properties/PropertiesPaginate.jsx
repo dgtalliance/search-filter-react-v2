@@ -4,7 +4,7 @@ import { fetchAsyncSearch } from '../../config/actions/properties'
 import { updateForm } from '../../config/slices/properties'
 
 function PropertiesPaginate({ pagination, current }) {
-  const { prev, next, pages, range } = pagination
+  const { prev, next, range } = pagination
   const dispatch = useDispatch()
 
   console.log('Render PropertiesPaginate')

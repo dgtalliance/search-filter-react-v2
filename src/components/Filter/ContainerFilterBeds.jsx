@@ -12,29 +12,29 @@ function ContainerFilterBeds() {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = (minBeds, maxBeds, activeMatch) => {
-    console.log('TitleChange', minBeds, maxBeds, activeMatch)
-    if (parseInt(minBeds) !== 10) {
-      if (activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+  const TitleChange = (minBedsv, maxBedsv, activeMatchv) => {
+    console.log('TitleChange', minBedsv, maxBedsv, activeMatchv)
+    if (parseInt(minBedsv) !== 10) {
+      if (activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 0) {
         settitle('Studio Beds')
       }
 
-      if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 0) {
+      if (!activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 0) {
         settitle('Any Beds')
       }
-      if (!activeMatch && parseInt(minBeds) === 0 && parseInt(maxBeds) === 10) {
+      if (!activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 10) {
         settitle('Any Beds')
       }
 
-      if (activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Beds: ' + minBeds)
+      if (activeMatchv && parseInt(minBedsv) !== 0) {
+        settitle('Beds: ' + minBedsv)
       }
-      if (!activeMatch && parseInt(minBeds) !== 0) {
-        settitle('Beds: ' + minBeds + '+')
+      if (!activeMatch && parseInt(minBedsv) !== 0) {
+        settitle('Beds: ' + minBedsv + '+')
       }
-      if (activeMatch && parseInt(minBeds) !== 0 && parseInt(maxBeds) !== 0) {
-        if (parseInt(maxBeds) !== 10) {
-          settitle('Beds: ' + minBeds + '-' + maxBeds)
+      if (activeMatch && parseInt(minBedsv) !== 0 && parseInt(maxBedsv) !== 0) {
+        if (parseInt(maxBedsv) !== 10) {
+          settitle('Beds: ' + minBedsv + '-' + maxBedsv)
         }
       }
     } else {

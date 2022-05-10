@@ -197,8 +197,7 @@ export const propertySlice = createSlice({
         state.properties = { ...state.properties, ...temp_properties }
         state.event_triggered = 'yes'
 
-        if (parseInt(actions.payload.data.params?.currentpage) === 1) {
-        }
+        
 
         //Update Url
         history.replaceState(null, null, '?' + actions.payload.data.slug)
@@ -206,7 +205,10 @@ export const propertySlice = createSlice({
         state.params = {...state.params,...params}
 
         //Load Data for map
-        /* state.params.rect = actions.payload.data.params.rect
+        /* 
+        if (parseInt(actions.payload.data.params?.currentpage) === 1) {
+        }
+        state.params.rect = actions.payload.data.params.rect
         state.params.zm = actions.payload.data.params.zm
         state.params.polygon_search = actions.payload.data.params.polygon_search
         state.params.page = actions.payload.data.params.currentpage

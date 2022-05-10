@@ -62,7 +62,7 @@ export const formatShortPriceX = (value) => {
     short_price
 
   if (price < 1000) {
-    return price
+    return new String(price)
   }
 
   if (price < 10000) {
@@ -74,7 +74,7 @@ export const formatShortPriceX = (value) => {
       short_price = Math.ceil(price / 1000)
 
       if (short_price < 100) {
-        return String(short_price).substr(0, 2) + 'K'
+        return String(short_price).substring(0, 2) + 'K'
       }
 
       if (short_price >= 1000) {
@@ -91,8 +91,8 @@ export const formatShortPriceX = (value) => {
     }
   }
 
-  if (String(short_price, '.') !== -1) {
-    short_price = String(short_price).substr(0, 4)
+  if (String(short_price, '.') != -1) {
+    short_price = String(short_price).substring(0, 4)
   }
 
   return short_price + 'M'
@@ -266,13 +266,12 @@ export const datesConvertView = (dt)=>{
   return {};
 }
 
-export const calculate_mortgage = (price, percent, year, interest) =>{
-	var price = price.replace(/[^\d]/g, "");
-	var percent = parseFloat(percent);
-	var year = year.replace(/[^\d]/g, "");
-	var interest = parseFloat(interest);
+export const calculate_mortgage = (pricev, percentv, yearv, interestv) =>{
+	var price = pricev.replace(/[^\d]/g, "");
+	var percent = parseFloat(percentv);
+	var year = yearv.replace(/[^\d]/g, "");
+	var interest = parseFloat(interestv);
 	var month_factor = 0;
-	var month_term = year * 12;
 	var down_payment = price * (percent / 100);
   
 	interest = interest / 100;

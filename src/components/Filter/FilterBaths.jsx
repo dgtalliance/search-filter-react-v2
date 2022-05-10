@@ -160,7 +160,6 @@ const FilterBaths = ({
       setselectRight(10)
       setexactMatch(false)
       setOptions(optionsAny)
-    } else {
     }
     if (parseInt(temp) === 0) {
       setexactMatch(true)

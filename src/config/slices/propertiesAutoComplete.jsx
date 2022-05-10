@@ -103,7 +103,6 @@ export const autoCompleteSlice = createSlice({
       console.log(payload)
       state.city_data = payload
     },
-    updateAuto: (state, { payload }) => {},
   },
   extraReducers: {
     [fetchAsyncAutoComplete.pending]: (state) => {

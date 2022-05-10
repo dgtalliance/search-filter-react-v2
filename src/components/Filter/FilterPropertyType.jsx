@@ -92,30 +92,6 @@ const FilterPropertyType = ({ setTitle }) => {
         labelTitle={''}
         identificator={'ib-amenitiesList'}
       />
-
-      {/*  {Object.keys(property_type_data).length > 0 && (
-        <div className="ib-typesList">
-         
-            {property_type_data.map((item, index) => {
-              return (          
-                <div className="ib-chk-wrapper" key={index}>
-                <input
-                  type="checkbox"
-                  id={`ib-ppt-outer_${item.value}`}
-                  name="any_types"
-                  value={item.value}
-                  onChange={checkedActive}
-                  defaultChecked={checkedDefault(item.value)}
-                />
-                <label htmlFor={`ib-ppt-outer_${item.value}`}>
-                  {item.label}
-                </label>
-              </div> 
-              )
-            })}
-         
-        </div>
-      )} */}
     </>
   )
 }

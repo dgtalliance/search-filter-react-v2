@@ -17,13 +17,13 @@ const Carousel = ({
   const [isArray, setIsArray] = useState(images.length > 0)
   const [imgIndex, setImgIndex] = useState(0)
   const [isOpen, setIsOpen] = useState(isOpenModal)
-
+  const fill = images.length > 3 ? 3 : images.length
   const settings = {
     dots: false,
     lazyLoad: 'ondemand',
     infinite: true,
     swipe: swipe,
-    slidesToShow: itemsSlider ? (images.length > 3 ? 3 : images.length) : 1,
+    slidesToShow: itemsSlider ? fill : 1,
     slidesToScroll: 1,
     responsive: [
       {

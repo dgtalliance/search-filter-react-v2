@@ -18,7 +18,7 @@ const FilterProvider = ({children})=>{
    const openModal = (datainfo,stay) => {
      setModalData({...datainfo,stay});
      setSlugShow(true)
-     //document.body.classList.add('active-modal-detail');
+
      if(!document.body.classList.contains("openModals")){
       document.body.classList.add("openModals");
     }

@@ -11,7 +11,6 @@ import { ib_fetch_default_cities } from '../../utils/utils'
 import { updateForm } from '../../config/slices/properties'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import { fetchAsyncAutoComplete } from '../../config/actions/propertiesAutoComplete'
-const { Option } = AutoComplete
 
 const Complete = () => {
   const dispatch = useDispatch()
@@ -20,8 +19,7 @@ const Complete = () => {
 
   const [keyword, setKeyword] = useState('')
   const [ib_autocomplete_cities, setIbAutoCompleteCities] = useState(cities)
-  const refAutoComplete = useRef()
-  console.log('AutoComplete')
+
   useEffect(() => {
     setIbAutoCompleteCities(autocompleteData)
   }, [autocompleteData])

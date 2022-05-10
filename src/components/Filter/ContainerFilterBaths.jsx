@@ -12,29 +12,29 @@ const ContainerFilterBaths = () => {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = (minBaths, maxBaths, activeMatch) => {
-    console.log('TitleChange', minBaths, maxBaths, activeMatch)
-    if (parseInt(minBaths) !== 10) {
-      if (activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 0) {
+  const TitleChange = (minBathsv, maxBathsv, activeMatchv) => {
+    console.log('TitleChange', minBathsv, maxBathsv, activeMatchv)
+    if (parseInt(minBathsv) !== 10) {
+      if (activeMatchv && parseInt(minBathsv) === 0 && parseInt(maxBathsv) === 0) {
         settitle('Studio Baths')
       }
 
-      if (!activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 0) {
+      if (!activeMatchv && parseInt(minBathsv) === 0 && parseInt(maxBathsv) === 0) {
         settitle('Any Baths')
       }
-      if (!activeMatch && parseInt(minBaths) === 0 && parseInt(maxBaths) === 10) {
+      if (!activeMatchv && parseInt(minBathsv) === 0 && parseInt(maxBathsv) === 10) {
         settitle('Any Baths')
       }
 
-      if (activeMatch && parseInt(minBaths) !== 0) {
-        settitle('Baths: ' + minBaths)
+      if (activeMatchv && parseInt(minBathsv) !== 0) {
+        settitle('Baths: ' + minBathsv)
       }
-      if (!activeMatch && parseInt(minBaths) !== 0) {
-        settitle('Baths: ' + minBaths + '+')
+      if (!activeMatchv && parseInt(minBathsv) !== 0) {
+        settitle('Baths: ' + minBathsv + '+')
       }
-      if (activeMatch && parseInt(minBaths) !== 0 && parseInt(maxBaths) !== 0) {
-        if (parseInt(maxBaths) !== 10) {
-          settitle('Baths: ' + minBaths + '-' + maxBaths)
+      if (activeMatchv && parseInt(minBathsv) !== 0 && parseInt(maxBathsv) !== 0) {
+        if (parseInt(maxBathsv) !== 10) {
+          settitle('Baths: ' + minBathsv + '-' + maxBathsv)
         }
       }
     } else {
