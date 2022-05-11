@@ -12,20 +12,20 @@ const FilterModalLivingSize = () => {
   const [maxLivingDefault, setMaxLivingDefault] = useState(max_living_size)
   const [minLiving, setMinLiving] = useState(0)
   const [maxLiving, setMaxLiving] = useState(maxLivingDefault)
-  /* const params = useSelector(getparams) */
+  const params = useSelector(getparams)
   const [error, setError] = useState(false)
   const [livingTimeout, setLivingTimeout] = useState(0)
   const dispatch = useDispatch()
 
- /*  useEffect(() => {
+  useEffect(() => {
     var { min_living_size, max_living_size } = params
     setMinLiving(min_living_size !== '' ? parseInt(min_living_size) : 0)
     setMaxLiving(
       max_living_size !== '' ? parseInt(max_living_size) : maxLivingDefault,
     )
-  }, [params]) */
+  }, [params])
   const updateLiving = (min, max) => {
-    /* if (livingTimeout) {
+    if (livingTimeout) {
       clearTimeout(livingTimeout)
     }
     setLivingTimeout(
@@ -46,10 +46,10 @@ const FilterModalLivingSize = () => {
           dispatch(fetchAsyncSearch())
         }
       }, 1000),
-    ) */
+    )
   }
   const onChangeMin = (e) => {
-    /*  if ('' === e.target.value) {
+    if ('' === e.target.value) {
       setMinLiving(0)
       return
     }
@@ -57,11 +57,11 @@ const FilterModalLivingSize = () => {
     if (!isNaN(inputValue)) {
       setMinLiving(parseInt(inputValue))
     }
-    updateLiving(parseInt(inputValue), maxLiving) */
+    updateLiving(parseInt(inputValue), maxLiving)
   }
 
   const onChangeMax = (e) => {
-    /*  if ('' === e.target.value) {
+    if ('' === e.target.value) {
       setMaxLiving(maxLivingDefault)
       return
     }
@@ -70,7 +70,7 @@ const FilterModalLivingSize = () => {
     if (!isNaN(inputValue)) {
       setMaxLiving(parseInt(inputValue))
     }
-    updateLiving(minLiving, parseInt(inputValue)) */
+    updateLiving(minLiving, parseInt(inputValue))
   }
 
   //function tools
@@ -87,7 +87,7 @@ const FilterModalLivingSize = () => {
   const numberNotCommas = (value) => value.replace(/,/g, '')
 
   const onChange = (value) => {
-    /*  if (parseInt(value[0]) < parseInt(value[1])) {
+    if (parseInt(value[0]) < parseInt(value[1])) {
       setMinLiving(parseInt(value[0]))
       setMaxLiving(parseInt(value[1]))
     }
@@ -97,11 +97,11 @@ const FilterModalLivingSize = () => {
     }
     if (value[1] === maxLivingDefault) {
       setMaxLiving(maxLivingDefault)
-    } */
+    }
   }
 
   const onAfterChangeLoad = (value) => {
-    //  updateLiving(parseInt(value[0]), parseInt(value[1]))
+    updateLiving(parseInt(value[0]), parseInt(value[1]))
   }
 
   return (
