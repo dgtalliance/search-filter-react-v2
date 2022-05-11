@@ -105,7 +105,7 @@ const FilterModalYearBuilt = () => {
 
   return (
     <>
-      <div className="ib-flex-item">
+      <div className="ib-flex-item -icon-price">
         <span className="ib-label">Minimum Year Built</span>
         <Input
           style={error ? { border: '1px solid var(--color-red)' } : null}
@@ -116,7 +116,7 @@ const FilterModalYearBuilt = () => {
           value={minYearBuilt}
         />
       </div>
-      <div className="ib-flex-item">
+      <div className="ib-flex-item -icon-price">
         <span className="ib-label">Maximum Year Built</span>
         <Input
           style={error ? { border: '1px solid var(--color-red)' } : null}

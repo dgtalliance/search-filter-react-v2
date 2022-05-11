@@ -1734,6 +1734,19 @@
                 display: none; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-flex-wrapper {
           padding: 0; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-land-size .ib-wrapper .ib-flex-wrapper .ib-flex-item.-icon-price:before, .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-living-size .ib-wrapper .ib-flex-wrapper .ib-flex-item.-icon-price:before {
+          font-size: 12px;
+          font-family: "Open Sans", sans-serif !important;
+          content: "Sq.Ft.";
+          left: auto;
+          right: 0;
+          width: 45px; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-land-size .ib-wrapper .ib-flex-wrapper .ib-flex-item .ib-input, .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-living-size .ib-wrapper .ib-flex-wrapper .ib-flex-item .ib-input {
+          padding-left: 15px;
+          padding-right: 45px; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-year-built .ib-wrapper .ib-flex-wrapper .ib-flex-item.-icon-price:before {
+          font-size: 18px;
+          content: "\e919"; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper {
         width: 100%; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper .rdrCalendarWrapper {

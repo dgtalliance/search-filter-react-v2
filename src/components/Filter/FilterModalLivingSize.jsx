@@ -75,7 +75,7 @@ const FilterModalLivingSize = () => {
 
   //function tools
   const transformPrice = (price) => {
-    if (price === 0 || price === maxLivingDefault || price === null) {
+    if (price === maxLivingDefault || price === null) {
       return 'Any Size'
     } else {
       return numberWithCommas(price)
