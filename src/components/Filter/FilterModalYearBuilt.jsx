@@ -136,8 +136,8 @@ const FilterModalYearBuilt = () => {
       <Slider
         style={{ margin: '2rem' }}
         className="slider-main-div"
-        min={minYearBuilt}
-        max={maxYearBuiltDefault}
+        min={min_year_built}
+        max={max_year_built}
         step={1}
         onChange={onChange}
         range={true}
