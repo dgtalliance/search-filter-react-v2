@@ -7,7 +7,7 @@ const initialState = {
     currentpage: 1,
     pagination: {},
     items: [],
-    slug:''
+    slug: '',
   },
   properties_maps: [],
   properties_data: [],
@@ -65,10 +65,9 @@ export const propertySlice = createSlice({
       state.loading = true
     },
     [fetchAsyncSearch.fulfilled]: (state, actions) => {
-     
       state.loading = false
-      if(actions.payload.data.success === false) {
-        console.log('Success False',actions.payload.data);
+      if (actions.payload.data.success === false) {
+        console.log('Success False', actions.payload.data)
         state.error = {
           status: false,
           code: actions.payload.data.error_code,
@@ -76,7 +75,10 @@ export const propertySlice = createSlice({
         }
       }
 
-      if (actions.payload.status && Object.keys(actions.payload.data).length>0) {
+      if (
+        actions.payload.status &&
+        Object.keys(actions.payload.data).length > 0
+      ) {
         state.properties_data = actions.payload.data
         console.log('Success', actions.payload.data)
         var params = {
@@ -191,18 +193,16 @@ export const propertySlice = createSlice({
           currentpage: actions.payload.data.params?.currentpage,
           pagination: actions.payload.data?.pagination,
           items: actions.payload.data?.items,
-          slug: actions.payload.data.slug
+          slug: actions.payload.data.slug,
         }
 
-        state.properties = { ...state.properties, ...temp_properties }
+        state.properties = Object.assign(state.properties, temp_properties)
         state.event_triggered = 'yes'
-
-        
 
         //Update Url
         history.replaceState(null, null, '?' + actions.payload.data.slug)
 
-        state.params = {...state.params,...params}
+        state.params = params
 
         //Load Data for map
         /* 

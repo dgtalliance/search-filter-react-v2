@@ -19,7 +19,7 @@ const App = () => {
   console.log("App render");
   useEffect(() => {
    dispatch(fetchAsyncSearch())
-  }, [dispatch])
+  }, [])
 
   return (
     <>

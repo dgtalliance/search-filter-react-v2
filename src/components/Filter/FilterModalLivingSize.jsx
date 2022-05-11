@@ -1,37 +1,55 @@
-import { Input, Slider } from 'antd'
-import { memo, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAsyncSearch } from '../../config/actions/properties'
 import { living_size_range_d } from '../../config/config'
+import { numberWithCommas } from '../../utils/utils'
+import { Input, Slider } from 'antd'
 import { getparams, updateForm } from '../../config/slices/properties'
-import { formatShortPriceX, numberWithCommas } from '../../utils/utils'
+import { fetchAsyncSearch } from '../../config/actions/properties'
 
 const FilterModalLivingSize = () => {
-  const dispatch = useDispatch()
-
   const max_living_size =
     living_size_range_d[living_size_range_d.length - 1].value
   const [maxLivingDefault, setMaxLivingDefault] = useState(max_living_size)
-  const [minPrice, setMinLiving] = useState(0)
-  const [maxPrice, setMaxLiving] = useState(maxLivingDefault)
-  const params = useSelector(getparams)
+  const [minLiving, setMinLiving] = useState(0)
+  const [maxLiving, setMaxLiving] = useState(maxLivingDefault)
+  /* const params = useSelector(getparams) */
   const [error, setError] = useState(false)
-  const [typingTimeout, setTypingTimeout] = useState(0)
+  const [livingTimeout, setLivingTimeout] = useState(0)
+  const dispatch = useDispatch()
 
-  useEffect(() => {
-    var min, max
+ /*  useEffect(() => {
     var { min_living_size, max_living_size } = params
-
-    min = min_living_size !== '' ? parseInt(min_living_size) : 0
-    max = max_living_size !== '' ? parseInt(max_living_size) : maxLivingDefault
     setMinLiving(min_living_size !== '' ? parseInt(min_living_size) : 0)
     setMaxLiving(
       max_living_size !== '' ? parseInt(max_living_size) : maxLivingDefault,
     )
-  }, [params])
+  }, [params]) */
+  const updateLiving = (min, max) => {
+    /* if (livingTimeout) {
+      clearTimeout(livingTimeout)
+    }
+    setLivingTimeout(
+      setTimeout(function () {
+        console.log('typingTimeout updateLiving', min, max)
+        var temp = {
+          min_living_size: parseInt(min) === 0 ? '' : min,
+          max_living_size: parseInt(max) === maxLivingDefault ? '' : max,
+          page: 1,
+        }
 
+        if (min > max) {
+          setError(true)
+          return
+        } else {
+          setError(false)
+          dispatch(updateForm(temp))
+          dispatch(fetchAsyncSearch())
+        }
+      }, 1000),
+    ) */
+  }
   const onChangeMin = (e) => {
-    if ('' === e.target.value) {
+    /*  if ('' === e.target.value) {
       setMinLiving(0)
       return
     }
@@ -39,11 +57,11 @@ const FilterModalLivingSize = () => {
     if (!isNaN(inputValue)) {
       setMinLiving(parseInt(inputValue))
     }
-    updateLiving(parseInt(inputValue), maxPrice)
+    updateLiving(parseInt(inputValue), maxLiving) */
   }
 
   const onChangeMax = (e) => {
-    if ('' === e.target.value) {
+    /*  if ('' === e.target.value) {
       setMaxLiving(maxLivingDefault)
       return
     }
@@ -52,7 +70,7 @@ const FilterModalLivingSize = () => {
     if (!isNaN(inputValue)) {
       setMaxLiving(parseInt(inputValue))
     }
-    updateLiving(minPrice, parseInt(inputValue))
+    updateLiving(minLiving, parseInt(inputValue)) */
   }
 
   //function tools
@@ -69,7 +87,7 @@ const FilterModalLivingSize = () => {
   const numberNotCommas = (value) => value.replace(/,/g, '')
 
   const onChange = (value) => {
-    if (parseInt(value[0]) < parseInt(value[1])) {
+    /*  if (parseInt(value[0]) < parseInt(value[1])) {
       setMinLiving(parseInt(value[0]))
       setMaxLiving(parseInt(value[1]))
     }
@@ -79,35 +97,11 @@ const FilterModalLivingSize = () => {
     }
     if (value[1] === maxLivingDefault) {
       setMaxLiving(maxLivingDefault)
-    }
+    } */
   }
 
-  const updateLiving = (min, max) => {
-    if (typingTimeout) {
-      clearTimeout(typingTimeout)
-    }
-    setTypingTimeout(
-      setTimeout(function () {
-        console.log('typingTimeout', min, max)  
-        var temp = {
-          min_living_size: parseInt(min) === 0 ? '' : min,
-          max_living_size: parseInt(max) === maxLivingDefault ? '' : max,
-          page: 1,
-        }
-
-        if (min > max) {
-          setError(true)
-          return
-        } else {
-          setError(false)
-           dispatch(updateForm(temp))
-           dispatch(fetchAsyncSearch())
-        }
-      }, 1000),
-    )
-  }
   const onAfterChangeLoad = (value) => {
-    updateLiving(parseInt(value[0]), parseInt(value[1]))
+    //  updateLiving(parseInt(value[0]), parseInt(value[1]))
   }
 
   return (
@@ -120,7 +114,7 @@ const FilterModalLivingSize = () => {
           pattern="[0-9]*"
           className="ib-input"
           onChange={onChangeMin}
-          value={transformPrice(minPrice)}
+          value={transformPrice(minLiving)}
         />
       </div>
       <div className="ib-flex-item -icon-price">
@@ -131,7 +125,7 @@ const FilterModalLivingSize = () => {
           pattern="[0-9]*"
           className="ib-input"
           onChange={onChangeMax}
-          value={transformPrice(maxPrice)}
+          value={transformPrice(maxLiving)}
         />
       </div>
       {error && (
@@ -149,12 +143,12 @@ const FilterModalLivingSize = () => {
         tipFormatter={formatter}
         onChange={onChange}
         range={true}
-        defaultValue={[minPrice, maxLivingDefault]}
-        value={[minPrice, maxPrice]}
+        defaultValue={[minLiving, maxLivingDefault]}
+        value={[minLiving, maxLiving]}
         onAfterChange={onAfterChangeLoad}
       />
     </>
   )
 }
 
-export default memo(FilterModalLivingSize)
+export default FilterModalLivingSize

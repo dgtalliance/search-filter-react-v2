@@ -662,7 +662,7 @@
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   position: relative;
-  padding: 0; }
+  padding: 15px; }
   .ib-dropdown .ib-wrapper .ib-flex-wrapper .ib-flex-item,
   .ib-guests-search-modal .ib-wrapper .ib-flex-wrapper .ib-flex-item {
     width: 48%;
@@ -1732,6 +1732,8 @@
                 margin-right: 0; }
               .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-round .ant-radio-group .ant-radio-button-wrapper .ant-radio-button {
                 display: none; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-flex-wrapper {
+          padding: 0; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper {
         width: 100%; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper .rdrCalendarWrapper {
