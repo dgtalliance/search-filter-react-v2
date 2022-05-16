@@ -116,6 +116,68 @@ export const formatShortPriceX = (value) => {
   return short_price + 'M'
 }
 
+// function to agroup items map
+export const groupProperties = (map_items) => {
+  let row
+  let inner
+  let geocode
+  const hashed_properties = []
+  const filtered_properties = []
+  const unique_properties = []
+
+  // reduce markers [first step]
+  for (var i = 0, l = map_items.length; i < l; i++) {
+    // if (i >= 39) { break; }
+    row = map_items[i]
+    geocode = `${row.lat}:${row.lng}`
+    if (hashed_properties.indexOf(geocode) === -1) {
+      hashed_properties.push(geocode)
+      filtered_properties.push(row)
+    }
+  }
+  // reduce markers [second step]
+  for (i = 0, l = filtered_properties.length; i < l; i++) {
+    row = filtered_properties[i]
+    geocode = [row.lat, row.lng]
+
+    // reset array
+    const related_properties = []
+    for (let k = 0, m = map_items.length; k < m; k++) {
+      inner = map_items[k]
+      if (inner.lat === geocode[0] && inner.lng === geocode[1]) {
+        related_properties.push(inner)
+      }
+    }
+    unique_properties.push({
+      item: Object.assign(row, { hovered: false }),
+      group: related_properties,
+    })
+  }
+
+  return unique_properties
+}
+
+export const hoveredItem = (mls, markers, active) => {
+  var updatedMarkers = []
+
+  markers.forEach((marker) => {
+    var t = Object.assign({}, marker.item)
+    if (marker.item.mls_num === mls) {
+      updatedMarkers.push({
+        item: Object.assign(t, { hovered: active }),
+        group: marker.group,
+      })
+    } else {
+      updatedMarkers.push({
+        item: Object.assign(t, { hovered: false }),
+        group: marker.group,
+      })
+    }
+  })
+  return updatedMarkers
+}
+
+// init script to jquery
 export const initializeElement = () => {
   jQuery(document).on('click', '.js-float-form', function (e) {
     e.preventDefault()

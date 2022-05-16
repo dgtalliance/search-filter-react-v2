@@ -8,6 +8,7 @@ import Properties from './Properties/Properties'
 initializeElement()
 
 const ContainerFiftyFifty = () => {
+  document.body.classList.add('-react-filter');
   return (
     <>
       <FilterSearch />

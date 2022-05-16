@@ -21,10 +21,9 @@ function Properties() {
   useEffect(() => {
     setSlug(propertiesItems.slug)
   }, [propertiesItems])
-  const infoSearch = useRef() 
- 
+  const infoSearch = useRef()
+
   const handleClean = () => {
-   
     var params = {
       sale_type: '',
       property_type: [],

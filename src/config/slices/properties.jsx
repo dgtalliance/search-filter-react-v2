@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { groupProperties } from '../../utils/utils'
 import { fetchAsyncSearch } from '../actions/properties'
 
 const initialState = {
@@ -57,6 +58,9 @@ export const propertySlice = createSlice({
     },
     updateTriggered: (state, { payload }) => {
       state.event_triggered = payload
+    },
+    updateDataMap: (state, { payload }) => {
+      state.properties_maps = payload
     },
   },
   extraReducers: {
@@ -205,9 +209,11 @@ export const propertySlice = createSlice({
         state.params = params
 
         //Load Data for map
-        /* 
+        
         if (parseInt(actions.payload.data.params?.currentpage) === 1) {
+          state.properties_maps =   groupProperties(actions.payload.data.map_items)
         }
+        /* 
         state.params.rect = actions.payload.data.params.rect
         state.params.zm = actions.payload.data.params.zm
         state.params.polygon_search = actions.payload.data.params.polygon_search
@@ -232,12 +238,12 @@ export const propertySlice = createSlice({
 })
 
 export const getparams = (state) => state.properties.params
-
+export const getpropertiesMapData = (state) => state.properties.properties_maps
 export const getpropertiesData = (state) => state.properties.properties_data
 export const getpropertiesItems = (state) => state.properties.properties
 export const getloading = (state) => state.properties.loading
 export const geterror = (state) => state.properties.error
 
-export const { updateForm, updateTriggered } = propertySlice.actions
+export const { updateForm, updateTriggered, updateDataMap } = propertySlice.actions
 
 export default propertySlice.reducer
