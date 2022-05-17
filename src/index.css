@@ -81,3 +81,7 @@
 .ib-wrapper-map .flex-map-controls-ct {
   margin: 16px 10px 0 0 !important;
 }
+
+body.openModals .ib-modal.active {
+  z-index: 100 !important;
+}

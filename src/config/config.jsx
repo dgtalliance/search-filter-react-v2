@@ -1,35 +1,35 @@
 import { convertParamsArray } from '../utils/utils'
 
 export const API_SEARCH_URL =
-  window.location.host === 'localhost:3000'
+  window.location.host === 'http://wordpress.test/'
     ? 'https://api.idxboost.dev/search_lookup'
     : 'https://api.idxboost.dev/search_lookup'
 
 export const API_SEARCH_FILTER_URL =
-  window.location.host === 'localhost:3000'
+  window.location.host === 'http://wordpress.test/'
     ? 'https://api.idxboost.dev/search_filter_lookup'
     : 'https://api.idxboost.dev/search_filter_lookup'
-export const ACCESS_TOKEN =
-  window.location.host === 'localhost:3000'
-    ? 'YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ'
-    : window.__flex_g_settings.accessToken
+export const ACCESS_TOKEN = 'YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ'
+  // window.location.host === 'http://wordpress.test/'
+  //   ? 'YTMwN2M5ZDc3ZTcxNTNjOGUxZTU2YTQ5ZWM1NzBhN2UzOWRhYTg2MzM5MjA0N2YwMjMzMzU0N2QzNDYzMzMxMQ'
+  //   : window.__flex_g_settings.accessToken
 export const API_PROPERTIES_DETAIL =
-  window.location.host === 'localhost:3000'
+  window.location.host === 'http://wordpress.test/'
     ? 'https://api.idxboost.dev/listings/'
     : 'https://api.idxboost.dev/listings/'
 export const API_PROPERTIES_DETAIL_CHART =
-  window.location.host === 'localhost:3000'
+  window.location.host === 'http://wordpress.test/'
     ? 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details'
     : 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details'
 export const API_AUTOCOMPLETE_URL =
-  window.location.host === 'localhost:3000'
+  window.location.host === 'http://wordpress.test/'
     ? 'https://autocomplete.idxboost.dev/?board=1'
     : 'https://autocomplete.idxboost.dev/?board=1'
 
-export const GOOGLEMAPREACTKEY =
-  window.location.host === 'localhost:3000'
-    ? 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4'
-    : window.__flex_g_settings.google_recaptcha_public_key
+export const GOOGLEMAPREACTKEY = window.__flex_g_settings.google_recaptcha_public_key
+  // window.location.host === 'http://wordpress.test/'
+  //   ? 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4'
+  //   : window.__flex_g_settings.google_recaptcha_public_key
 var temp_property_type = [
   {
     label: 'Single Family Homes',
@@ -53,10 +53,10 @@ var temp_property_type = [
   },
 ]
 
-export const property_type_d =
-  window.location.host === 'localhost:3000'
-    ? temp_property_type
-    : window.__flex_g_settings.params.property_types
+export const property_type_d = window.__flex_g_settings.params.property_types
+  // window.location.host === 'localhost:3000'
+  //   ? temp_property_type
+  //   : window.__flex_g_settings.params.property_types
 
 const amenities = [
   {
@@ -109,10 +109,10 @@ const amenities = [
   },
 ]
 
-export const amenities_d =
-  window.location.host === 'localhost:3000'
-    ? convertParamsArray(amenities)
-    : convertParamsArray(window.__flex_g_settings.params.amenities)
+export const amenities_d = convertParamsArray(window.__flex_g_settings.params.amenities)
+  // window.location.host === 'http://wordpress.test/'
+  //   ? convertParamsArray(amenities)
+  //   : convertParamsArray(window.__flex_g_settings.params.amenities)
 
 const waterfront_options = [
   {
@@ -149,10 +149,10 @@ const waterfront_options = [
   },
 ]
 
-export const waterfront_options_d =
-  window.location.host === 'localhost:3000'
-    ? convertParamsArray(waterfront_options)
-    : convertParamsArray(window.__flex_g_settings.params.waterfront_options)
+export const waterfront_options_d = convertParamsArray(window.__flex_g_settings.params.waterfront_options)
+  // window.location.host === 'http://wordpress.test/'
+  //   ? convertParamsArray(waterfront_options)
+  //   : convertParamsArray(window.__flex_g_settings.params.waterfront_options)
 
 const parking_options = [
   {
@@ -180,10 +180,10 @@ const parking_options = [
     value: 6,
   },
 ]
-export const parking_options_d =
-  window.location.host === 'localhost:3000'
-    ? parking_options
-    : window.__flex_g_settings.params.parking_options
+export const parking_options_d = window.__flex_g_settings.params.parking_options
+  // window.location.host === 'http://wordpress.test/'
+  //   ? parking_options
+  //   : window.__flex_g_settings.params.parking_options
 
 const living_size_range = [
   {
@@ -339,10 +339,10 @@ const living_size_range = [
     value: 80000,
   },
 ]
-export const living_size_range_d =
-  window.location.host === 'localhost:3000'
-    ? living_size_range
-    : window.__flex_g_settings.params.living_size_range
+export const living_size_range_d = window.__flex_g_settings.params.living_size_range
+  // window.location.host === 'http://wordpress.test/'
+  //   ? living_size_range
+  //   : window.__flex_g_settings.params.living_size_range
 
 const year_built_range = [
   {
@@ -839,10 +839,10 @@ const year_built_range = [
   },
 ]
 
-export const year_built_range_d =
-  window.location.host === 'localhost:3000'
-    ? year_built_range
-    : window.__flex_g_settings.params.year_built_range
+export const year_built_range_d = window.__flex_g_settings.params.year_built_range
+  // window.location.host === 'http://wordpress.test/'
+  //   ? year_built_range
+  //   : window.__flex_g_settings.params.year_built_range
 
 const lot_size_range = [
   {
@@ -999,7 +999,7 @@ const lot_size_range = [
   },
 ]
 
-export const lot_size_range_d =
-  window.location.host === 'localhost:3000'
-    ? lot_size_range
-    : window.__flex_g_settings.params.lot_size_range
+export const lot_size_range_d = window.__flex_g_settings.params.lot_size_range
+  // window.location.host === 'http://wordpress.test/'
+  //   ? lot_size_range
+  //   : window.__flex_g_settings.params.lot_size_range
