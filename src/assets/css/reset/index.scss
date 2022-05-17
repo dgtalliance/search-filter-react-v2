@@ -79,7 +79,8 @@ button, input, select{
 	>div:nth-child(2){
 		>div{
 			>div:nth-child(3){
-				display: none;
+				display: inline-block;
+				z-index: -1;
 			}
 		}
 	}

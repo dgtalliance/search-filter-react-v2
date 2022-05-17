@@ -21,10 +21,9 @@ function Properties() {
   useEffect(() => {
     setSlug(propertiesItems.slug)
   }, [propertiesItems])
-  const infoSearch = useRef() 
- 
+  const infoSearch = useRef()
+
   const handleClean = () => {
-   
     var params = {
       sale_type: '',
       property_type: [],
@@ -90,6 +89,7 @@ function Properties() {
               <PropertiesPaginate
                 pagination={propertiesItems.pagination}
                 current={propertiesItems.currentpage}
+                infoSearch={infoSearch}
               />
             </div>
           </>

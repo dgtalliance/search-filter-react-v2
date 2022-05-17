@@ -1,130 +1,39 @@
-import { Input, Slider } from 'antd'
-import { memo, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAsyncSearch } from '../../config/actions/properties'
+import { year_built_range_d } from '../../config/config'
+import { numberWithCommas } from '../../utils/utils'
+import { Input, Slider } from 'antd'
 import { getparams, updateForm } from '../../config/slices/properties'
-import { formatShortPriceX, numberWithCommas } from '../../utils/utils'
+import { fetchAsyncSearch } from '../../config/actions/properties'
 
 const FilterModalYearBuilt = () => {
-  const dispatch = useDispatch()
-  const maxPriceDefaultSales = 100000000
-  const maxPriceDefaultRent = 100000
-  const [maxPriceDefault, setmaxPriceDefault] = useState(maxPriceDefaultSales)
-  const [minPrice, setMinPrice] = useState(0)
-  const [maxPrice, setMaxPrice] = useState(maxPriceDefault)
+  const max_year_built = year_built_range_d[year_built_range_d.length - 1].value
+  const min_year_built = year_built_range_d[0].value
+
+  const [maxYearBuiltDefault, setYearBuiltDefault] = useState(max_year_built)
+  const [minYearBuilt, setMinYearBuilt] = useState(min_year_built)
+  const [maxYearBuilt, setMaxYearBuilt] = useState(maxYearBuiltDefault)
   const params = useSelector(getparams)
   const [error, setError] = useState(false)
-  const [typingTimeout, setTypingTimeout] = useState(0)
-  const [saletype, setSaletype] = useState(0)
+  const [yearBuiltTimeout, setYearBuiltTimeout] = useState(0)
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    var min, max
-    var {
-      sale_type,
-      min_rent_price,
-      max_rent_price,
-      min_sale_price,
-      max_sale_price,
-    } = params
-    setSaletype(sale_type)
-    if (parseInt(sale_type) === 0) {
-      setmaxPriceDefault(maxPriceDefaultSales)
-      min = min_sale_price !== '' ? parseInt(min_sale_price) : 0
-      max =
-        max_sale_price !== '' ? parseInt(max_sale_price) : maxPriceDefaultSales
-      setMinPrice(min_sale_price !== '' ? parseInt(min_sale_price) : 0)
-      setMaxPrice(
-        max_sale_price !== '' ? parseInt(max_sale_price) : maxPriceDefaultSales,
-      )
-    } else {
-      setmaxPriceDefault(maxPriceDefaultRent)
-      min = min_rent_price !== '' ? parseInt(min_rent_price) : 0
-      max =
-        max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent
-      setMinPrice(min_rent_price !== '' ? parseInt(min_rent_price) : 0)
-      setMaxPrice(
-        max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent,
-      )
-    }
+    var { min_year, max_year } = params
+    setMinYearBuilt(min_year !== '' ? parseInt(min_year) : min_year_built)
+    setMaxYearBuilt(max_year !== '' ? parseInt(max_year) : maxYearBuiltDefault)
   }, [params])
-
-  const onChangeMin = (e) => {
-    if ('' === e.target.value) {
-      setMinPrice(0)
-      return
+  const updateYearBuilt = (min, max) => {
+    if (yearBuiltTimeout) {
+      clearTimeout(yearBuiltTimeout)
     }
-    var inputValue = parseInt(numberNotCommas(e.target.value))
-    if (!isNaN(inputValue)) {
-      setMinPrice(parseInt(inputValue))
-    }
-    updatePrice(parseInt(inputValue), maxPrice, saletype)
-  }
-
-  const onChangeMax = (e) => {
-    if ('' === e.target.value) {
-      setMaxPrice(maxPriceDefault)
-      return
-    }
-
-    var inputValue = parseInt(numberNotCommas(e.target.value))
-    if (!isNaN(inputValue)) {
-      setMaxPrice(parseInt(inputValue))
-    }
-    updatePrice(minPrice, parseInt(inputValue), saletype)
-  }
-
-  //function tools
-  const transformPrice = (price) => {
-    if (
-      price === 0 ||
-      price === maxPriceDefault ||
-      price === null
-    ) {
-      return 'Any Size'
-    } else {
-      return numberWithCommas(price)
-    }
-  }
-  const formatter = (value) => {
-    return `${formatShortPriceX(value)} Sq.Ft.`
-  }
-  const numberNotCommas = (value) => value.replace(/,/g, '')
-
-  const onChange = (value) => {
-    if (parseInt(value[0]) < parseInt(value[1])) {
-      setMinPrice(parseInt(value[0]))
-      setMaxPrice(parseInt(value[1]))
-    }
-
-    if (value[0] === 0) {
-      setMinPrice(0)
-    }
-    if (value[1] === maxPriceDefault) {
-      setMaxPrice(maxPriceDefault)
-    }
-  }
-
-  const updatePrice = (min, max, type) => {
-    if (typingTimeout) {
-      clearTimeout(typingTimeout)
-    }
-    setTypingTimeout(
+    setYearBuiltTimeout(
       setTimeout(function () {
-        console.log('typingTimeout', min, max, type)
-
-        var tempPrice = {}
-        if (parseInt(type) === 0) {
-          tempPrice = {
-            min_sale_price: parseInt(min) === 0 ? '' : min,
-            max_sale_price: parseInt(max) === maxPriceDefaultSales ? '' : max,
-            page: 1,
-          }
-        } else {
-          tempPrice = {
-            min_rent_price: parseInt(min) === 0 ? '' : min,
-            max_rent_price: parseInt(max) === maxPriceDefaultRent ? '' : max,
-            page: 1,
-          }
+        console.log('typingTimeout YearBuilt', min, max)
+        var temp = {
+          min_year: parseInt(min) === 0 ? '' : min,
+          max_year: parseInt(max) === maxYearBuiltDefault ? '' : max,
+          page: 1,
         }
 
         if (min > max) {
@@ -132,14 +41,66 @@ const FilterModalYearBuilt = () => {
           return
         } else {
           setError(false)
-         // dispatch(updateForm(tempPrice))
-         // dispatch(fetchAsyncSearch())
+          dispatch(updateForm(temp))
+          dispatch(fetchAsyncSearch())
         }
       }, 1000),
     )
   }
+  const onChangeMin = (e) => {
+    if ('' === e.target.value) {
+      setMinYearBuilt(0)
+      return
+    }
+    var inputValue = parseInt(numberNotCommas(e.target.value))
+    if (!isNaN(inputValue)) {
+      setMinYearBuilt(parseInt(inputValue))
+    }
+    updateYearBuilt(parseInt(inputValue), maxYearBuilt)
+  }
+
+  const onChangeMax = (e) => {
+    if ('' === e.target.value) {
+      setMaxYearBuilt(maxYearBuiltDefault)
+      return
+    }
+
+    var inputValue = parseInt(numberNotCommas(e.target.value))
+    if (!isNaN(inputValue)) {
+      setMaxYearBuilt(parseInt(inputValue))
+    }
+    updateYearBuilt(minYearBuilt, parseInt(inputValue))
+  }
+
+  //function tools
+  const transformYear = (year) => {
+    if (year === minYearBuilt || year === maxYearBuiltDefault || year === null) {
+      return 'Any Year'
+    } else {
+      return year
+    }
+  }
+  const formatter = (value) => {
+    return `${numberWithCommas(value)} Sq.Ft.`
+  }
+  const numberNotCommas = (value) => value.replace(/,/g, '')
+
+  const onChange = (value) => {
+    if (parseInt(value[0]) < parseInt(value[1])) {
+      setMinYearBuilt(parseInt(value[0]))
+      setMaxYearBuilt(parseInt(value[1]))
+    }
+
+    if (value[0] === 0) {
+      setMinYearBuilt(0)
+    }
+    if (value[1] === maxYearBuiltDefault) {
+      setMaxYearBuilt(maxYearBuiltDefault)
+    }
+  }
+
   const onAfterChangeLoad = (value) => {
-    updatePrice(parseInt(value[0]), parseInt(value[1]), saletype)
+    updateYearBuilt(parseInt(value[0]), parseInt(value[1]))
   }
 
   return (
@@ -151,8 +112,8 @@ const FilterModalYearBuilt = () => {
           type="text"
           pattern="[0-9]*"
           className="ib-input"
-          onChange={onChangeMin}
-          value={transformPrice(minPrice)}
+          onChange={transformYear(onChangeMin)}
+          value={minYearBuilt}
         />
       </div>
       <div className="ib-flex-item -icon-price">
@@ -163,7 +124,7 @@ const FilterModalYearBuilt = () => {
           pattern="[0-9]*"
           className="ib-input"
           onChange={onChangeMax}
-          value={transformPrice(maxPrice)}
+          value={transformYear(maxYearBuilt)}
         />
       </div>
       {error && (
@@ -175,18 +136,17 @@ const FilterModalYearBuilt = () => {
       <Slider
         style={{ margin: '2rem' }}
         className="slider-main-div"
-        min={0}
-        max={maxPriceDefault}
+        min={min_year_built}
+        max={max_year_built}
         step={1}
-        tipFormatter={formatter}
         onChange={onChange}
         range={true}
-        defaultValue={[minPrice, maxPriceDefault]}
-        value={[minPrice, maxPrice]}
+        defaultValue={[minYearBuilt, maxYearBuiltDefault]}
+        value={[minYearBuilt, maxYearBuilt]}
         onAfterChange={onAfterChangeLoad}
       />
     </>
   )
 }
 
-export default memo(FilterModalYearBuilt)
+export default FilterModalYearBuilt

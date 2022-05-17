@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { groupProperties } from '../../utils/utils'
 import { fetchAsyncSearch } from '../actions/properties'
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
     currentpage: 1,
     pagination: {},
     items: [],
-    slug:''
+    slug: '',
   },
   properties_maps: [],
   properties_data: [],
@@ -58,6 +59,9 @@ export const propertySlice = createSlice({
     updateTriggered: (state, { payload }) => {
       state.event_triggered = payload
     },
+    updateDataMap: (state, { payload }) => {
+      state.properties_maps = payload
+    },
   },
   extraReducers: {
     [fetchAsyncSearch.pending]: (state) => {
@@ -65,10 +69,9 @@ export const propertySlice = createSlice({
       state.loading = true
     },
     [fetchAsyncSearch.fulfilled]: (state, actions) => {
-     
       state.loading = false
-      if(actions.payload.data.success === false) {
-        console.log('Success False',actions.payload.data);
+      if (actions.payload.data.success === false) {
+        console.log('Success False', actions.payload.data)
         state.error = {
           status: false,
           code: actions.payload.data.error_code,
@@ -76,7 +79,10 @@ export const propertySlice = createSlice({
         }
       }
 
-      if (actions.payload.status && Object.keys(actions.payload.data).length>0) {
+      if (
+        actions.payload.status &&
+        Object.keys(actions.payload.data).length > 0
+      ) {
         state.properties_data = actions.payload.data
         console.log('Success', actions.payload.data)
         var params = {
@@ -191,23 +197,23 @@ export const propertySlice = createSlice({
           currentpage: actions.payload.data.params?.currentpage,
           pagination: actions.payload.data?.pagination,
           items: actions.payload.data?.items,
-          slug: actions.payload.data.slug
+          slug: actions.payload.data.slug,
         }
 
-        state.properties = { ...state.properties, ...temp_properties }
+        state.properties = Object.assign(state.properties, temp_properties)
         state.event_triggered = 'yes'
-
-        
 
         //Update Url
         history.replaceState(null, null, '?' + actions.payload.data.slug)
 
-        state.params = {...state.params,...params}
+        state.params = params
 
         //Load Data for map
-        /* 
+        
         if (parseInt(actions.payload.data.params?.currentpage) === 1) {
+          state.properties_maps =   groupProperties(actions.payload.data.map_items)
         }
+        /* 
         state.params.rect = actions.payload.data.params.rect
         state.params.zm = actions.payload.data.params.zm
         state.params.polygon_search = actions.payload.data.params.polygon_search
@@ -232,12 +238,12 @@ export const propertySlice = createSlice({
 })
 
 export const getparams = (state) => state.properties.params
-
+export const getpropertiesMapData = (state) => state.properties.properties_maps
 export const getpropertiesData = (state) => state.properties.properties_data
 export const getpropertiesItems = (state) => state.properties.properties
 export const getloading = (state) => state.properties.loading
 export const geterror = (state) => state.properties.error
 
-export const { updateForm, updateTriggered } = propertySlice.actions
+export const { updateForm, updateTriggered, updateDataMap } = propertySlice.actions
 
 export default propertySlice.reducer

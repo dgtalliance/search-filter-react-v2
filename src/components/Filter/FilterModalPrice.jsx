@@ -1,9 +1,9 @@
 import { Input, Slider } from 'antd'
 import { memo, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAsyncSearch } from '../../config/actions/properties'
 import { getparams, updateForm } from '../../config/slices/properties'
 import { formatShortPriceX, numberWithCommas } from '../../utils/utils'
+import { fetchAsyncSearch } from '../../config/actions/properties'
 
 const FilterModalPrice = () => {
   const dispatch = useDispatch()
@@ -18,7 +18,6 @@ const FilterModalPrice = () => {
   const [saletype, setSaletype] = useState(0)
 
   useEffect(() => {
-    var min, max
     var {
       sale_type,
       min_rent_price,
@@ -29,80 +28,18 @@ const FilterModalPrice = () => {
     setSaletype(sale_type)
     if (parseInt(sale_type) === 0) {
       setmaxPriceDefault(maxPriceDefaultSales)
-      min = min_sale_price !== '' ? parseInt(min_sale_price) : 0
-      max =
-        max_sale_price !== '' ? parseInt(max_sale_price) : maxPriceDefaultSales
       setMinPrice(min_sale_price !== '' ? parseInt(min_sale_price) : 0)
       setMaxPrice(
         max_sale_price !== '' ? parseInt(max_sale_price) : maxPriceDefaultSales,
       )
     } else {
       setmaxPriceDefault(maxPriceDefaultRent)
-      min = min_rent_price !== '' ? parseInt(min_rent_price) : 0
-      max =
-        max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent
       setMinPrice(min_rent_price !== '' ? parseInt(min_rent_price) : 0)
       setMaxPrice(
         max_rent_price !== '' ? parseInt(max_rent_price) : maxPriceDefaultRent,
       )
     }
   }, [params])
-
-  const onChangeMin = (e) => {
-    if ('' === e.target.value) {
-      setMinPrice(0)
-      return
-    }
-    var inputValue = parseInt(numberNotCommas(e.target.value))
-    if (!isNaN(inputValue)) {
-      setMinPrice(parseInt(inputValue))
-    }
-    updatePrice(parseInt(inputValue), maxPrice, saletype)
-  }
-
-  const onChangeMax = (e) => {
-    if ('' === e.target.value) {
-      setMaxPrice(maxPriceDefault)
-      return
-    }
-
-    var inputValue = parseInt(numberNotCommas(e.target.value))
-    if (!isNaN(inputValue)) {
-      setMaxPrice(parseInt(inputValue))
-    }
-    updatePrice(minPrice, parseInt(inputValue), saletype)
-  }
-
-  //function tools
-  const transformPrice = (price) => {
-    if (
-      price === 0 ||
-      price === maxPriceDefault ||
-      price === null
-    ) {
-      return 'Any'
-    } else {
-      return numberWithCommas(price)
-    }
-  }
-  const formatter = (value) => {
-    return `$${formatShortPriceX(value)}`
-  }
-  const numberNotCommas = (value) => value.replace(/,/g, '')
-
-  const onChange = (value) => {
-    if (parseInt(value[0]) < parseInt(value[1])) {
-      setMinPrice(parseInt(value[0]))
-      setMaxPrice(parseInt(value[1]))
-    }
-
-    if (value[0] === 0) {
-      setMinPrice(0)
-    }
-    if (value[1] === maxPriceDefault) {
-      setMaxPrice(maxPriceDefault)
-    }
-  }
 
   const updatePrice = (min, max, type) => {
     if (typingTimeout) {
@@ -138,6 +75,59 @@ const FilterModalPrice = () => {
       }, 1000),
     )
   }
+
+  const onChangeMin = (e) => {
+    if ('' === e.target.value) {
+      setMinPrice(0)
+      return
+    }
+    var inputValue = parseInt(numberNotCommas(e.target.value))
+    if (!isNaN(inputValue)) {
+      setMinPrice(parseInt(inputValue))
+    }
+    updatePrice(parseInt(inputValue), maxPrice, saletype)
+  }
+
+  const onChangeMax = (e) => {
+    if ('' === e.target.value) {
+      setMaxPrice(maxPriceDefault)
+      return
+    }
+
+    var inputValue = parseInt(numberNotCommas(e.target.value))
+    if (!isNaN(inputValue)) {
+      setMaxPrice(parseInt(inputValue))
+    }
+    updatePrice(minPrice, parseInt(inputValue), saletype)
+  }
+
+  //function tools
+  const transformPrice = (price) => {
+    if (price === 0 || price === maxPriceDefault || price === null) {
+      return 'Any'
+    } else {
+      return numberWithCommas(price)
+    }
+  }
+  const formatter = (value) => {
+    return `$${formatShortPriceX(value)}`
+  }
+  const numberNotCommas = (value) => value.replace(/,/g, '')
+
+  const onChange = (value) => {
+    if (parseInt(value[0]) < parseInt(value[1])) {
+      setMinPrice(parseInt(value[0]))
+      setMaxPrice(parseInt(value[1]))
+    }
+
+    if (value[0] === 0) {
+      setMinPrice(0)
+    }
+    if (value[1] === maxPriceDefault) {
+      setMaxPrice(maxPriceDefault)
+    }
+  }
+
   const onAfterChangeLoad = (value) => {
     updatePrice(parseInt(value[0]), parseInt(value[1]), saletype)
   }

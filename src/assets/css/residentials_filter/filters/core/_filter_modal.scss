@@ -193,6 +193,50 @@
 						}
 					}
 				}
+
+				.ib-flex-wrapper{
+					padding: 0;
+				}
+
+				&.-land-size,
+				&.-living-size{
+					.ib-wrapper{
+						.ib-flex-wrapper{
+							.ib-flex-item{
+								&.-icon-price{
+									&:before {
+										font-size: 12px;
+										font-family: "Open Sans", sans-serif!important;
+										content: "Sq.Ft.";
+										left: auto;
+										right: 0;
+										width: 45px;
+									}
+								}
+
+								.ib-input{
+									padding-left: 15px;
+									padding-right: 45px;
+								}
+							}
+						}
+					}
+				}
+
+				&.-year-built{
+					.ib-wrapper{
+						.ib-flex-wrapper{
+							.ib-flex-item{
+								&.-icon-price{
+									&:before {
+										font-size: 18px;
+										content: "\e919";
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			.rdrDateRangePickerWrapper{
