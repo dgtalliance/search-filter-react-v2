@@ -1,14 +1,18 @@
-import { memo, useRef, useState } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import Map from 'google-map-react'
+import { getpropertiesMapData } from '../../config/slices/properties'
+import { useSelector } from 'react-redux'
+import { abbreviateNumber } from '../../utils/utils'
+import Marker from './Marker'
 
 function MapSearch() {
   const bootstrapURLKeys = { key: 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4' }
   const defaultCenter = { lat: 25.91157267302583, lng: -80.21950243519076 }
   const defaultZoom = 11
-
+  const params = useSelector(getpropertiesMapData)
   //set states
   const [isDrawing, setIsDrawing] = useState(false)
-
+  const [IB_MARKERS, set_IB_MARKERS] = useState([])
   //ref elements
   const containerMap = useRef()
   const mapRef = useRef()
@@ -18,6 +22,10 @@ function MapSearch() {
   const zoomOut = useRef()
   const satellite = useRef()
   const draw = useRef()
+
+  useEffect(() => {
+    set_IB_MARKERS(params)
+  }, [params])
 
   const handlefullscreenButton = (event) => {
     event.stopPropagation()
@@ -96,6 +104,22 @@ function MapSearch() {
     }
   }
 
+  //PIN MARKERS
+
+  const updateDataMap = (mapData) => {
+    if (mapRef === null && mapRef === undefined) {
+      return
+    }
+    var markers = []
+    mapData.forEach((property) => {
+      let markerLabel = abbreviateNumber(property.item.price)
+
+      if (property.group.length > 1) {
+        markerLabel = property.group.length + ' Units'
+      }
+    })
+  }
+
   const handleCancel = (e) => {
     e.stopPropagation()
     e.preventDefault()
@@ -113,7 +137,10 @@ function MapSearch() {
   const handleOnChildClick = () => {}
   const handleOnChildMouseEnter = () => {}
   const handleOnChildMouseLeave = () => {}
-  const onGoogleApiLoaded = ({ map, maps, ref }) => {
+
+  /// for marker
+
+  const onGoogleApiLoaded = ({ map, maps }) => {
     mapRef.current = map
     mapsRef.current = maps
   }
@@ -225,7 +252,18 @@ function MapSearch() {
             draggingCursor: 'grabbing', //
           })}
           onGoogleApiLoaded={onGoogleApiLoaded}
-        ></Map>
+        >
+          {IB_MARKERS.map((element, index) => {
+            return (
+              <Marker
+                key={index}
+                lat={element.item.lat}
+                lng={element.item.lng}
+                info={element}
+              />
+            )
+          })}
+        </Map>
       </div>
     </div>
   )

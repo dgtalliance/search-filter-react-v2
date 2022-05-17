@@ -1,4 +1,4 @@
-.dgt-richmarker-group, 
+.dgt-richmarker-group,
 .dgt-richmarker-single {
 	font-family: var(--font-opensans);
 	white-space: nowrap;
@@ -13,34 +13,50 @@
 	display: inline-block;
 	font-size: 10px;
 	transition: all .35s ease;
-	strong{
+
+	strong {
 		font-weight: 600;
 		margin-right: 3px;
-    display: inline-block;
+		display: inline-block;
 	}
 
-	&.ib-search-marker-active{
+	&.ib-search-marker-active {
 		background-color: var(--color-coral);
+		z-index: 100;
 	}
 
-	&:after{
-		display: none;
+	&:after {
+		content: '';
+		width: 0px;
+		height: 0px;
+		border-left: 3px solid transparent;
+		border-right: 3px solid transparent;
+		border-top: 5px solid #333;
+		position: absolute;
+		bottom: -4px;
+		left: 0;
+		right: 0;
+		margin: 0 auto;
+		-webkit-transition: all .35s ease;
+		-o-transition: all .35s ease;
+		transition: all .35s ease;
 	}
 }
 
-#ib-idx-search-filter{
+#ib-idx-search-filter {
 
-	.gm-style-iw.gm-style-iw-c{
+	.gm-style-iw.gm-style-iw-c {
 		padding: 0;
-		*{
+
+		* {
 			font-family: var(--font-opensans);
 		}
 
-		.gm-style-iw-d{
+		.gm-style-iw-d {
 			overflow: hidden !important;
 		}
 
-		.gm-ui-hover-effect{
+		.gm-ui-hover-effect {
 			top: 0 !important;
 			right: 0 !important;
 		}
@@ -53,6 +69,7 @@
 
 		@media screen and (min-width: 990px) {
 			padding-bottom: 15px;
+
 			&:after {
 				position: absolute;
 				content: "";
@@ -61,7 +78,7 @@
 				border-top: 15px solid var(--color-white);
 				border-left: 15px solid transparent;
 				border-right: 15px solid transparent;
-				bottom:0;
+				bottom: 0;
 				left: 50%;
 				transform: translateX(-50%);
 			}
@@ -109,7 +126,7 @@
 				color: $colorp;
 			}*/
 
-			span{
+			span {
 				text-transform: uppercase;
 				margin-left: 5px;
 				display: inline-block;
@@ -144,7 +161,7 @@
 
 		.ib-ibclose {
 			position: absolute;
-			top:0;
+			top: 0;
 			right: 0;
 			height: 100%;
 			width: 30px;
@@ -153,15 +170,16 @@
 			span {
 				position: absolute;
 				top: -200px;
-				left:0;
+				left: 0;
 			}
 
-			&:before, &:after {
+			&:before,
+			&:after {
 				content: "";
 				width: 2px;
 				height: 60%;
 				position: absolute;
-				top:0 ;
+				top: 0;
 				left: 0;
 				right: 0;
 				bottom: 0;
@@ -179,7 +197,7 @@
 			}
 
 			&:hover {
-				cursor:pointer;
+				cursor: pointer;
 			}
 		}
 
@@ -199,7 +217,7 @@
 
 			&::-webkit-scrollbar-track {
 				border: 0px solid var(--color-black);
-					background-color: rgba(0, 0, 0, 0.15);
+				background-color: rgba(0, 0, 0, 0.15);
 			}
 		}
 
@@ -211,17 +229,18 @@
 			flex-direction: row-reverse;
 			border-bottom: 1px solid var(--color-gray-bd);
 			margin-bottom: 5px;
-			@media screen and (min-width: 640px){
+
+			@media screen and (min-width: 640px) {
 				width: 410px;
 			}
 
-			&:last-child{
+			&:last-child {
 				border-bottom: 0;
 				margin-bottom: 0;
 			}
 
 			&:hover {
-				cursor:pointer;
+				cursor: pointer;
 			}
 		}
 
@@ -278,12 +297,15 @@
 			text-overflow: ellipsis;
 		}
 
-		.ib-ibaddress, .ib-ibprice {
+		.ib-ibaddress,
+		.ib-ibprice {
 			width: 100%;
 		}
 
-		.ib-ibdbold, .ib-ibprice {
-			font-weight: 600;;
+		.ib-ibdbold,
+		.ib-ibprice {
+			font-weight: 600;
+			;
 		}
 
 		.ib-ibprice {
@@ -292,9 +314,12 @@
 			font-weight: bold;
 		}
 
-		.ib-ibbeds, .ib-ibbaths, .ib-ibsqft {
+		.ib-ibbeds,
+		.ib-ibbaths,
+		.ib-ibsqft {
 			margin-right: 7px;
 			font-size: 13px;
+
 			.ib-ibdbold {
 				margin-right: 3px;
 			}
@@ -315,12 +340,13 @@
 		margin-bottom: 5px;
 		border-radius: 10px;
 		max-width: fit-content;
-		.ib-ibwtitle{
+
+		.ib-ibwtitle {
 			border-top-left-radius: 6px;
 			border-top-right-radius: 6px;
 		}
 
-		.ib-ibproperties{
+		.ib-ibproperties {
 			border-bottom-right-radius: 6px;
 			border-bottom-left-radius: 6px;
 		}
@@ -345,19 +371,19 @@
 	}
 
 	.markerOverlay {
-    padding: 5px 10px;
-    display: flex;
-    text-align: center;
-    width: max-content;
+		padding: 5px 10px;
+		display: flex;
+		text-align: center;
+		width: max-content;
 	}
 }
 
 .gm-style .gm-style-iw-t::after {
 	left: 0;
-	transform: translate(90%,-44%) rotate(-45deg);
+	transform: translate(90%, -44%) rotate(-45deg);
 }
 
 .gm-style .gm-style-iw-c {
 	left: 0;
-	transform: translate3d(-48%,-100%,0);
+	transform: translate3d(-48%, -100%, 0);
 }

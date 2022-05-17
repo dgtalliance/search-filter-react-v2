@@ -36,13 +36,13 @@ function PropertiesItem({ itemData }) {
   const handleOnItemMouseEnter = (e, value) => {
     e.preventDefault()
     var markers = hoveredItem(value, itemsMap, true)
-   // dispatch(updateDataMap(markers))
+    dispatch(updateDataMap(markers))
   }
 
   const handleOnItemMouseLeave = (e, value) => {
     e.preventDefault()
     var markers = hoveredItem(value, itemsMap, false)
-  //  dispatch(updateDataMap(markers))
+    dispatch(updateDataMap(markers))
   }
 
   return (

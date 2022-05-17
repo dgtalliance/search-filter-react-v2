@@ -75,5 +75,9 @@
 }
 
 .gm-svpc{
-  top: 225px !important;
+  top: 231px !important;
+}
+
+.ib-wrapper-map .flex-map-controls-ct {
+  margin: 16px 10px 0 0 !important;
 }

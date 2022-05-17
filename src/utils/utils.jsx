@@ -176,6 +176,51 @@ export const hoveredItem = (mls, markers, active) => {
   })
   return updatedMarkers
 }
+export const hoverMapGrid = (ele) => {
+  Array.from(document.getElementsByClassName('markerOverlay')).forEach(f => {
+    if (f.className.includes('active')) {
+      document.getElementById(f.id).classList.remove('active')
+    }
+  });
+  if (document.getElementById(ele) !== null)
+    document.getElementById(ele).classList.add('active')
+}
+
+export const clearHover = () => {
+  Array.from(document.getElementsByClassName('markerOverlay')).forEach(f => {
+    if (f.className.includes('active')) {
+      document.getElementById(f.id).classList.remove('active')
+    }
+  });
+}
+
+export const removeChild = () => {
+  const removeChild = document.getElementsByClassName('gm-style')[0].children[1].children[1].children[0].children[2];
+  removeChild.innerHTML = '';
+}
+
+export const abbreviateNumber = (number) => {
+  if (number === null) {
+    return '$'
+  }
+  const SI_SYMBOL = ['', 'k', 'M', 'G', 'T', 'P', 'E']
+
+  // what tier? (determines SI symbol)
+  const tier = (Math.log10(number) / 3) | 0
+
+  // if zero, we don't need a suffix
+  if (tier === 0) return number
+
+  // get suffix and determine scale
+  const suffix = SI_SYMBOL[tier]
+  const scale = Math.pow(10, tier * 3)
+
+  // scale the number
+  const scaled = number / scale
+
+  // format number and add suffix
+  return '$' + scaled.toFixed(1) + suffix
+}
 
 // init script to jquery
 export const initializeElement = () => {
