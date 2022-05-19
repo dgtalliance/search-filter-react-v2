@@ -12,13 +12,18 @@ import { Collapse } from "antd";
 
 import {
   calculate_mortgage,
+  favoriteIcon,
   formatPrice,
   phoneFormat,
 } from "../../utils/utils";
 
 import RentalFormContact from "./RentalFormContact";
 import ModalSendToFriend from "./ModalSendToFriend";
-import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
+import {
+  API_PROPERTIES_DETAIL_CHART,
+  LEAD_FAVORITES,
+  SAVE_FAVORITE,
+} from "../../config/config";
 import { Chart } from "./Chart";
 
 import { ChartTabs } from "./ChartTabs";
@@ -45,6 +50,10 @@ export const ModalDetailProperties = () => {
   const [defaultTab, setDefaultTab] = useState("media_price");
   const [defaultYears, setDefaultYears] = useState(1);
   const [defaultYearsSegment, setDefaultYearsSegment] = useState("1 year");
+
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const refFormMortgage = useRef();
   const refPropertyMcTy = useRef();
@@ -102,28 +111,6 @@ export const ModalDetailProperties = () => {
     dispatch(fetchAsyncDetails(mls_num));
   };
 
-
-  const handleFavorite = ()=>{
-    console.log('lleaaa')
-    if (__flex_g_settings.anonymous === "yes") {
-			//active_modal($('#modal_login'));
-			jQuery("#modal_login").addClass("active_modal").find('[data-tab]').removeClass('active');
-			jQuery("#modal_login").addClass("active_modal").find('[data-tab]:eq(1)').addClass('active');
-			jQuery("#modal_login").find(".item_tab").removeClass("active");
-			jQuery("#tabRegister").addClass("active");
-			jQuery("button.close-modal").addClass("ib-close-mproperty");
-			jQuery(".overlay_modal").css("background-color", "rgba(0,0,0,0.8);");
-			jQuery("#modal_login h2").html(
-        jQuery("#modal_login").find("[data-tab]:eq(1)").data("text-force"));
-			/*Asigamos el texto personalizado*/
-			var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr('data-text')
-			jQuery("#modal_login .modal_cm .content_md .heder_md .ms-title-modal").html(titleText);
-
-		}else{
-      console.log('peticion')
-    }
-  }
-
   const calculate = (val_cal) => {
     var price = val_cal.price;
     if (refFormMortgage.current.length > 0) {
@@ -157,7 +144,9 @@ export const ModalDetailProperties = () => {
 
   useEffect(() => {
     if (Object.keys(propertiesData).length > 0) {
+      isFavoriteF();
       chartsDetails();
+      console.log(propertiesData);
     }
   }, [propertiesData]);
 
@@ -182,6 +171,83 @@ export const ModalDetailProperties = () => {
         series: response.data.value.zip.metadata["1"]["media_price"],
       });
       setLoadingDataChart(false);
+    }
+  };
+
+  const handleFavorite = async () => {
+    if (__flex_g_settings.anonymous === "yes") {
+      //active_modal($('#modal_login'));
+      jQuery("#modal_login")
+        .addClass("active_modal")
+        .find("[data-tab]")
+        .removeClass("active");
+      jQuery("#modal_login")
+        .addClass("active_modal")
+        .find("[data-tab]:eq(1)")
+        .addClass("active");
+      jQuery("#modal_login").find(".item_tab").removeClass("active");
+      jQuery("#tabRegister").addClass("active");
+      jQuery("button.close-modal").addClass("ib-close-mproperty");
+      jQuery(".overlay_modal").css("background-color", "rgba(0,0,0,0.8);");
+      jQuery("#modal_login h2").html(
+        jQuery("#modal_login").find("[data-tab]:eq(1)").data("text-force")
+      );
+      /*Asigamos el texto personalizado*/
+      var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr(
+        "data-text"
+      );
+      jQuery(
+        "#modal_login .modal_cm .content_md .heder_md .ms-title-modal"
+      ).html(titleText);
+    } else {
+      setIsFavoriteLoading(true);
+
+      var bodyFormData = new FormData();
+      bodyFormData.append("access_token", __flex_g_settings.accessToken);
+      bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
+      const response = await axios({
+        method: "post",
+        url: SAVE_FAVORITE + `${propertiesData.mls_num}/track`,
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.data.length != 0) {
+        if (response.data.type === "add") {
+          setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
+        }
+      }
+
+      setIsFavoriteLoading(false);
+    }
+  };
+
+  const isFavoriteF = async () => {
+    if (__flex_g_settings.anonymous !== "yes") {
+      var bodyFormData = new FormData();
+      bodyFormData.append("access_token", __flex_g_settings.accessToken);
+      bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
+      bodyFormData.append("paging", "saved_listings");
+      const response = await axios({
+        method: "post",
+        url: LEAD_FAVORITES,
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response.data.length != 0) {
+        let exits = response.data.lead_info.saved_listings.find(
+          (e) => e.mls_num === propertiesData.mls_num
+        );
+        if (exits) {
+          setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
+        }
+      }
+    } else {
+      setIsFavorite(false);
     }
   };
 
@@ -419,7 +485,20 @@ export const ModalDetailProperties = () => {
               <div className="ib-modal-header">
                 <div className="ib-wrapper-flex">
                   <div className="ib-flex">
-                    <button className="ib-btn -addFavorite" onClick={handleFavorite}>Save</button>
+                    <button
+                      className={
+                        isFavorite
+                          ? `ib-btn -addFavorite ${favoriteIcon()} -active ${
+                              isFavoriteLoading ? "-loading" : ""
+                            }`
+                          : `ib-btn -addFavorite ${favoriteIcon()} ${
+                              isFavoriteLoading ? "-loading" : ""
+                            }`
+                      }
+                      onClick={handleFavorite}
+                    >
+                      Save
+                    </button>
                     <div className="ib-dropdown">
                       <button className="ib-share-btn">
                         <i className="idx-icons-shared"></i> Share
@@ -500,6 +579,8 @@ export const ModalDetailProperties = () => {
                         setDefaultYearsSegment("1 year");
                         setChartDataShow({});
                         setDefaultCity("zip");
+                        setIsFavorite(false);
+                        setIsFavoriteLoading(false);
                         closeModal();
                       }}
                     ></button>
@@ -1882,14 +1963,32 @@ export const ModalDetailProperties = () => {
               </div>
 
               <div className="ib-modal-footer">
-                <button className="ib-btn -addFavorite">Save</button>
+                <button
+                  className={
+                    isFavorite
+                      ? `ib-btn -addFavorite ${favoriteIcon()} -active ${
+                          isFavoriteLoading ? "-loading" : ""
+                        }`
+                      : `ib-btn -addFavorite ${favoriteIcon()} ${
+                          isFavoriteLoading ? "-loading" : ""
+                        }`
+                  }
+                  onClick={handleFavorite}
+                >
+                  Save
+                </button>
                 <div className="ib-dropdown">
                   <button className="ib-share-btn">
                     <i className="idx-icons-shared"></i> Share
                   </button>
                   <ul className="ib-share-list">
                     <li>
-                      <a href="#">
+                      <a  href="#"
+                            className="js-show-modals"
+                            data-modal="#modalAlert"
+                            data-status={propertiesData.status_type}
+                            data-mls={propertiesData.mls_num}
+                            onClick={openModalEmailToFriend}>
                         <i className="idx-icons-envelope"></i> Email to a friend
                       </a>
                     </li>
@@ -1902,12 +2001,23 @@ export const ModalDetailProperties = () => {
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a  href={`/property/${propertiesData.slug}`}
+                            ref={refSharedFacebook}
+                            className="ib-plsitem ib-plsifb"
+                            onClick={sharedFacebook}>
                         <i className="idx-icons-facebook"></i> Facebook
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a  href={`/property/${propertiesData.slug}`}
+                            className="ib-plsitem ib-plsitw"
+                            data-address={`${propertiesData.address_short} ${propertiesData.address_large}`}
+                            data-price={propertiesData.price}
+                            data-type={propertiesData.class_id}
+                            data-rental={propertiesData.is_rental}
+                            data-mls={propertiesData.mls_num}
+                            ref={refSharedTwiter}
+                            onClick={sharedTwitter}>
                         <i className="idx-icons-twitter"></i> Twitter
                       </a>
                     </li>
@@ -1985,7 +2095,7 @@ export const ModalDetailProperties = () => {
                             />
                             <div className="ms-wrapper-dropdown-menu">
                               <button
-                                id="calculatorYears"
+                                id="calculatorYears1"
                                 ref={refCalculatorYears}
                                 onClick={openCalculatorYears}
                               >
