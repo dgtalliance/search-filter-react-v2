@@ -8,13 +8,13 @@
     "preview": "vite preview --port 3000"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.10.3",
     "@reduxjs/toolkit": "^1.8.1",
     "@sentry/react": "^6.19.7",
     "@sentry/tracing": "^6.19.7",
     "antd": "^4.20.1",
     "axios": "^0.26.1",
     "google-map-react": "^2.1.10",
-    "googlemaps-js-rich-marker": "^1.0.2",
     "html-react-parser": "^1.4.11",
     "js-cookie": "^3.0.1",
     "node-sass": "^7.0.1",

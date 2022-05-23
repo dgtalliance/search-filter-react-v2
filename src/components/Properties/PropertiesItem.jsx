@@ -35,14 +35,12 @@ function PropertiesItem({ itemData }) {
 
   const handleOnItemMouseEnter = (e, value) => {
     e.preventDefault()
-    var markers = hoveredItem(value, itemsMap, true)
-    dispatch(updateDataMap(markers))
+    dispatch(updateDataMap({ mls_num: value, active: true, infoWin: true }))
   }
 
   const handleOnItemMouseLeave = (e, value) => {
     e.preventDefault()
-    var markers = hoveredItem(value, itemsMap, false)
-    dispatch(updateDataMap(markers))
+    dispatch(updateDataMap({ mls_num: value, active: false, infoWin: false }))
   }
 
   return (

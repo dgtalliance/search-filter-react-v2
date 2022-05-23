@@ -14,6 +14,7 @@ const FilterProvider = ({children})=>{
 
    ////// OPEN MODAL
    const [modalData, setModalData] = useState(null);
+   const [modalInfoWindow, setModalInfoWindow] = useState([]);
 
    const openModal = (datainfo,stay) => {
      setModalData({...datainfo,stay});
@@ -72,7 +73,7 @@ const FilterProvider = ({children})=>{
 
   
 
-  const data = {modalData, openModal, closeModal, isOpenModalMessage, success, defSuccess, isOpenModalAlert, closeModalAlert,slug, setSlug,slugShow};
+  const data = {modalData, openModal, closeModal, isOpenModalMessage, success, defSuccess, isOpenModalAlert, closeModalAlert,slug, setSlug,slugShow,modalInfoWindow, setModalInfoWindow};
   return <FilterContext.Provider value={data}>{children}</FilterContext.Provider>;
 }
 

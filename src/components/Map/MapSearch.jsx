@@ -1,12 +1,16 @@
 import { memo, useEffect, useRef, useState } from 'react'
-import Map from 'google-map-react'
 import { getpropertiesMapData } from '../../config/slices/properties'
 import { useSelector } from 'react-redux'
-import { abbreviateNumber } from '../../utils/utils'
-import Marker from './Marker'
+
+import { GoogleMap, InfoWindow, Marker } from '@react-google-maps/api'
 
 function MapSearch() {
-  const bootstrapURLKeys = { key: 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4' }
+  const bootstrapURLKeys = {
+    key: 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4',
+    language: 'en',
+    region: 'us',
+    libraries: ['drawing', 'geometry'].join(','),
+  }
   const defaultCenter = { lat: 25.91157267302583, lng: -80.21950243519076 }
   const defaultZoom = 11
   const params = useSelector(getpropertiesMapData)
@@ -25,8 +29,12 @@ function MapSearch() {
 
   useEffect(() => {
     set_IB_MARKERS(params)
-  }, [params])
+    // updateDataMap(params)
+    //console.log('mapRef',mapRef.current.getBounds());
 
+    //  fitBounds()
+  }, [params, IB_MARKERS])
+  //Btn fullscreenButton
   const handlefullscreenButton = (event) => {
     event.stopPropagation()
     event.preventDefault()
@@ -80,17 +88,19 @@ function MapSearch() {
       document.msExitFullscreen()
     }
   }
-
+  //Btn ZoomIn
   const handleZoomIn = (event) => {
     event.stopPropagation()
     event.preventDefault()
     mapRef.current.setZoom(mapRef.current.getZoom() + 1)
   }
+  // Btn ZoomOut
   const handleZoomOut = (event) => {
     event.stopPropagation()
     event.preventDefault()
     mapRef.current.setZoom(mapRef.current.getZoom() - 1)
   }
+  // Btn View Satellite
   const handleSatellite = (event) => {
     event.stopPropagation()
     event.preventDefault()
@@ -106,18 +116,19 @@ function MapSearch() {
 
   //PIN MARKERS
 
-  const updateDataMap = (mapData) => {
-    if (mapRef === null && mapRef === undefined) {
-      return
-    }
-    var markers = []
-    mapData.forEach((property) => {
-      let markerLabel = abbreviateNumber(property.item.price)
-
-      if (property.group.length > 1) {
-        markerLabel = property.group.length + ' Units'
+  const fitBounds = () => {
+    const bounds = new window.google.maps.LatLngBounds()
+    if (IB_MARKERS.length) {
+      for (var i = 0, l = IB_MARKERS.length; i < l; i++) {
+        bounds.extend(
+          new window.google.maps.LatLng(
+            IB_MARKERS[i].item.lat,
+            IB_MARKERS[i].item.lng,
+          ),
+        )
       }
-    })
+      mapRef.current.fitBounds(bounds)
+    }
   }
 
   const handleCancel = (e) => {
@@ -135,8 +146,12 @@ function MapSearch() {
   console.log('Render Map')
 
   const handleOnChildClick = () => {}
-  const handleOnChildMouseEnter = () => {}
-  const handleOnChildMouseLeave = () => {}
+  const handleOnChildMouseEnter = (e) => {
+    // dispatch(updateDataMap({ mls_num: value, active: true }))
+  }
+  const handleOnChildMouseLeave = (e) => {
+    // dispatch(updateDataMap({ mls_num: value, active: false }))
+  }
 
   /// for marker
 
@@ -225,15 +240,13 @@ function MapSearch() {
       ) : null}
 
       <div className="ib-map-content">
-        <Map
-          bootstrapURLKeys={bootstrapURLKeys}
+        <GoogleMap
           defaultCenter={defaultCenter}
           defaultZoom={defaultZoom}
           onChildClick={handleOnChildClick}
           onChildMouseEnter={handleOnChildMouseEnter}
           onChildMouseLeave={handleOnChildMouseLeave}
           onChange={(m) => console.log(m)}
-          yesIWantToUseGoogleMapApiInternals
           options={() => ({
             scrollwheel: false,
             mapTypeControl: false,
@@ -251,19 +264,17 @@ function MapSearch() {
             draggableCursor: 'pointer', // Inicial cursor    crosshair -cruz   grabbing  -mano cerrada
             draggingCursor: 'grabbing', //
           })}
+          mapContainerStyle={{ width: "100vw", height: "100vw"}}
           onGoogleApiLoaded={onGoogleApiLoaded}
         >
           {IB_MARKERS.map((element, index) => {
-            return (
-              <Marker
-                key={index}
-                lat={element.item.lat}
-                lng={element.item.lng}
-                info={element}
-              />
-            )
+            var position = new google.maps.LatLng({
+              lat: Number(element.item.lat),
+              lng: Number(element.item.lng),
+            })
+            return <Marker key={index} position={position} />
           })}
-        </Map>
+        </GoogleMap>
       </div>
     </div>
   )

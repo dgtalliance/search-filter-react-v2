@@ -1,2 +1,106 @@
-*{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;font-display:block}h1,h2,h3,h4,h5,hr,img,li,p,ul{border:0;padding:0;margin:0;outline:0}li,ol,ul{list-style:none;padding:0;margin:0}h1,h2,h3,h4,h5{font-weight:normal}a{color:inherit;text-decoration:none;-webkit-text-decoration-skip:objects}a,button,input,textarea{border:0;padding:0}a:active,a:focus,a:hover,button:active,button:focus,button:hover,input:active,input:focus,input:hover,textarea:active,textarea:focus,textarea:hover{outline:none}button,input,select{overflow:visible;border:none;-webkit-appearance:none;-moz-appearance:none;appearance:none}button::-ms-expand,input::-ms-expand,select::-ms-expand{display:none}button:hover,input:hover,select:hover{cursor:pointer}button:focus,input:focus,select:focus{outline:none}input[type=submit]:hover{cursor:pointer}audio:not([controls]){display:none;height:0}audio,canvas,video{display:inline-block}button,input,select{-webkit-appearance:none;-moz-appearance:none;appearance:none}.gm-style>div:nth-child(2)>div:nth-child(2)>div>div:nth-child(3){display:inline-block;z-index: -1;}.ms-line-br{display:block;font-size:13px;color:var(--color-gray-light);padding:15px 0;text-align:center;position:relative;width:100%}.ms-line-br span{background-color:var(--color-white);display:inline-block;padding:0 15px;position:relative;z-index:2}.ms-line-br:after{content:"";display:block;border-top:1px dashed var(--color-border);height:1px;width:100%;position:absolute;top:50%;left:0;-webkit-transform:translateY(-50%);-ms-transform:translateY(-50%);transform:translateY(-50%)}
-/*# sourceMappingURL=index.css.map */
+/* RESET */
+* {
+  box-sizing: border-box;
+  font-display: block;
+}
+
+hr, h1, h2, h3, h4, h5, p, img, ul, li {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  outline: 0;
+}
+
+ul, ol, li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: normal;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  -webkit-text-decoration-skip: objects;
+}
+
+a, button, input, textarea {
+  border: 0;
+  padding: 0;
+}
+a:focus, a:active, a:hover, button:focus, button:active, button:hover, input:focus, input:active, input:hover, textarea:focus, textarea:active, textarea:hover {
+  outline: none;
+}
+
+select, button, input {
+  overflow: visible;
+  border: none;
+  /* Para safari , IOS*/
+  -webkit-appearance: none;
+  appearance: none;
+  /* */
+  /* Para crome, le quita la fechita*/
+  /* */
+}
+select::-ms-expand, button::-ms-expand, input::-ms-expand {
+  display: none;
+}
+select:hover, button:hover, input:hover {
+  cursor: pointer;
+}
+select:focus, button:focus, input:focus {
+  outline: none;
+}
+
+input[type=submit]:hover {
+  cursor: pointer;
+}
+
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+audio, video, canvas {
+  display: inline-block;
+}
+
+button, input, select {
+  -webkit-appearance: none;
+          appearance: none;
+}
+
+.gm-style > div:nth-child(2) > div:nth-child(2) > div > div:nth-child(3) {
+  display: none;
+}
+
+.ms-line-br {
+  display: block;
+  font-size: 13px;
+  color: var(--color-gray-light);
+  padding: 15px 0;
+  text-align: center;
+  position: relative;
+  width: 100%;
+}
+.ms-line-br span {
+  background-color: var(--color-white);
+  display: inline-block;
+  padding: 0 15px;
+  position: relative;
+  z-index: 2;
+}
+.ms-line-br:after {
+  content: "";
+  display: block;
+  border-top: 1px dashed var(--color-border);
+  height: 1px;
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}

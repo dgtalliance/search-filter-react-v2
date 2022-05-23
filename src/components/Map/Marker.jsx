@@ -1,19 +1,37 @@
-import { memo} from 'react'
+import { memo } from 'react'
+import { useDispatch } from 'react-redux'
+import { updateDataMap } from '../../config/slices/properties'
 import { abbreviateNumber } from '../../utils/utils'
 import CustomInfoWindow from './CustomInfoWindow'
 
 const Marker = ({ info }) => {
   console.log('Marker')
-    const setActive = (data)=> {
-        console.log(data);
-    }
+  const dispatch = useDispatch()
+  const setActive = (data) => {
+    console.log(data)
+  }
+  const handleOnItemMouseEnter = (e, value) => {
+    e.preventDefault()
+    dispatch(updateDataMap({ mls_num: value, active: true }))
+  }
+
+  const handleOnItemMouseLeave = (e, value) => {
+    e.preventDefault()
+    dispatch(updateDataMap({ mls_num: value, active: false }))
+  }
   return (
     <>
       {
-        <div className="mo-marker-container">
+        <>
           {info.group.length > 1 ? (
             <div
               onClick={(e) => setActive(info.group[0].mls_num)}
+              onMouseEnter={(e) =>
+                handleOnItemMouseEnter(e, info.group[0].mls_num)
+              }
+              onMouseLeave={(e) =>
+                handleOnItemMouseLeave(e, info.group[0].mls_num)
+              }
               className={`dgt-richmarker-group ${
                 info.item.hovered ? 'ib-search-marker-active' : ''
               }`}
@@ -23,7 +41,13 @@ const Marker = ({ info }) => {
             </div>
           ) : (
             <div
-               onClick={(e) => setActive(info.group[0].mls_num)}
+              onClick={(e) => setActive(info.group[0].mls_num)}
+              onMouseEnter={(e) =>
+                handleOnItemMouseEnter(e, info.group[0].mls_num)
+              }
+              onMouseLeave={(e) =>
+                handleOnItemMouseLeave(e, info.group[0].mls_num)
+              }
               className={`dgt-richmarker-single ${
                 info.item.hovered ? 'ib-search-marker-active' : ''
               }`}
@@ -31,11 +55,10 @@ const Marker = ({ info }) => {
               <strong>{abbreviateNumber(info.group[0].price)}</strong>
             </div>
           )}
-
-         <CustomInfoWindow
-         info={info}
-         />
-        </div>
+         {/*  {info.item.hovered && (
+            <CustomInfoWindow info={info} />
+          )} */}
+        </>
       }
     </>
   )

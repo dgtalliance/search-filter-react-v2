@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { groupProperties } from '../../utils/utils'
+import { groupProperties, hoveredItem } from '../../utils/utils'
 import { fetchAsyncSearch } from '../actions/properties'
 
 const initialState = {
@@ -59,8 +59,8 @@ export const propertySlice = createSlice({
     updateTriggered: (state, { payload }) => {
       state.event_triggered = payload
     },
-    updateDataMap: (state, { payload }) => {
-      state.properties_maps = payload
+    updateDataMap: (state, { payload }) => {      
+      state.properties_maps = hoveredItem(payload.mls_num,state.properties_maps,payload.active,payload.infoWin)
     },
   },
   extraReducers: {
@@ -209,11 +209,10 @@ export const propertySlice = createSlice({
         state.params = params
 
         //Load Data for map
+        state.properties_maps =   groupProperties(actions.payload.data.map_items)        
         
-        if (parseInt(actions.payload.data.params?.currentpage) === 1) {
-          state.properties_maps =   groupProperties(actions.payload.data.map_items)
+        /* if (parseInt(actions.payload.data.params?.currentpage) === 1) {
         }
-        /* 
         state.params.rect = actions.payload.data.params.rect
         state.params.zm = actions.payload.data.params.zm
         state.params.polygon_search = actions.payload.data.params.polygon_search
