@@ -306,6 +306,7 @@ export const ModalDetailProperties = () => {
     }
     return "";
   };
+  
 
   const refOpenUrl = useRef();
   const openUrl = (e) => {
