@@ -414,6 +414,7 @@ export const ModalDetailProperties = () => {
     e.preventDefault();
     // console.log('resultDetail.mls_num:',resultDetail.mls_num);
   };
+  
 
   const openCalculatorYears = (e) => {
     e.preventDefault();
