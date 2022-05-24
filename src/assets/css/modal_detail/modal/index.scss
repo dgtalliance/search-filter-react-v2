@@ -990,13 +990,59 @@
             background-color: transparent;
             font-weight: 600;
             transition: all .3s;
+
             &:before{
               font-family: 'idxboost-icons';
-              content: "\e91e";
               display: inline-block;
               font-size: 30px;
               font-weight: normal;
-              margin-right: 7px;
+              margin-right: 7px
+            }
+
+            &.-heart{
+              &:before{
+                content: "\e91e";
+              }
+            }
+
+            &.-square{
+              &:before{
+                content: "\e917";
+              }
+            }
+
+            &.-star{
+              &:before{
+                content: "\e91c";
+              }
+            }
+
+            &.-active{
+              &.-heart{
+                &:before{
+                  content: "\e91f";
+                }
+              }
+
+              &.-square{
+                &:before{
+                  content: "\e918";
+                }
+              }
+
+              &.-star{
+                &:before{
+                  content: "\e91d";
+                }
+              }
+            }
+
+            &.-loading{
+              &:before{
+                content: "\e94a" !important;
+                font-size: 25px !important;
+                animation: spinLoading 1s linear infinite;
+              }
             }
           }
 
