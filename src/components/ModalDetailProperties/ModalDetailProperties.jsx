@@ -305,8 +305,7 @@ export const ModalDetailProperties = () => {
       return formatPrice(price / sqft);
     }
     return "";
-  };
-  
+  };  
 
   const refOpenUrl = useRef();
   const openUrl = (e) => {
