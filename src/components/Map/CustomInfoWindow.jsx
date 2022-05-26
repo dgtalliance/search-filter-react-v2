@@ -2,11 +2,11 @@ import React from 'react'
 import { abbreviateNumber } from '../../utils/utils'
 
 const CustomInfoWindow = ({ info }) => {
-  const itemRender = (item,index) => {
+  const itemRender = (item, index) => {
     return (
       <li
         key={`info-win-` + index}
-        className="ib-ibpitem ms-order-m"
+        className="ib-ibpitem ms-order-m infoWindowSingle"
         data-mls={item.mls_num}
       >
         <div className="ib-ibpa">
@@ -32,7 +32,7 @@ const CustomInfoWindow = ({ info }) => {
               Bath(s)
             </li>
             <li className="ib-ibditem ib-ibbaths">
-            <span className="ib-ibdbold">{item.sqft}</span>Sq.Ft.
+              <span className="ib-ibdbold">{item.sqft}</span>Sq.Ft.
             </li>
             {/* <li className="ib-item -sqft">
               <strong>{item.bath}</strong>/ Sq.Ft.
@@ -67,7 +67,7 @@ const CustomInfoWindow = ({ info }) => {
             </h3>
           </div>
           <ul className="ib-ibproperties">
-            {info.group.map((item,index) => itemRender(item,index))}
+            {info.group.map((item, index) => itemRender(item, index))}
           </ul>
         </div>
       )}

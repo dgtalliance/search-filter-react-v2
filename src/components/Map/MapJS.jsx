@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
+  getparams,
   getpropertiesMapData,
   updateDataMap,
 } from '../../config/slices/properties'
@@ -11,28 +12,32 @@ import createHTMLMapMarker from './HtmlMarker'
 import { renderToString } from 'react-dom/server'
 import CustomInfoWindow from './CustomInfoWindow'
 import FilterContext from '../../Contexts/FilterContext'
+import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
 
 const defaultCenter = { lat: 25.91157267302583, lng: -80.21950243519076 }
 const defaultZoom = 11
 
 const bootstrapURLKeys = {
   googleMapsApiKey: 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4',
-  language: 'en',
-  region: 'us',
-  libraries: ['drawing', 'geometry'],
+  libraries: ['drawing', 'geometry'], 
 }
 
 const MapJS = () => {
   console.log('Render MAP')
   const dispatch = useDispatch()
-  const { setModalInfoWindow } = useContext(FilterContext)
+  const { setModalInfoWindow, openModal } = useContext(FilterContext)
   //load Data from redux
-  const params = useSelector(getpropertiesMapData)
+  const paramsItems = useSelector(getpropertiesMapData)
+  const params = useSelector(getparams)
   // set States
-  const [activeMarker, setActiveMarker] = useState(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [IB_MARKERS, set_IB_MARKERS] = useState([])
   const [markersData, setMarkersData] = useState([])
+  const [autoMapSearch, setAutoMapSearch] = useState(true)
+  const [polygons, setPolygons] = useState([])
+  const [initPolygons, setInitPolygons] = useState([])
+  const [polygonsDraw, setPolygonsDraw] = useState([])
+
   //ref elements
   const containerMap = useRef()
   const mapRef = useRef()
@@ -40,16 +45,26 @@ const MapJS = () => {
   const zoomIn = useRef()
   const zoomOut = useRef()
   const satellite = useRef()
-  const draw = useRef()
+  const polygonRef = useRef()
+  const polygonRefTemp = useRef()
+  var drawingManager = useRef()
+  var newPolygons = useRef()
+
+  var polygonsDrawTemp = []
 
   useEffect(() => {
-    set_IB_MARKERS(params)
-    if (params.length > 0) {
-      if (mapRef.current !== null) {
-        loadMakers(params)
+    console.log('load data')
+    if (paramsItems.length > 0 && mapRef.current !== null) {
+      set_IB_MARKERS(paramsItems)
+      if (!isDrawing) {
+        loadMakers(paramsItems)
       }
     }
-  }, [params])
+
+    if ('' != params.kml_boundaries && autoMapSearch && !isDrawing) {
+      drawPolygonInit(params.kml_boundaries)
+    }
+  }, [paramsItems])
 
   //Btn fullscreenButton
   const handlefullscreenButton = (event) => {
@@ -134,16 +149,145 @@ const MapJS = () => {
   const handleCancel = (e) => {
     e.stopPropagation()
     e.preventDefault()
+    setIsDrawing(false)
+    initPolygons.setMap(mapRef.current)
+    setPolygons(initPolygons)
+    loadMakers(IB_MARKERS)
+    drawingManager.current.setMap(null)
+    drawingManager.current = null
+    console.log(newPolygons.current)
+
+    polygonsDrawTemp = []
+
+    /*  if (polygonRefTemp.current?.length > 0) {
+      for (let index = 0; index < polygonRefTemp.current.length; index++) {
+        polygonRefTemp.current[index].setMap(null)
+      }
+      polygonRefTemp.current = []
+    } */
   }
   const handleApply = (e) => {
     e.stopPropagation()
     e.preventDefault()
+    console.log('polygonsDrawTemp', polygonRefTemp.current)
+    setIsDrawing(false)
+    removePolygons()
+    // buscar class'#map-draw-apply-tg'
+    // preguntar si la drawpolygons tiene valores y  drawingManager.setMap(null);
+    // sino tiene regresar los markes y polygon inicial y return
+
+    // mostrar btn de 'search this area'
+    // drawingManager.setMap(null);
+    // obtener array de coordenadas para hacer la consulta al api
   }
   const handleRemove = (e) => {
     e.stopPropagation()
     e.preventDefault()
+    removePolygons()
   }
   // Impletation for map
+  const handleMapDrawing = () => {
+    // mostrar btn de 'search this area'
+
+    setIsDrawing(true)
+    removePolygons()
+    removeloadMakers()
+    initializeDraw()
+  }
+  const drawFreeHand = () => {
+    var poly
+    var move
+    var mouseup
+    //the polygon
+    poly = new google.maps.Polyline({
+      map: mapRef.current,
+      clickable: false,
+      editable: false,
+      strokeColor: '#31239a',
+      fillOpacity: 0.1,
+      strokeOpacity: 0.8,
+      strokeWeight: 1,
+      fillColor: '#31239a',
+    })
+
+    //move-listener
+    move = google.maps.event.addListener(
+      mapRef.current,
+      isMobile ? 'touchmove' : 'mousemove',
+      function (e) {
+        poly.getPath().push(e.latLng)
+      },
+    )
+
+    //mouseup-listener
+    mouseup = google.maps.event.addListenerOnce(
+      mapRef.current,
+      'mouseup',
+      function (e) {
+        google.maps.event.removeListener(move)
+        poly.setMap(null)
+        var path = poly.getPath()
+        poly = new google.maps.Polygon({
+          map: mapRef.current,
+          path: path,
+          clickable: false,
+          editable: false,
+          strokeColor: '#31239a',
+          fillOpacity: 0.1,
+          strokeOpacity: 0.8,
+          strokeWeight: 1,
+          fillColor: '#31239a',
+        })
+        console.log('path finish')
+        polygonsDrawTemp.push(poly)
+        polygonRefTemp.current = polygonsDrawTemp
+
+        google.maps.event.removeListener(mouseup)
+      },
+    )
+  }
+
+  const initializeDraw = () => {
+    drawingManager.current = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.LEFT_CENTER,
+        drawingModes: [google.maps.drawing.OverlayType.POLYGON],
+      },
+      polygonOptions: {
+        strokeColor: '#31239a',
+        fillOpacity: 0.1,
+        strokeOpacity: 0.8,
+        strokeWeight: 1,
+        fillColor: '#31239a',
+        clickable: true,
+        zIndex: 1,
+        editable: true,
+      },
+    })
+
+    drawingManager.current.setMap(mapRef.current)
+
+    google.maps.event.addListener(
+      drawingManager.current,
+      'overlaycomplete',
+      function (event) {
+        if (event.type != google.maps.drawing.OverlayType.MARKER) {
+          drawingManager.current.setDrawingMode(null)
+        }
+
+        var newShape = event.overlay
+        newShape.type = event.type
+        console.log(
+          newShape
+            .getPath()
+            .getArray()
+            .map((t) => t.lat() + '-' + t.lng()),
+        )
+      },
+    )
+  }
 
   const fitBounds = (map, arr) => {
     const bounds = new google.maps.LatLngBounds()
@@ -157,42 +301,71 @@ const MapJS = () => {
     map.fitBounds(bounds)
   }
 
-  const loadMakers = (IB_MARKERS) => {
+  const drawPolygonInit = (kml_boundaries) => {
     if ('undefined' === typeof mapRef.current || mapRef.current === null) {
       return
     }
+    if (polygonRef.current !== null && polygonRef.current !== undefined) {
+      polygonRef.current.setMap(null)
+    }
 
+    removePolygons()
+    console.log('drawPolygonInit')
+
+    setAutoMapSearch(false)
+    var kb_exp = kml_boundaries.split(',')
+    var tmp_points = new google.maps.MVCArray()
+    for (var nn = 0, mm = kb_exp.length; nn < mm; nn++) {
+      var tmp_point = kb_exp[nn].split(' ')
+      tmp_points.push(new google.maps.LatLng(tmp_point[0], tmp_point[1]))
+    }
+
+    var tmpPolygon = new google.maps.Polygon({
+      path: tmp_points,
+      editable: false,
+      strokeColor: '#31239a',
+      fillOpacity: 0.1,
+      strokeOpacity: 0.8,
+      strokeWeight: 1,
+      fillColor: '#31239a',
+    })
+
+    tmpPolygon.setMap(mapRef.current)
+    setPolygons(tmpPolygon)
+    polygonRef.current = tmpPolygon
+  }
+
+  const removePolygons = () => {
+    setInitPolygons(polygons)
+    if (Object.keys(polygons).length > 0) {
+      polygonRef.current.setMap(null)
+      setPolygons(null)
+    }
+  }
+  const removeloadMakers = () => {
     if (markersData.length > 0) {
       for (let i = 0; i < markersData.length; i++) {
         markersData[i].setMap(null)
       }
-      markersData.length = 0
-      setMarkersData(markersData)
+      setMarkersData([])
     }
-
+  }
+  const loadMakers = (data) => {
+    if ('undefined' === typeof mapRef.current || mapRef.current === null) {
+      return
+    }
+    console.log('load markers')
+    removeloadMakers()
     let marker
     let markers = []
 
     const handleOnClick = (e) => {
-      const parentNode = jQuery(e.target).parents('.ib-ibpitem').eq(0)
-      // const permalink = jQuery(parentNode).data("permalink");
-      const mls = jQuery(parentNode).data('mls')
-      console.log(mls)
-      /*  openModal({
-        mls_num: mls
-      }, props.stay) */
+      var mls = jQuery(e.target).parents('.infoWindowSingle').attr('data-mls')
+      dispatch(fetchAsyncDetails(mls))
+      openModal({ mls_num: mls })
     }
 
-    IB_MARKERS.forEach((grouped_properties, index) => {
-      let infoWindow = new google.maps.InfoWindow({
-        disableAutoPan: true,
-      })
-
-      /*  google.maps.event.addListener(infoWindow, 'domready', function () {
-        var doc = document.getElementsByClassName('.ib-ibpitem')[0];
-        doc.addEventListener("click", handleOnClick)
-      }); */
-
+    data.forEach((grouped_properties, index) => {
       const { lat, lng } = grouped_properties.item
 
       let markerLabel = abbreviateNumber(grouped_properties.item.price)
@@ -216,12 +389,22 @@ const MapJS = () => {
         classDiv: markerClass + '' + markerActive,
       })
       if (isMobile) {
-        // for movile show modal center bottom
         if (grouped_properties.item.infoWin) {
           setModalInfoWindow(grouped_properties)
         }
       } else {
         if (grouped_properties.item.infoWin) {
+          let infoWindow = new google.maps.InfoWindow({
+            disableAutoPan: true,
+          })
+
+          google.maps.event.addListener(infoWindow, 'domready', function () {
+            var doc = document.getElementsByClassName('infoWindowSingle')
+            for (var i = 0; i < doc.length; i++) {
+              doc[i].addEventListener('click', handleOnClick)
+            }
+          })
+
           infoWindow.setContent(
             renderToString(<CustomInfoWindow info={grouped_properties} />),
           )
@@ -229,6 +412,17 @@ const MapJS = () => {
             anchor: marker,
             map: mapRef.current,
             shouldFocus: false,
+          })
+
+          google.maps.event.addListener(infoWindow, 'closeclick', (event) => {
+            infoWindow.close()
+            dispatch(
+              updateDataMap({
+                mls_num: grouped_properties.item.mls_num,
+                active: false,
+                infoWin: false,
+              }),
+            )
           })
         }
       }
@@ -243,32 +437,26 @@ const MapJS = () => {
           }),
         )
       })
-
-      google.maps.event.addListener(infoWindow, 'closeclick', (event) => {
-        infoWindow.close()
-        console.log('close click')
-        dispatch(
-          updateDataMap({
-            mls_num: grouped_properties.item.mls_num,
-            active: false,
-            infoWin: false,
-          }),
-        )
-      })
-
       markers.push(marker)
     })
 
     setMarkersData(markers)
+    fitBounds(mapRef.current, data)
   }
 
   const onGoogleApiLoaded = ({ map, maps }) => {
     mapRef.current = map
+    if (IB_MARKERS.length > 0) {
+      console.log('onGoogleApiLoaded onGoogleApiLoaded')
+      loadMakers(IB_MARKERS)
+    }
+    if (params?.kml_boundaries) {
+      drawPolygonInit(params.kml_boundaries)
+    }
     // fitBounds(map)
   }
-
-  const handleOnChildClick = (e) => {
-    e.preventDefault()
+  const onChangeMap = (e) => {
+    console.log(e)
   }
   return (
     <>
@@ -299,7 +487,7 @@ const MapJS = () => {
               ref={zoomOut}
               onClick={handleZoomOut}
             ></div>
-            <div className="flex-map-draw" ref={draw}></div>
+            <div className="flex-map-draw" onClick={handleMapDrawing}></div>
             <div
               className="flex-satellite-button"
               ref={satellite}
@@ -336,40 +524,40 @@ const MapJS = () => {
             </div>
           </div>
         ) : null}
-        {undefined === undefined ? (
-          <div className="content-rsp-btn">
-            <div className="idx-btn-content">
-              <div className="idx-bg-group">
-                <button
-                  style={{ padding: '0 20px' }}
-                  onClick={handleRemove}
-                  className="idx-btn-act ib-removeb-tg"
-                  aria-label="remove"
-                >
-                  Search this area
-                </button>
-              </div>
-            </div>
+
+        <div className="ib-wrapper-float-actions -grid -view-map">
+          <div className="ib-wrapper -round-sv">
+            <button className="ib-btn">
+              Save <i className="idx-icons-save"></i>
+            </button>
+            <button className="ib-btn js-show-grid">
+              Grid <i className="idx-icons-grid"></i>
+            </button>
+
+            <button onClick={initializeDraw} className="ib-btn js-show-area">
+              Search this Area
+            </button>
           </div>
-        ) : null}
+        </div>
+
         <div className="ib-map-content">
           <GoogleMapReact
             bootstrapURLKeys={bootstrapURLKeys}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
-            onChange={(m) => console.log(m)}
+            onChange={(m) => onChangeMap(m)}
             yesIWantToUseGoogleMapApiInternals
             options={{
               scrollwheel: false,
-              mapTypeControl: false,
+              mapTypeControl: true,
               fullscreenControl: false,
               zoomControl: false,
               disableDefaultUI: true,
               disableDoubleClickZoom: true,
               mapTypeId: google.maps.MapTypeId.ROADMAP,
-              panControl: true,
+              panControl: !isDrawing,
               clickableIcons: false,
-              gestureHandling: true,
+              gestureHandling: isDrawing ? 'none' : 'greedy',
               rotateControl: false,
               streetViewControl: !isDrawing,
               streetViewControlOptions: {

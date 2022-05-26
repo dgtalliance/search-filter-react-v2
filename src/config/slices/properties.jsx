@@ -46,6 +46,7 @@ const initialState = {
     max_year: '',
     sort_type: '',
     page: '',
+    kml_boundaries: '',
   },
 }
 
@@ -59,8 +60,13 @@ export const propertySlice = createSlice({
     updateTriggered: (state, { payload }) => {
       state.event_triggered = payload
     },
-    updateDataMap: (state, { payload }) => {      
-      state.properties_maps = hoveredItem(payload.mls_num,state.properties_maps,payload.active,payload.infoWin)
+    updateDataMap: (state, { payload }) => {
+      state.properties_maps = hoveredItem(
+        payload.mls_num,
+        state.properties_maps,
+        payload.active,
+        payload.infoWin,
+      )
     },
   },
   extraReducers: {
@@ -89,6 +95,10 @@ export const propertySlice = createSlice({
           sale_type:
             actions.payload.data.params.sale_type !== null
               ? actions.payload.data.params.sale_type
+              : '',
+          kml_boundaries:
+            actions.payload.data.params.kml_boundaries !== null
+              ? actions.payload.data.params.kml_boundaries
               : '',
           property_type:
             Object.keys(actions.payload.data.params.property_type).length > 0
@@ -209,8 +219,8 @@ export const propertySlice = createSlice({
         state.params = params
 
         //Load Data for map
-        state.properties_maps =   groupProperties(actions.payload.data.map_items)        
-        
+        state.properties_maps = groupProperties(actions.payload.data.map_items)
+
         /* if (parseInt(actions.payload.data.params?.currentpage) === 1) {
         }
         state.params.rect = actions.payload.data.params.rect
@@ -243,6 +253,10 @@ export const getpropertiesItems = (state) => state.properties.properties
 export const getloading = (state) => state.properties.loading
 export const geterror = (state) => state.properties.error
 
-export const { updateForm, updateTriggered, updateDataMap } = propertySlice.actions
+export const {
+  updateForm,
+  updateTriggered,
+  updateDataMap,
+} = propertySlice.actions
 
 export default propertySlice.reducer

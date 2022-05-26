@@ -12,8 +12,7 @@ function ContainerFilterBeds() {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = (minBedsv, maxBedsv, activeMatchv) => {
-    console.log('TitleChange', minBedsv, maxBedsv, activeMatchv)
+  const TitleChange = (minBedsv, maxBedsv, activeMatchv) => {  
     if (parseInt(minBedsv) !== 10) {
       if (activeMatchv && parseInt(minBedsv) === 0 && parseInt(maxBedsv) === 0) {
         settitle('Studio Beds')

@@ -79,7 +79,7 @@ const FilterModal = () => {
           </div>
 
           <div className="ib-body-guests">
-            <div className="ib-gs-item -full">
+            <div className="ib-gs-item -full -sale-type">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Property Search</span>
@@ -87,7 +87,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -bedrooms">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Bedrooms</span>
@@ -97,7 +97,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -bathrooms">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Bathrooms</span>
@@ -147,7 +147,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -parking-spaces">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Parking Spaces</span>
@@ -157,7 +157,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -waterfront">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Waterfront Description</span>
@@ -167,7 +167,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -property-type">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Property Type</span>
@@ -177,7 +177,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -features">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Features</span>

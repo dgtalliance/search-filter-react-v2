@@ -386,3 +386,205 @@ body{
 		}
 	}
 }
+
+/*ORDENANDO LOS ELEMENTOS*/
+.ib-guests-search-modal{
+	.ib-wrapper-modal{
+		.ib-body-guests{
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: flex-start;
+			.ib-gs-item{
+				width: 100%;
+				&.-sale-type{
+					order: 0;
+				}
+
+				&.-price-range{
+					order: 1;
+				}
+
+				&.-bedrooms{
+					order: 2;
+				}
+
+				&.-bathrooms{
+					order: 3;
+				}
+
+				&.-property-type{
+					order: 4;
+					.ib-typesList{
+						.ib-wrapper{
+							.ib-flex-wrapper{
+								.ib-amenitiesList{
+									.ib-chk-wrapper{
+										margin-bottom: 2px;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				&.-parking-spaces{
+					order: 5;
+				}
+
+				&.-living-size{
+					order: 6;
+				}
+
+				&.-land-size{
+					order: 7;
+				}
+
+				&.-year-built{
+					order: 8;
+				}
+
+				&.-waterfront{
+					order: 9;
+				}
+
+				&.-features{
+					order: 10;
+					.ib-typesList{
+						.ib-wrapper{
+							.ib-flex-wrapper{
+								.ib-amenitiesList{
+									.ib-chk-wrapper{
+										margin-bottom: 2px;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	@media screen and (min-width: 768px){
+		.ib-wrapper-modal{
+			width: 90%;
+			max-width: 1115px;
+			position: relative;
+		}
+	}
+
+	@media screen and (min-width: 1024px){
+		.ib-wrapper-modal{
+			width: 97%;
+			//overflow: visible;
+			.ib-md-header{
+				padding: 0;
+				border: 0;
+				.ib-text{
+					display: none;
+				}
+
+				.ib-btn{
+					left: auto;
+					top: 8px;
+					right: 5px;
+					width: 30px;
+					height: 30px;
+					position: absolute;
+					///top: -35px;
+					//border-radius: 100%;
+					font-size: 10px;
+					z-index: 3;
+					background-color: transparent;
+					&:before{
+						padding-top: 2px;
+					}
+				}
+			}
+
+			.ib-body-guests{
+				.ib-gs-item{
+					width: 33.33%;
+					background-color: var(--color-white);
+					&.-full{
+						width: 33.33%;
+					}
+
+					&.-sale-type{
+						order: 0;
+					}
+
+					&.-parking-spaces{
+						order: 1;
+					}
+
+					&.-waterfront{
+						order: 2;
+						border-right: 0;
+					}
+
+					&.-price-range{
+						order: 3;
+					}
+
+					&.-year-built{
+						order: 4;
+					}
+
+					&.-property-type{
+						order: 5;
+						border-right: 0;
+					}
+
+					&.-bedrooms{
+						order: 6;
+						margin-top: -10px;
+					}
+
+					&.-bathrooms{
+						order: 7;
+						margin-top: -10px;
+					}
+
+					&.-features{
+						order: 8;
+						margin-top: -10px;
+						border-bottom: 0 !important;
+						border-right: 0;
+					}
+		
+					&.-living-size{
+						order: 9;
+						margin-top: -173px;
+					}
+	
+					&.-land-size{
+						order: 10;
+						margin-top: -173px;
+					}
+
+					.ib-chk-list{
+						&.-round{
+							.ant-radio-group {
+								zoom: 0.93;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.error-label {
+			color: #5e1717;
+			position: absolute;
+			bottom: -50px;
+			z-index: 2;
+			background-color: #f9a6a0;
+			border-radius: 4px;
+			width: calc(100% - 30px);
+			padding: 10px;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+	}
+}

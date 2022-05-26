@@ -12,8 +12,7 @@ const ContainerFilterBaths = () => {
   const [error, setError] = useState(false)
   const dispatch = useDispatch()
 
-  const TitleChange = (minBathsv, maxBathsv, activeMatchv) => {
-    console.log('TitleChange', minBathsv, maxBathsv, activeMatchv)
+  const TitleChange = (minBathsv, maxBathsv, activeMatchv) => {   
     if (parseInt(minBathsv) !== 10) {
       if (activeMatchv && parseInt(minBathsv) === 0 && parseInt(maxBathsv) === 0) {
         settitle('Studio Baths')

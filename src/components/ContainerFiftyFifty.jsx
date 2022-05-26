@@ -20,13 +20,10 @@ const ContainerFiftyFifty = () => {
           <div className="ib-wrapper -round-sv">
             <button className="ib-btn">
               Save <i className="idx-icons-save"></i>
-            </button>
-            <button className="ib-btn js-show-grid">
-              Grid <i className="idx-icons-grid"></i>
-            </button>
+            </button>            
             <button className="ib-btn js-show-map">
               Map <i className="idx-icons-map"></i>
-            </button>
+            </button>            
           </div>
         </div>
         <CustomInfoWindowMobile/>
