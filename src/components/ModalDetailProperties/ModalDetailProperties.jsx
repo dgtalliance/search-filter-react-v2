@@ -21,12 +21,14 @@ import RentalFormContact from "./RentalFormContact";
 import ModalSendToFriend from "./ModalSendToFriend";
 import {
   API_PROPERTIES_DETAIL_CHART,
+  API_PROPERTIES_DETAIL_CHART_P,
   LEAD_FAVORITES,
   SAVE_FAVORITE,
 } from "../../config/config";
 import { Chart } from "./Chart";
 
 import { ChartTabs } from "./ChartTabs";
+import { ChartTabsP } from "./ChartTabsP";
 
 export const ModalDetailProperties = () => {
   const { closeModal, openModal, setSlug, slug, modalData } =
@@ -43,13 +45,28 @@ export const ModalDetailProperties = () => {
   const [propertymcir, setPropertymcir] = useState("3.215");
 
   const [chartDataApi, setChartDataApi] = useState([]);
+  const [chartDataApiP, setChartDataApiP] = useState([]);
+
   const [chartDataShow, setChartDataShow] = useState({});
+  const [chartDataShowP, setChartDataShowP] = useState({});
+
   const [defaultHome, setDefaultHome] = useState("1");
+  const [defaultHomeP, setDefaultHomeP] = useState("1");
+
   const [defaultCity, setDefaultCity] = useState("zip");
+  const [defaultCityP, setDefaultCityP] = useState("zip");
+
   const [loadingDataChart, setLoadingDataChart] = useState(true);
+  const [loadingDataChartP, setLoadingDataChartP] = useState(true);
+
   const [defaultTab, setDefaultTab] = useState("media_price");
+  const [defaultTabP, setDefaultTabP] = useState("media_price");
+
   const [defaultYears, setDefaultYears] = useState(1);
+  const [defaultYearsP, setDefaultYearsP] = useState(1);
+
   const [defaultYearsSegment, setDefaultYearsSegment] = useState("1 year");
+  const [defaultYearsSegmentP, setDefaultYearsSegmentP] = useState("1 year");
 
   const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
 
@@ -146,6 +163,7 @@ export const ModalDetailProperties = () => {
     if (Object.keys(propertiesData).length > 0) {
       isFavoriteF();
       chartsDetails();
+      chartsDetailsP();
       console.log(propertiesData);
     }
   }, [propertiesData]);
@@ -170,7 +188,30 @@ export const ModalDetailProperties = () => {
         categories: response.data.value.zip.month,
         series: response.data.value.zip.metadata["1"]["media_price"],
       });
-      setLoadingDataChart(false);
+    }
+    setLoadingDataChart(false);
+  };
+
+  const chartsDetailsP = async () => {
+    setDefaultHomeP("1");
+    setDefaultTabP("media_price");
+    setDefaultYearsP(1);
+    setDefaultYearsSegmentP("1 year");
+    setLoadingDataChartP(true);
+    setDefaultCityP("zip");
+
+    const responseP = await axios.get(
+      API_PROPERTIES_DETAIL_CHART_P +
+        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+    );
+    setLoadingDataChartP(false);
+    if (responseP.data.length != 0) {
+      setChartDataApiP(responseP.data);
+      setChartDataShowP({});
+      setChartDataShowP({
+        categories: responseP.data.value.zip.month,
+        series: responseP.data.value.zip.metadata["1"]["media_price"],
+      });
     }
   };
 
@@ -263,6 +304,14 @@ export const ModalDetailProperties = () => {
     });
     setDefaultHome(value);
   }
+  function onChangeP(value) {
+    // console.log(`selected ${value}`);
+    setChartDataShowP({
+      ...chartDataShowP,
+      series: chartDataApiP.value[defaultCityP].metadata[value][defaultTabP],
+    });
+    setDefaultHomeP(value);
+  }
   function onChangeCity(value) {
     // console.log(`selected ${value}`);
     setChartDataShow({
@@ -271,9 +320,21 @@ export const ModalDetailProperties = () => {
     });
     setDefaultCity(value);
   }
+  function onChangeCityP(value) {
+    // console.log(`selected ${value}`);
+    setChartDataShowP({
+      ...chartDataShowP,
+      series: chartDataApiP.value[value].metadata[defaultHomeP][defaultTabP],
+    });
+    setDefaultCityP(value);
+  }
   function changeYear(value) {
     setDefaultYears(value.charAt(0));
     setDefaultYearsSegment(value);
+  }
+  function changeYearP(value) {
+    setDefaultYearsP(value.charAt(0));
+    setDefaultYearsSegmentP(value);
   }
 
   function onSearch(val) {
@@ -286,6 +347,14 @@ export const ModalDetailProperties = () => {
       series: chartDataApi.value[defaultCity].metadata[defaultHome][key],
     });
     setDefaultTab(key);
+  }
+
+  function callbackP(key) {
+    setChartDataShowP({
+      ...chartDataShowP,
+      series: chartDataApiP.value[defaultCityP].metadata[defaultHomeP][key],
+    });
+    setDefaultTabP(key);
   }
 
   const [isOpenCarusel, setIsOpenCarusel] = useState(false);
@@ -305,7 +374,7 @@ export const ModalDetailProperties = () => {
       return formatPrice(price / sqft);
     }
     return "";
-  };  
+  };
 
   const refOpenUrl = useRef();
   const openUrl = (e) => {
@@ -414,7 +483,6 @@ export const ModalDetailProperties = () => {
     e.preventDefault();
     // console.log('resultDetail.mls_num:',resultDetail.mls_num);
   };
-  
 
   const openCalculatorYears = (e) => {
     e.preventDefault();
@@ -580,6 +648,14 @@ export const ModalDetailProperties = () => {
                         setDefaultYearsSegment("1 year");
                         setChartDataShow({});
                         setDefaultCity("zip");
+
+                        setDefaultHomeP("1");
+                        setDefaultTabP("media_price");
+                        setDefaultYearsP(1);
+                        setDefaultYearsSegmentP("1 year");
+                        setChartDataShowP({});
+                        setDefaultCityP("zip");
+
                         setIsFavorite(false);
                         setIsFavoriteLoading(false);
                         closeModal();
@@ -1625,22 +1701,22 @@ export const ModalDetailProperties = () => {
                       </div>
                     </div> */}
 
-                    {Object.keys(chartDataShow).length > 0 && (
-                      <div className="ib-plist-details">
-                        <div className="ib-plist-card">
-                          <Spin spinning={loadingDataChart}>
-                            <Collapse
-                              bordered={false}
-                              defaultActiveKey={["1"]}
-                              expandIconPosition={"right"}
+                    <div className="ib-plist-details">
+                      <div className="ib-plist-card">
+                        <Spin spinning={loadingDataChart}>
+                          <Collapse
+                            bordered={false}
+                            defaultActiveKey={["1"]}
+                            expandIconPosition={"right"}
+                          >
+                            <Panel
+                              header={
+                                propertiesData.city_name +
+                                " Housing Market Trends"
+                              }
+                              key="1"
                             >
-                              <Panel
-                                header={
-                                  propertiesData.city_name +
-                                  " Housing Market Trends"
-                                }
-                                key="1"
-                              >
+                              {Object.keys(chartDataShow).length > 0 && (
                                 <div style={{ padding: 12 }}>
                                   <div
                                     style={{
@@ -1667,11 +1743,15 @@ export const ModalDetailProperties = () => {
                                       >
                                         <Option value="zip">
                                           Zip Code:{" "}
-                                          {chartDataApi.value.zip.zip_code}
+                                          {chartDataApi?.value?.zip.zip_code
+                                            ? chartDataApi.value.zip.zip_code
+                                            : ""}
                                         </Option>
                                         <Option value="city">
                                           City:{" "}
-                                          {chartDataApi.value.city.city_name}
+                                          {chartDataApi?.value?.city.city_name
+                                            ? chartDataApi.value.city.city_name
+                                            : ""}
                                         </Option>
                                       </Select>
                                       <Select
@@ -1712,12 +1792,122 @@ export const ModalDetailProperties = () => {
                                     defaultCity={defaultCity}
                                   ></ChartTabs>
                                 </div>
-                              </Panel>
-                            </Collapse>
-                          </Spin>
-                        </div>
+                              )}
+                               {Object.keys(chartDataShow).length == 0 && !loadingDataChart && (
+                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                   <span>No data available</span>
+                                </div>
+                              )}
+                            </Panel>
+                          </Collapse>
+                        </Spin>
                       </div>
-                    )}
+                    </div>
+
+                    <div className="ib-plist-details">
+                      <div className="ib-plist-card">
+                        <Spin spinning={loadingDataChartP}>
+                          <Collapse
+                            bordered={false}
+                            defaultActiveKey={["1"]}
+                            expandIconPosition={"right"}
+                          >
+                            <Panel
+                              header={
+                                "How hot is the " +
+                                propertiesData.city_name +
+                                "housing market"
+                              }
+                              key="1"
+                            >
+                              {Object.keys(chartDataShowP).length > 0 && (
+                                <div style={{ padding: 12 }}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      marginBottom: "15px",
+                                    }}
+                                  >
+                                    <div>
+                                      <Select
+                                        style={{ width: 200, marginRight: 10 }}
+                                        showSearch
+                                        placeholder="Select"
+                                        optionFilterProp="children"
+                                        onChange={onChangeCityP}
+                                        value={defaultCityP}
+                                        onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                          option.children
+                                            .toLowerCase()
+                                            .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                      >
+                                        <Option value="zip">
+                                          Zip Code:{" "}
+                                          {chartDataApiP?.value?.zip.zip_code
+                                            ? chartDataApiP.value.zip.zip_code
+                                            : ""}
+                                        </Option>
+                                        <Option value="city">
+                                          City:{" "}
+                                          {chartDataApiP?.value?.city.city_name
+                                            ? chartDataApiP.value.city.city_name
+                                            : ""}
+                                        </Option>
+                                      </Select>
+                                      <Select
+                                        style={{ width: 200 }}
+                                        showSearch
+                                        placeholder="Select a home type"
+                                        optionFilterProp="children"
+                                        onChange={onChangeP}
+                                        value={defaultHomeP}
+                                        onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                          option.children
+                                            .toLowerCase()
+                                            .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                      >
+                                        <Option value="1">Condos</Option>
+                                        <Option value="2">Homes</Option>
+                                        <Option value="26">Lands</Option>
+                                        <Option value="100">TownHomes</Option>
+                                      </Select>
+                                    </div>
+
+                                    <Segmented
+                                      options={["1 year", "2 years", "3 years"]}
+                                      value={defaultYearsSegmentP}
+                                      onChange={changeYearP}
+                                    />
+                                  </div>
+
+                                  <ChartTabsP
+                                    callback={callbackP}
+                                    defaultTab={defaultTabP}
+                                    chartDataApi={chartDataApiP}
+                                    defaultHome={defaultHomeP}
+                                    chartDataShow={chartDataShowP}
+                                    defaultYears={defaultYearsP}
+                                    defaultCity={defaultCityP}
+                                  ></ChartTabsP>
+                                </div>
+                              )}
+
+                              {Object.keys(chartDataShowP).length == 0 && !loadingDataChartP && (
+                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                   <span>No data available</span>
+                                </div>
+                              )}
+                            </Panel>
+                          </Collapse>
+                        </Spin>
+                      </div>
+                    </div>
 
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
@@ -1984,12 +2174,14 @@ export const ModalDetailProperties = () => {
                   </button>
                   <ul className="ib-share-list">
                     <li>
-                      <a  href="#"
-                            className="js-show-modals"
-                            data-modal="#modalAlert"
-                            data-status={propertiesData.status_type}
-                            data-mls={propertiesData.mls_num}
-                            onClick={openModalEmailToFriend}>
+                      <a
+                        href="#"
+                        className="js-show-modals"
+                        data-modal="#modalAlert"
+                        data-status={propertiesData.status_type}
+                        data-mls={propertiesData.mls_num}
+                        onClick={openModalEmailToFriend}
+                      >
                         <i className="idx-icons-envelope"></i> Email to a friend
                       </a>
                     </li>
@@ -2002,23 +2194,27 @@ export const ModalDetailProperties = () => {
                       </a>
                     </li>
                     <li>
-                      <a  href={`/property/${propertiesData.slug}`}
-                            ref={refSharedFacebook}
-                            className="ib-plsitem ib-plsifb"
-                            onClick={sharedFacebook}>
+                      <a
+                        href={`/property/${propertiesData.slug}`}
+                        ref={refSharedFacebook}
+                        className="ib-plsitem ib-plsifb"
+                        onClick={sharedFacebook}
+                      >
                         <i className="idx-icons-facebook"></i> Facebook
                       </a>
                     </li>
                     <li>
-                      <a  href={`/property/${propertiesData.slug}`}
-                            className="ib-plsitem ib-plsitw"
-                            data-address={`${propertiesData.address_short} ${propertiesData.address_large}`}
-                            data-price={propertiesData.price}
-                            data-type={propertiesData.class_id}
-                            data-rental={propertiesData.is_rental}
-                            data-mls={propertiesData.mls_num}
-                            ref={refSharedTwiter}
-                            onClick={sharedTwitter}>
+                      <a
+                        href={`/property/${propertiesData.slug}`}
+                        className="ib-plsitem ib-plsitw"
+                        data-address={`${propertiesData.address_short} ${propertiesData.address_large}`}
+                        data-price={propertiesData.price}
+                        data-type={propertiesData.class_id}
+                        data-rental={propertiesData.is_rental}
+                        data-mls={propertiesData.mls_num}
+                        ref={refSharedTwiter}
+                        onClick={sharedTwitter}
+                      >
                         <i className="idx-icons-twitter"></i> Twitter
                       </a>
                     </li>
