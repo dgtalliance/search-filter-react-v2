@@ -440,7 +440,7 @@ export const phoneFormat = (val) => {
 export const favoriteIcon = () => {
   let options = ['-heart','-star', '-square']
   const position = window.location.host === 'http://wordpress.test/'
-    ? 0
-    : parseInt(window.__flex_g_settings.params.view_icon_type)
+    ? parseInt(window.__flex_g_settings.params.view_icon_type)
+    : 0
   return options[position];
 }
