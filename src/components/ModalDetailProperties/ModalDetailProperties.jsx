@@ -21,12 +21,14 @@ import {
 import RentalFormContact from "./RentalFormContact";
 import ModalSendToFriend from "./ModalSendToFriend";
 import {
+  ACCESS_TOKEN,
+  anonymous,
   API_PROPERTIES_DETAIL_CHART,
   API_PROPERTIES_DETAIL_CHART_P,
   LEAD_FAVORITES,
   SAVE_FAVORITE,
 } from "../../config/config";
-import { Chart } from "./Chart";
+import Cookies from "js-cookie";
 
 import { ChartTabs } from "./ChartTabs";
 import { ChartTabsP } from "./ChartTabsP";
@@ -217,7 +219,7 @@ export const ModalDetailProperties = () => {
   };
 
   const handleFavorite = async () => {
-    if (__flex_g_settings.anonymous === "yes") {
+    if (anonymous === "yes") {
       //active_modal($('#modal_login'));
       jQuery("#modal_login")
         .addClass("active_modal")
@@ -245,7 +247,7 @@ export const ModalDetailProperties = () => {
       setIsFavoriteLoading(true);
 
       var bodyFormData = new FormData();
-      bodyFormData.append("access_token", __flex_g_settings.accessToken);
+      bodyFormData.append("access_token", ACCESS_TOKEN);
       bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
       const response = await axios({
         method: "post",
@@ -267,9 +269,9 @@ export const ModalDetailProperties = () => {
   };
 
   const isFavoriteF = async () => {
-    if (__flex_g_settings.anonymous !== "yes") {
+    if (anonymous !== "yes") {
       var bodyFormData = new FormData();
-      bodyFormData.append("access_token", __flex_g_settings.accessToken);
+      bodyFormData.append("access_token", ACCESS_TOKEN);
       bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
       bodyFormData.append("paging", "saved_listings");
       const response = await axios({
@@ -279,7 +281,7 @@ export const ModalDetailProperties = () => {
         headers: { "Content-Type": "multipart/form-data" },
       });
       if (response.data.length != 0) {
-        let exits = response.data.lead_info.saved_listings.find(
+        let exits = response.data.lead_info?.saved_listings?.find(
           (e) => e.mls_num === propertiesData.mls_num
         );
         if (exits) {
