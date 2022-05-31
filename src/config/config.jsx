@@ -26,6 +26,9 @@ export const API_AUTOCOMPLETE_URL =
     ? 'https://autocomplete.idxboost.dev/?board=1'
     : 'https://autocomplete.idxboost.dev/?board=1'
 
+export const SAVE_FAVORITE = 'https://api.idxboost.dev/listings/'
+export const LEAD_FAVORITES = 'https://api.idxboost.dev/leads/fetch_activities'
+
 export const GOOGLEMAPREACTKEY = window.__flex_g_settings.google_recaptcha_public_key
   // window.location.host === 'http://wordpress.test/'
   //   ? 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4'
