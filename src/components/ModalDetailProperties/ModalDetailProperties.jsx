@@ -61,7 +61,7 @@ export const ModalDetailProperties = () => {
   const [loadingDataChartP, setLoadingDataChartP] = useState(true);
 
   const [defaultTab, setDefaultTab] = useState("media_price");
-  const [defaultTabP, setDefaultTabP] = useState("media_price");
+  const [defaultTabP, setDefaultTabP] = useState("sale_to_list");
 
   const [defaultYears, setDefaultYears] = useState(1);
   const [defaultYearsP, setDefaultYearsP] = useState(1);
@@ -195,7 +195,7 @@ export const ModalDetailProperties = () => {
 
   const chartsDetailsP = async () => {
     setDefaultHomeP("1");
-    setDefaultTabP("media_price");
+    setDefaultTabP("sale_to_list");
     setDefaultYearsP(1);
     setDefaultYearsSegmentP("1 year");
     setLoadingDataChartP(true);
@@ -211,7 +211,7 @@ export const ModalDetailProperties = () => {
       setChartDataShowP({});
       setChartDataShowP({
         categories: responseP.data.value.zip.month,
-        series: responseP.data.value.zip.metadata["1"]["media_price"],
+        series: responseP.data.value.zip.metadata["1"]["sale_to_list"],
       });
     }
   };
@@ -322,7 +322,6 @@ export const ModalDetailProperties = () => {
     setDefaultCity(value);
   }
   function onChangeCityP(value) {
-    // console.log(`selected ${value}`);
     setChartDataShowP({
       ...chartDataShowP,
       series: chartDataApiP.value[value].metadata[defaultHomeP][defaultTabP],
@@ -651,7 +650,7 @@ export const ModalDetailProperties = () => {
                         setDefaultCity("zip");
 
                         setDefaultHomeP("1");
-                        setDefaultTabP("media_price");
+                        setDefaultTabP("sale_to_list");
                         setDefaultYearsP(1);
                         setDefaultYearsSegmentP("1 year");
                         setChartDataShowP({});
