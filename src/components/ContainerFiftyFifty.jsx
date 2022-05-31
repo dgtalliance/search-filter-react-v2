@@ -3,10 +3,10 @@ import { initializeElement } from '../utils/utils'
 import FilterSearch from './Filter/FilterSearch'
 import { ModalDetailProperties } from './ModalDetailProperties/ModalDetailProperties'
 import Properties from './Properties/Properties'
-
+import MapJS from './Map/MapJS'
 import CustomInfoWindowMobile from './Map/CustomInfoWindowMobile'
 import { LazyLoadComponent } from 'react-lazy-load-image-component'
-import MapJS from './Map/MapJS'
+
 initializeElement()
 
 const ContainerFiftyFifty = () => {
