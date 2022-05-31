@@ -1022,4 +1022,4 @@ export const lot_size_range_d =
 export const anonymous =
 window.location.host === 'localhost:3000'
 ? 'yes'
-: windows.__flex_g_settings.anonymous
+: window.__flex_g_settings.anonymous
