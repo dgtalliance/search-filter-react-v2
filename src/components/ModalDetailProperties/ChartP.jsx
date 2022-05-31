@@ -3,7 +3,10 @@ import React, { useEffect } from "react";
 export const ChartP = ({ chartData, con, years }) => {
 
   useEffect(() => { 
+    console.log('cd', chartData)
       chartsDetails();
+
+     
 
   }, [chartData, years]);
 
@@ -121,7 +124,7 @@ export const ChartP = ({ chartData, con, years }) => {
       //   }]
       // },
       tooltip: {
-        valuePrefix: "$",
+        valueSuffix: "%",
       },
       plotOptions: {
         // spline: {

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
 import { Tabs } from "antd";
-import { Chart } from "./Chart";
 import { ChartP } from "./ChartP";
 export const ChartTabsP = ({
   defaultCity,
@@ -22,7 +21,7 @@ export const ChartTabsP = ({
      return(
        <>
        {
-         m === 0 ? <span style={{color: 'red'}}>N/A</span> : <>${m}</>
+         m === 0 ? <span style={{color: 'red'}}>N/A</span> : <>{m}%</>
        }
        </>
      );
@@ -42,11 +41,11 @@ export const ChartTabsP = ({
       <TabPane
         tab={
           <div>
-            <h3>Median Sale Price</h3>
+            <h3>Sale-to-list-Price</h3>
             <h3>
               {median(
                 chartDataApi.value[defaultCity].metadata[defaultHome][
-                  "media_price"
+                  "sale_to_list"
                 ].slice(-12 * defaultYears)
               )}
             </h3>
@@ -55,18 +54,18 @@ export const ChartTabsP = ({
                 style={{
                   color:
                     chartDataApi.value[defaultCity].metadata[defaultHome]
-                      .percent[defaultYears].media_price_percent >= 0
+                      .percent[defaultYears].percent_sale_to_list >= 0
                       ? "#75b945"
                       : "red",
                 }}
               >
                 {chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                  .media_price_percent > 0
+                  .percent_sale_to_list > 0
                   ? "+"
                   : ""}
                 {
                   chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                    .media_price_percent
+                    .percent_sale_to_list
                 }
                 %
               </span>{" "}
@@ -74,22 +73,22 @@ export const ChartTabsP = ({
             </h5>
           </div>
         }
-        key="media_price"
+        key="sale_to_list"
       >
         <ChartP
           chartData={chartDataShow}
-          con={"media_price_p"}
+          con={"sale_to_list"}
           years={defaultYears}
         />
       </TabPane>
       <TabPane
         tab={
           <div>
-            <h3># of Homes Sold</h3>
+            <h3>Homes Sold Above Price</h3>
             <h3>
-              {sold(
+             {median(
                 chartDataApi.value[defaultCity].metadata[defaultHome][
-                  "sold_cant"
+                  "sale_upper_list"
                 ].slice(-12 * defaultYears)
               )}
             </h3>
@@ -98,18 +97,18 @@ export const ChartTabsP = ({
                 style={{
                   color:
                     chartDataApi.value[defaultCity].metadata[defaultHome]
-                      .percent[defaultYears].sold_cant_percent >= 0
+                      .percent[defaultYears].percent_sale_upper_list >= 0
                       ? "#75b945"
                       : "red",
                 }}
               >
                 {chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                  .sold_cant_percent > 0
+                  .percent_sale_upper_list > 0
                   ? "+"
                   : ""}
                 {
                   chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                    .sold_cant_percent
+                    .percent_sale_upper_list
                 }
                 %
               </span>{" "}
@@ -117,23 +116,23 @@ export const ChartTabsP = ({
             </h5>
           </div>
         }
-        key="sold_cant"
+        key="sale_upper_list"
       >
         <ChartP
           chartData={chartDataShow}
-          con={"sold_cant_p"}
+          con={"sale_upper_list"}
           years={defaultYears}
         />
       </TabPane>
       <TabPane
         tab={
           <div>
-            <h3>Median Days on Market</h3>
+            <h3>Homes with Price Drops</h3>
             <h3>
               
                {median(
                 chartDataApi.value[defaultCity].metadata[defaultHome][
-                  "media_adom"
+                  "sale_lower_list"
                 ].slice(-12 * defaultYears)
               )}
             </h3>
@@ -142,18 +141,18 @@ export const ChartTabsP = ({
                 style={{
                   color:
                     chartDataApi.value[defaultCity].metadata[defaultHome]
-                      .percent[defaultYears].media_price_percent >= 0
+                      .percent[defaultYears].percent_sale_lower_list >= 0
                       ? "#75b945"
                       : "red",
                 }}
               >
                 {chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                  .media_price_percent > 0
+                  .percent_sale_lower_list > 0
                   ? "+"
                   : ""}
                 {
                   chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                    .media_price_percent
+                    .percent_sale_lower_list
                 }
                 %
               </span>{" "}
@@ -161,11 +160,11 @@ export const ChartTabsP = ({
             </h5>
           </div>
         }
-        key="media_adom"
+        key="sale_lower_list"
       >
         <ChartP
           chartData={chartDataShow}
-          con={"media_adom_p"}
+          con={"sale_lower_list"}
           years={defaultYears}
         />
       </TabPane>
