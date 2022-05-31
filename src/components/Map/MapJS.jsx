@@ -4,6 +4,7 @@ import {
   getparams,
   getpropertiesMapData,
   updateDataMap,
+  updateForm,
 } from '../../config/slices/properties'
 import { isMobile } from 'react-device-detect'
 import GoogleMapReact from 'google-map-react'
@@ -13,13 +14,14 @@ import { renderToString } from 'react-dom/server'
 import CustomInfoWindow from './CustomInfoWindow'
 import FilterContext from '../../Contexts/FilterContext'
 import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
+import { fetchAsyncSearch } from '../../config/actions/properties'
 
 const defaultCenter = { lat: 25.91157267302583, lng: -80.21950243519076 }
 const defaultZoom = 11
 
 const bootstrapURLKeys = {
   googleMapsApiKey: 'AIzaSyBdlczEuxYRH-xlD_EZH4jv0naeVT1JaA4',
-  libraries: ['drawing', 'geometry'], 
+  libraries: ['geometry', 'drawing'],
 }
 
 const MapJS = () => {
@@ -33,11 +35,7 @@ const MapJS = () => {
   const [isDrawing, setIsDrawing] = useState(false)
   const [IB_MARKERS, set_IB_MARKERS] = useState([])
   const [markersData, setMarkersData] = useState([])
-  const [autoMapSearch, setAutoMapSearch] = useState(true)
-  const [polygons, setPolygons] = useState([])
-  const [initPolygons, setInitPolygons] = useState([])
-  const [polygonsDraw, setPolygonsDraw] = useState([])
-
+  
   //ref elements
   const containerMap = useRef()
   const mapRef = useRef()
@@ -49,8 +47,9 @@ const MapJS = () => {
   const polygonRefTemp = useRef()
   var drawingManager = useRef()
   var newPolygons = useRef()
-
-  var polygonsDrawTemp = []
+  var dontReloadBounds = useRef(true)
+  var autoMapSearch = useRef(true)
+ 
 
   useEffect(() => {
     console.log('load data')
@@ -59,12 +58,19 @@ const MapJS = () => {
       if (!isDrawing) {
         loadMakers(paramsItems)
       }
+    } else {
+      if (!isDrawing) {
+        removeloadMakers()
+      }
     }
-
-    if ('' != params.kml_boundaries && autoMapSearch && !isDrawing) {
+    if (params?.kml_boundaries && '' != params.kml_boundaries && !isDrawing) {
       drawPolygonInit(params.kml_boundaries)
     }
   }, [paramsItems])
+  useEffect(() => {
+    console.log('change params')
+    dontReloadBounds.current = true
+  }, [params])
 
   //Btn fullscreenButton
   const handlefullscreenButton = (event) => {
@@ -149,112 +155,126 @@ const MapJS = () => {
   const handleCancel = (e) => {
     e.stopPropagation()
     e.preventDefault()
+
+    document.body.classList.add('draw-map')
     setIsDrawing(false)
-    initPolygons.setMap(mapRef.current)
-    setPolygons(initPolygons)
+
+    polygonRef.current = polygonRefTemp.current
+    polygonRef.current.setMap(mapRef.current)
+    polygonRefTemp.current = null
+
     loadMakers(IB_MARKERS)
-    drawingManager.current.setMap(null)
+
+    drawingManager.current?.setMap(null)
     drawingManager.current = null
-    console.log(newPolygons.current)
-
-    polygonsDrawTemp = []
-
-    /*  if (polygonRefTemp.current?.length > 0) {
-      for (let index = 0; index < polygonRefTemp.current.length; index++) {
-        polygonRefTemp.current[index].setMap(null)
-      }
-      polygonRefTemp.current = []
-    } */
+    newPolygons.current?.setMap(null)
+    newPolygons.current = null
   }
   const handleApply = (e) => {
     e.stopPropagation()
     e.preventDefault()
-    console.log('polygonsDrawTemp', polygonRefTemp.current)
+    document.body.classList.add('draw-map')
     setIsDrawing(false)
-    removePolygons()
-    // buscar class'#map-draw-apply-tg'
-    // preguntar si la drawpolygons tiene valores y  drawingManager.setMap(null);
-    // sino tiene regresar los markes y polygon inicial y return
+   
+    if (newPolygons.current?.getPath()) {
+      var points = newPolygons.current.getPath()
+      var coords = []
+      var currentPathArray = []
 
-    // mostrar btn de 'search this area'
-    // drawingManager.setMap(null);
-    // obtener array de coordenadas para hacer la consulta al api
+      points.forEach((point) => {
+        coords.push(point.lat() + ' ' + point.lng())
+        currentPathArray.push({ lat: point.lat(), lng: point.lng() })
+      })
+
+      var lastPoint = points.getAt(0)
+
+      coords.push(lastPoint.lat() + ' ' + lastPoint.lng())
+
+      currentPathArray.push({ lat: lastPoint.lat(), lng: lastPoint.lng() })
+
+      var points = new google.maps.MVCArray()
+
+      for (var i = 0, l = currentPathArray.length; i < l; i++) {
+        points.push(
+          new google.maps.LatLng(
+            currentPathArray[i].lat,
+            currentPathArray[i].lng,
+          ),
+        )
+      }   
+
+      var encodedPath = google.maps.geometry.encoding.encodePath(points)
+
+      // encode base64
+      encodedPath = btoa(encodedPath)
+
+      // make URL friendly
+      encodedPath = encodedPath
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/\=+$/, '')
+
+      var mapZoom = mapRef.current.getZoom()
+      var mapBounds = mapRef.current.getBounds()
+
+      var params = {
+        rect: mapBounds.toUrlValue(),
+        zm: mapZoom,
+        filter_search_keyword_label: '',
+        polygon_search: encodedPath,
+        page: 1,
+      }
+      dispatch(updateForm(params))
+      dispatch(fetchAsyncSearch())
+    } else {
+      polygonRef.current = polygonRefTemp.current
+      polygonRef.current.setMap(mapRef.current)
+      polygonRefTemp.current = null
+      loadMakers(IB_MARKERS)
+      if (newPolygons.current !== null || newPolygons.current !== undefined) {
+        newPolygons.current?.setMap(null)
+        newPolygons.current = null
+      }
+    }
+
+    drawingManager.current?.setMap(null)
+    drawingManager.current = null
+    
   }
   const handleRemove = (e) => {
     e.stopPropagation()
     e.preventDefault()
     removePolygons()
+    removeloadMakers()
+    var mapZoom = mapRef.current.getZoom()
+    var mapBounds = mapRef.current.getBounds()
+
+    var params = {
+      rect: mapBounds.toUrlValue(),
+      zm: mapZoom,
+      kml_boundaries: '',
+      filter_search_keyword_label: '',
+      polygon_search: '',
+      page: 1,
+    }
+    dispatch(updateForm(params))
+    dispatch(fetchAsyncSearch())
   }
   // Impletation for map
   const handleMapDrawing = () => {
     // mostrar btn de 'search this area'
-
+    document.body.classList.remove('draw-map')
     setIsDrawing(true)
     removePolygons()
     removeloadMakers()
     initializeDraw()
   }
-  const drawFreeHand = () => {
-    var poly
-    var move
-    var mouseup
-    //the polygon
-    poly = new google.maps.Polyline({
-      map: mapRef.current,
-      clickable: false,
-      editable: false,
-      strokeColor: '#31239a',
-      fillOpacity: 0.1,
-      strokeOpacity: 0.8,
-      strokeWeight: 1,
-      fillColor: '#31239a',
-    })
-
-    //move-listener
-    move = google.maps.event.addListener(
-      mapRef.current,
-      isMobile ? 'touchmove' : 'mousemove',
-      function (e) {
-        poly.getPath().push(e.latLng)
-      },
-    )
-
-    //mouseup-listener
-    mouseup = google.maps.event.addListenerOnce(
-      mapRef.current,
-      'mouseup',
-      function (e) {
-        google.maps.event.removeListener(move)
-        poly.setMap(null)
-        var path = poly.getPath()
-        poly = new google.maps.Polygon({
-          map: mapRef.current,
-          path: path,
-          clickable: false,
-          editable: false,
-          strokeColor: '#31239a',
-          fillOpacity: 0.1,
-          strokeOpacity: 0.8,
-          strokeWeight: 1,
-          fillColor: '#31239a',
-        })
-        console.log('path finish')
-        polygonsDrawTemp.push(poly)
-        polygonRefTemp.current = polygonsDrawTemp
-
-        google.maps.event.removeListener(mouseup)
-      },
-    )
-  }
 
   const initializeDraw = () => {
     drawingManager.current = new google.maps.drawing.DrawingManager({
+      map: mapRef.current,
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
-      drawingControl: true,
-      drawingControlOptions: {
-        position: google.maps.ControlPosition.LEFT_CENTER,
-        drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-      },
+      drawingControl: false,
       polygonOptions: {
         strokeColor: '#31239a',
         fillOpacity: 0.1,
@@ -267,20 +287,17 @@ const MapJS = () => {
       },
     })
 
-    drawingManager.current.setMap(mapRef.current)
-
     google.maps.event.addListener(
       drawingManager.current,
       'overlaycomplete',
-      function (event) {
+      (event) => {
         if (event.type != google.maps.drawing.OverlayType.MARKER) {
           drawingManager.current.setDrawingMode(null)
         }
-
-        var newShape = event.overlay
-        newShape.type = event.type
+        newPolygons.current = event.overlay
+        newPolygons.current.type = event.type
         console.log(
-          newShape
+          newPolygons.current
             .getPath()
             .getArray()
             .map((t) => t.lat() + '-' + t.lng()),
@@ -289,7 +306,7 @@ const MapJS = () => {
     )
   }
 
-  const fitBounds = (map, arr) => {
+  const fitBounds = (map, arr) => {   
     const bounds = new google.maps.LatLngBounds()
     arr.forEach((element) => {
       let position = new google.maps.LatLng({
@@ -299,6 +316,10 @@ const MapJS = () => {
       bounds.extend(position)
     })
     map.fitBounds(bounds)
+
+    if (isMobile) {
+      map.setZoom(13)
+    }
   }
 
   const drawPolygonInit = (kml_boundaries) => {
@@ -309,10 +330,14 @@ const MapJS = () => {
       polygonRef.current.setMap(null)
     }
 
-    removePolygons()
-    console.log('drawPolygonInit')
+    if (newPolygons.current !== null || newPolygons.current !== undefined) {
+      newPolygons.current?.setMap(null)
+      newPolygons.current = null
+    }
 
-    setAutoMapSearch(false)
+    removePolygons()
+    
+   
     var kb_exp = kml_boundaries.split(',')
     var tmp_points = new google.maps.MVCArray()
     for (var nn = 0, mm = kb_exp.length; nn < mm; nn++) {
@@ -331,15 +356,14 @@ const MapJS = () => {
     })
 
     tmpPolygon.setMap(mapRef.current)
-    setPolygons(tmpPolygon)
     polygonRef.current = tmpPolygon
   }
 
   const removePolygons = () => {
-    setInitPolygons(polygons)
-    if (Object.keys(polygons).length > 0) {
+    if (polygonRef.current?.getPath()) {
+      polygonRefTemp.current = polygonRef.current
       polygonRef.current.setMap(null)
-      setPolygons(null)
+      polygonRef.current = null
     }
   }
   const removeloadMakers = () => {
@@ -441,7 +465,11 @@ const MapJS = () => {
     })
 
     setMarkersData(markers)
-    fitBounds(mapRef.current, data)
+    if (dontReloadBounds.current === true && autoMapSearch.current === true) {
+      fitBounds(mapRef.current, data)
+    }
+    dontReloadBounds.current = false
+    autoMapSearch.current = true
   }
 
   const onGoogleApiLoaded = ({ map, maps }) => {
@@ -453,10 +481,34 @@ const MapJS = () => {
     if (params?.kml_boundaries) {
       drawPolygonInit(params.kml_boundaries)
     }
-    // fitBounds(map)
+     
+    mapRef.current.addListener('dragend', () => {
+      var idleListener = mapRef.current.addListener('idle', function () {
+        google.maps.event.removeListener(idleListener)
+        handleDragSearchEvent()
+      })
+    })
   }
-  const onChangeMap = (e) => {
-    console.log(e)
+  const onChangeMap = (e) => {}
+
+  const handleDragSearchEvent = () => {
+    if (true === isDrawing) {
+      return
+    }
+
+    if (mapRef.current !== undefined && mapRef.current !== null) {
+      var mapZoom = mapRef.current?.getZoom()
+      var mapBounds = mapRef.current?.getBounds()
+      var params = {
+        rect: mapBounds.toUrlValue(),
+        zm: mapZoom,
+        page: 1,
+      }
+
+      dispatch(updateForm(params))
+      dispatch(fetchAsyncSearch())
+      autoMapSearch.current = false
+    }
   }
   return (
     <>
@@ -534,7 +586,16 @@ const MapJS = () => {
               Grid <i className="idx-icons-grid"></i>
             </button>
 
-            <button onClick={initializeDraw} className="ib-btn js-show-area">
+            <button
+              onClick={handleRemove}
+              className={` ${
+                params?.kml_boundaries &&
+                '' != params.kml_boundaries &&
+                !isDrawing
+                  ? ''
+                  : '-hidden'
+              }  ib-btn js-show-area`}
+            >
               Search this Area
             </button>
           </div>
@@ -563,7 +624,7 @@ const MapJS = () => {
               streetViewControlOptions: {
                 position: google.maps.ControlPosition.TOP_RIGHT,
               },
-              draggableCursor: 'grab', // Inicial cursor    crosshair -cruz   grabbing  -mano cerrada
+              draggableCursor: !isDrawing ? 'grab' : 'crosshair', // Inicial cursor    crosshair -cruz   grabbing  -mano cerrada
               draggingCursor: 'grabbing', //
             }}
             onGoogleApiLoaded={onGoogleApiLoaded}

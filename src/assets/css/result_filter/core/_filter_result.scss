@@ -288,6 +288,21 @@
 
 					.slick-slider{
 						height: 100%;
+						.slick-list{
+							.slick-track{
+								.slick-slide{
+									.slick-slide{
+										div{
+											height: 100%;
+											.lazy-load-image-background,
+											.lazy-load-image-loaded{
+												height: 100%;
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 
 					@media (max-width: 1023px){
@@ -890,6 +905,12 @@
 				}
 			}
 		}
+	}
+
+	.property-image.ib-pifimg{
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 }
 

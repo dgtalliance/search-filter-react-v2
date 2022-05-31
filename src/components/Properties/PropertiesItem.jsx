@@ -1,13 +1,14 @@
 import { memo, useContext, useEffect, useState } from 'react'
 import FilterContext from '../../Contexts/FilterContext'
-import { formatPrice, hoveredItem } from '../../utils/utils'
-import Carousel from '../common/Carousel'
+import { formatPrice } from '../../utils/utils'
 import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   getpropertiesMapData,
   updateDataMap,
 } from '../../config/slices/properties'
+import CarouselLoadLazy from '../common/CarouselLoadLazy'
+import { isMobile } from 'react-device-detect'
 function PropertiesItem({ itemData }) {
   const { openModal } = useContext(FilterContext)
   const dispatch = useDispatch()
@@ -35,12 +36,16 @@ function PropertiesItem({ itemData }) {
 
   const handleOnItemMouseEnter = (e, value) => {
     e.preventDefault()
-    dispatch(updateDataMap({ mls_num: value, active: true, infoWin: true }))
+    if (!isMobile) {
+      dispatch(updateDataMap({ mls_num: value, active: true, infoWin: true }))
+    }
   }
 
   const handleOnItemMouseLeave = (e, value) => {
     e.preventDefault()
-    dispatch(updateDataMap({ mls_num: value, active: false, infoWin: false }))
+    if (!isMobile) {
+      dispatch(updateDataMap({ mls_num: value, active: false, infoWin: false }))
+    }
   }
 
   return (
@@ -61,7 +66,7 @@ function PropertiesItem({ itemData }) {
         <li className="ms-logo-board"></li>
       </ul>
       <div className="ib-pislider gs-container-slider">
-        <Carousel
+        <CarouselLoadLazy
           itemsSlider={false}
           swipe={true}
           address={itemData.address_short + ' ' + itemData.address_large}

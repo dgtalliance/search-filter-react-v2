@@ -3,36 +3,46 @@ import { initializeElement } from '../utils/utils'
 import FilterSearch from './Filter/FilterSearch'
 import { ModalDetailProperties } from './ModalDetailProperties/ModalDetailProperties'
 import Properties from './Properties/Properties'
-import MapJS from './Map/MapJS'
-import CustomInfoWindowMobile from './Map/CustomInfoWindowMobile'
 
+import CustomInfoWindowMobile from './Map/CustomInfoWindowMobile'
+import { LazyLoadComponent } from 'react-lazy-load-image-component'
+import MapJS from './Map/MapJS'
 initializeElement()
 
-const ContainerFiftyFifty = () => { 
+const ContainerFiftyFifty = () => {
   document.body.classList.add('-react-filter')
+  document.body.classList.add('draw-map')
   return (
     <>
-      <FilterSearch />
+      <LazyLoadComponent>
+        <FilterSearch />
+      </LazyLoadComponent>
       <div id="ib-idx-search-filter" className="-ib-fifty-fifty">
-        <MapJS />
-        <Properties />
+        <LazyLoadComponent>
+          <MapJS />
+        </LazyLoadComponent>
+        <LazyLoadComponent>
+          <Properties />
+        </LazyLoadComponent>
         <div className="ib-wrapper-float-actions -grid">
           <div className="ib-wrapper -round-sv">
             <button className="ib-btn">
               Save <i className="idx-icons-save"></i>
-            </button>            
+            </button>
             <button className="ib-btn js-show-map">
               Map <i className="idx-icons-map"></i>
-            </button>            
+            </button>
           </div>
         </div>
-        <CustomInfoWindowMobile/>
+        <LazyLoadComponent>
+          <CustomInfoWindowMobile />
+        </LazyLoadComponent>
       </div>
 
-      
-
       {/* COMPONENTS MODALES PARA EL SEARCH FILTER */}
-      <ModalDetailProperties />
+      <LazyLoadComponent>
+        <ModalDetailProperties />
+      </LazyLoadComponent>
     </>
   )
 }

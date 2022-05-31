@@ -1558,7 +1558,8 @@
     -ms-flex-pack: start;
     justify-content: flex-start;
     background-color: var(--color-white);
-    padding-bottom: 65px; }
+    height: 100vh;
+    padding-bottom: 0; }
     .ib-guests-search-modal .ib-wrapper-modal .ib-md-header {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -1611,7 +1612,8 @@
     .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests {
       overflow: hidden;
       overflow-y: auto;
-      height: calc(100vh - 139px); }
+      height: calc(100vh - 139px);
+      padding-bottom: 100px; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests::-webkit-scrollbar {
         width: 10px; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests::-webkit-scrollbar-thumb {
@@ -1714,10 +1716,12 @@
             .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-property .ant-radio-group .ant-radio-button-wrapper {
               font-size: 14px;
               height: 45px;
-              width: 110px;
+              width: 49%;
               margin-right: 10px; }
               .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-property .ant-radio-group .ant-radio-button-wrapper .ant-radio-button {
                 display: none; }
+              .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-property .ant-radio-group .ant-radio-button-wrapper:last-child {
+                margin-right: 0; }
           .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-round .ant-radio-group {
             -webkit-box-pack: start;
             -ms-flex-pack: start;
@@ -1747,6 +1751,8 @@
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-year-built .ib-wrapper .ib-flex-wrapper .ib-flex-item.-icon-price:before {
           font-size: 18px;
           content: "\e919"; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-features {
+          border-bottom: 0 !important; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper {
         width: 100%; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper .rdrCalendarWrapper {
@@ -1831,7 +1837,8 @@
           margin-right: 10px; }
 
 body.ms-show-guests-filter {
-  overflow: hidden; }
+  overflow: hidden;
+  height: 100vh; }
   body.ms-show-guests-filter .ib-guests-search {
     z-index: 32; }
   body.ms-show-guests-filter .ib-guests-search-modal {

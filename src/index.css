@@ -101,10 +101,6 @@
   display: none;
 }
 
-.gm-style>div:nth-child(2)>div:nth-child(2)>div>div:nth-child(3) {
-  display: none !important;
-  z-index: -1 !important;
-}
 
 @media screen and (min-width: 990px) {
   #ib-idx-search-filter .gm-style-iw.gm-style-iw-c {
