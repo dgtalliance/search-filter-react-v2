@@ -85,6 +85,7 @@
   margin: 16px 10px 0 0 !important;
 }
 
+<<<<<<< HEAD
 
 .dgt-richmarker-group:hover {
   background-color: #d20049 !important;
@@ -111,4 +112,8 @@
 .dgt-richmarker-group.ib-search-marker-active,
 .dgt-richmarker-single.ib-search-marker-active {
   z-index: 106 !important;
+=======
+body.openModals .ib-modal.active {
+  z-index: 100 !important;
+>>>>>>> a30cb44 (modal login)
 }

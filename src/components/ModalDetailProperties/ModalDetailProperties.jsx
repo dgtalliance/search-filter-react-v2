@@ -102,6 +102,28 @@ export const ModalDetailProperties = () => {
     dispatch(fetchAsyncDetails(mls_num));
   };
 
+
+  const handleFavorite = ()=>{
+    console.log('lleaaa')
+    if (__flex_g_settings.anonymous === "yes") {
+			//active_modal($('#modal_login'));
+			jQuery("#modal_login").addClass("active_modal").find('[data-tab]').removeClass('active');
+			jQuery("#modal_login").addClass("active_modal").find('[data-tab]:eq(1)').addClass('active');
+			jQuery("#modal_login").find(".item_tab").removeClass("active");
+			jQuery("#tabRegister").addClass("active");
+			jQuery("button.close-modal").addClass("ib-close-mproperty");
+			jQuery(".overlay_modal").css("background-color", "rgba(0,0,0,0.8);");
+			jQuery("#modal_login h2").html(
+        jQuery("#modal_login").find("[data-tab]:eq(1)").data("text-force"));
+			/*Asigamos el texto personalizado*/
+			var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr('data-text')
+			jQuery("#modal_login .modal_cm .content_md .heder_md .ms-title-modal").html(titleText);
+
+		}else{
+      console.log('peticion')
+    }
+  }
+
   const calculate = (val_cal) => {
     var price = val_cal.price;
     if (refFormMortgage.current.length > 0) {
@@ -397,7 +419,7 @@ export const ModalDetailProperties = () => {
               <div className="ib-modal-header">
                 <div className="ib-wrapper-flex">
                   <div className="ib-flex">
-                    <button className="ib-btn -addFavorite">Save</button>
+                    <button className="ib-btn -addFavorite" onClick={handleFavorite}>Save</button>
                     <div className="ib-dropdown">
                       <button className="ib-share-btn">
                         <i className="idx-icons-shared"></i> Share
