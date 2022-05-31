@@ -1,12 +1,22 @@
-import { memo, useContext } from 'react'
+import { memo, useContext, useEffect, useState } from 'react'
 import FilterContext from '../../Contexts/FilterContext'
 import { formatPrice } from '../../utils/utils'
-import Carousel from '../common/Carousel'
 import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  getpropertiesMapData,
+  updateDataMap,
+} from '../../config/slices/properties'
+import CarouselLoadLazy from '../common/CarouselLoadLazy'
+import { isMobile } from 'react-device-detect'
 function PropertiesItem({ itemData }) {
   const { openModal } = useContext(FilterContext)
   const dispatch = useDispatch()
+  const getItemMap = useSelector(getpropertiesMapData)
+  const [itemsMap, setItemsMap] = useState([])
+  useEffect(() => {
+    setItemsMap(getItemMap)
+  }, [getItemMap])
 
   const handleOpenModal = () => {
     dispatch(fetchAsyncDetails(itemData.mls_num))
@@ -24,8 +34,26 @@ function PropertiesItem({ itemData }) {
     }
   }
 
+  const handleOnItemMouseEnter = (e, value) => {
+    e.preventDefault()
+    if (!isMobile) {
+      dispatch(updateDataMap({ mls_num: value, active: true, infoWin: true }))
+    }
+  }
+
+  const handleOnItemMouseLeave = (e, value) => {
+    e.preventDefault()
+    if (!isMobile) {
+      dispatch(updateDataMap({ mls_num: value, active: false, infoWin: false }))
+    }
+  }
+
   return (
-    <li className="ib-pitem">
+    <li
+      className="ib-pitem"
+      onMouseEnter={(e) => handleOnItemMouseEnter(e, itemData.mls_num)}
+      onMouseLeave={(e) => handleOnItemMouseLeave(e, itemData.mls_num)}
+    >
       <ul className="ib-info">
         <li className="ib-item -price">{formatPrice(itemData.price)}</li>
         <li className="ib-item -beds">{itemData.bed} Bed(s)</li>
@@ -38,7 +66,7 @@ function PropertiesItem({ itemData }) {
         <li className="ms-logo-board"></li>
       </ul>
       <div className="ib-pislider gs-container-slider">
-        <Carousel
+        <CarouselLoadLazy
           itemsSlider={false}
           swipe={true}
           address={itemData.address_short + ' ' + itemData.address_large}
@@ -50,6 +78,7 @@ function PropertiesItem({ itemData }) {
         aria-label="Add Favorite"
       ></button>
       <a
+        mls={itemData.mls_num}
         className="ib-pipermalink js-show-modals"
         onClick={handleOpenModal}
       ></a>

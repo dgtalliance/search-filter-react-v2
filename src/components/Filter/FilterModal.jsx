@@ -10,17 +10,17 @@ import {
   updateTriggered,
 } from '../../config/slices/properties'
 import { formatShortPriceX } from '../../utils/utils'
+import FilterSaleType from './FilterSaleType'
 import FilterModalBaths from './FilterModalBaths'
 import FilterModalBeds from './FilterModalBeds'
 import FilterModalFeatures from './FilterModalFeatures'
-/* import FilterModalLandSize from './FilterModalLandSize'
 import FilterModalLivingSize from './FilterModalLivingSize'
-import FilterModalYearBuilt from './FilterModalYearBuilt' */
+import FilterModalLandSize from './FilterModalLandSize'
+import FilterModalYearBuilt from './FilterModalYearBuilt' 
 import FilterModalParking from './FilterModalParking'
 import FilterModalPrice from './FilterModalPrice'
 import FilterModalWaterfront from './FilterModalWaterfront'
 import FilterPropertyType from './FilterPropertyType'
-import FilterSaleType from './FilterSaleType'
 
 const FilterModal = () => {
   const propertiesItems = useSelector(getpropertiesItems)
@@ -79,7 +79,7 @@ const FilterModal = () => {
           </div>
 
           <div className="ib-body-guests">
-            <div className="ib-gs-item -full">
+            <div className="ib-gs-item -full -sale-type">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Property Search</span>
@@ -87,7 +87,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -bedrooms">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Bedrooms</span>
@@ -97,7 +97,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -bathrooms">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Bathrooms</span>
@@ -122,7 +122,7 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Living Size</span>
                   <div className="ms-flex-wp">
-                    {/* <FilterModalLivingSize /> */}
+                    <FilterModalLivingSize />
                   </div>
                 </div>
               </div>
@@ -132,7 +132,7 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Land Size</span>
                   <div className="ms-flex-wp">
-                    {/* <FilterModalLandSize /> */}
+                     <FilterModalLandSize />
                   </div>
                 </div>
               </div>
@@ -142,12 +142,12 @@ const FilterModal = () => {
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Year Built</span>
                   <div className="ms-flex-wp">
-                   {/*  <FilterModalYearBuilt /> */}
+                    <FilterModalYearBuilt />
                   </div>
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -parking-spaces">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Parking Spaces</span>
@@ -157,7 +157,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -waterfront">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Waterfront Description</span>
@@ -167,7 +167,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -property-type">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Property Type</span>
@@ -177,7 +177,7 @@ const FilterModal = () => {
                 </div>
               </div>
             </div>
-            <div className="ib-gs-item">
+            <div className="ib-gs-item -features">
               <div className="ib-wrapper">
                 <div className="ib-flex-wrapper">
                   <span className="ib-title">Features</span>

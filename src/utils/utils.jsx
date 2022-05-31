@@ -116,6 +116,113 @@ export const formatShortPriceX = (value) => {
   return short_price + 'M'
 }
 
+// function to agroup items map
+export const groupProperties = (map_items) => {
+  let row
+  let inner
+  let geocode
+  const hashed_properties = []
+  const filtered_properties = []
+  const unique_properties = []
+
+  // reduce markers [first step]
+  for (var i = 0, l = map_items.length; i < l; i++) {
+    // if (i >= 39) { break; }
+    row = map_items[i]
+    geocode = `${row.lat}:${row.lng}`
+    if (hashed_properties.indexOf(geocode) === -1) {
+      hashed_properties.push(geocode)
+      filtered_properties.push(row)
+    }
+  }
+  // reduce markers [second step]
+  for (i = 0, l = filtered_properties.length; i < l; i++) {
+    row = filtered_properties[i]
+    geocode = [row.lat, row.lng]
+
+    // reset array
+    const related_properties = []
+    for (let k = 0, m = map_items.length; k < m; k++) {
+      inner = map_items[k]
+      if (inner.lat === geocode[0] && inner.lng === geocode[1]) {
+        related_properties.push(inner)
+      }
+    }
+    unique_properties.push({
+      item: Object.assign(row, { hovered: false, infoWin: false }),
+      group: related_properties,
+    })
+  }
+
+  return unique_properties
+}
+
+export const hoveredItem = (mls, markers, active, info) => {
+  return markers.map((marker) => {
+    var t = Object.assign({}, marker.item)
+    var tem = marker.group.filter((group) => group.mls_num === mls)
+
+    if (tem.length > 0) {
+      return {
+        item: Object.assign(t, { hovered: active, infoWin: info }),
+        group: marker.group,
+      }
+    } else {
+      return {
+        item: Object.assign(t, { hovered: false, infoWin: false }),
+        group: marker.group,
+      }
+    }
+  })
+}
+export const hoverMapGrid = (ele) => {
+  Array.from(document.getElementsByClassName('markerOverlay')).forEach((f) => {
+    if (f.className.includes('active')) {
+      document.getElementById(f.id).classList.remove('active')
+    }
+  })
+  if (document.getElementById(ele) !== null)
+    document.getElementById(ele).classList.add('active')
+}
+
+export const clearHover = () => {
+  Array.from(document.getElementsByClassName('markerOverlay')).forEach((f) => {
+    if (f.className.includes('active')) {
+      document.getElementById(f.id).classList.remove('active')
+    }
+  })
+}
+
+export const removeChild = () => {
+  const removeChild = document.getElementsByClassName('gm-style')[0].children[1]
+    .children[1].children[0].children[2]
+  removeChild.innerHTML = ''
+}
+
+export const abbreviateNumber = (number) => {
+  if (number === null) {
+    return '$'
+  }
+  const SI_SYMBOL = ['', 'k', 'M', 'G', 'T', 'P', 'E']
+
+  // what tier? (determines SI symbol)
+  const tier = (Math.log10(number) / 3) | 0
+
+  // if zero, we don't need a suffix
+  if (tier === 0) return number
+
+  // get suffix and determine scale
+  const suffix = SI_SYMBOL[tier]
+  const scale = Math.pow(10, tier * 3)
+
+  // scale the number
+  const scaled = number / scale
+
+  // format number and add suffix
+  return '$' + scaled.toFixed(1) + suffix
+}
+
+// init script to jquery
 export const initializeElement = () => {
   jQuery(document).on('click', '.js-float-form', function (e) {
     e.preventDefault()
@@ -329,4 +436,11 @@ export const calculate_mortgage = (pricev, percentv, yearv, interestv) => {
 
 export const phoneFormat = (val) => {
   return val.replace(/[^\d]/g, '')
+}
+export const favoriteIcon = () => {
+  let options = ['-heart','-star', '-square']
+  const position = window.location.host === 'http://wordpress.test/'
+    ? parseInt(window.__flex_g_settings.params.view_icon_type)
+    : 0
+  return options[position];
 }

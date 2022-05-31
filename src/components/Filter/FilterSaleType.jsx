@@ -18,10 +18,10 @@ const FilterSaleType = () => {
     var sale = parseInt(e.target.value)
     setActive(sale)
     var tempPrice = {
-      min_sale_price: '',
-      max_sale_price: '',
-      min_rent_price: '',
-      max_rent_price: '',
+      min_sale_price: params.min_sale_price,
+      max_sale_price: params.max_sale_price,
+      min_rent_price: params.min_rent_price,
+      max_rent_price: params.max_rent_price,
       page: 1,
       sale_type: sale,
     }

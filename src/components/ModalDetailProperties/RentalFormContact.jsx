@@ -224,7 +224,8 @@ const RentalFormContact = ({
                 </div>
               )}
 
-              <button aria-label="Close" className="ib-close"></button>
+              {/* <button aria-label="Close" className="ib-close"></button> */}
+              <button aria-label="Close" className="ib-close js-close-modal-aside"></button>
             </div>
             <div className="ib-modal-body">
               {/* <div className="ib-info-property">

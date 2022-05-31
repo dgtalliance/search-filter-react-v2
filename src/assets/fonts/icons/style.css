@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'idxboost-icons';
-  src:  url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.eot?sjqeca');
-  src:  url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.eot?sjqeca#iefix') format('embedded-opentype'),
-    url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.ttf?sjqeca') format('truetype'),
-    url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.woff?sjqeca') format('woff'),
-    url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.svg?sjqeca#idxboost-icons') format('svg');
+  src:  url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.eot?6bxbqk');
+  src:  url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.eot?6bxbqk#iefix') format('embedded-opentype'),
+    url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.ttf?6bxbqk') format('truetype'),
+    url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.woff?6bxbqk') format('woff'),
+    url('https://idxboost-spw-assets.idxboost.us/fonts/filters/idxboost-icons.svg?6bxbqk#idxboost-icons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -25,6 +25,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.idx-icons-my-building:before {
+  content: "\e921";
+}
 .idx-icons-warning-bold:before {
   content: "\e920";
 }

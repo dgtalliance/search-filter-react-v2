@@ -188,6 +188,7 @@
 			overflow: hidden;
 			overflow-y: auto;
 			max-height: 120px;
+			margin-bottom: 0;
 
 			&::-webkit-scrollbar {
 				width: 10px;
@@ -204,13 +205,14 @@
 		}
 
 		.ib-ibpitem {
-			padding: 10px 15px;
+			padding: 15px !important;
 			display: flex;
 			justify-content: center;
 			align-items: flex-start;
 			flex-direction: row-reverse;
 			border-bottom: 1px solid var(--color-gray-bd);
-			margin-bottom: 5px;
+			margin-bottom: 0;
+			padding-bottom: 0;
 			@media screen and (min-width: 640px){
 				width: 410px;
 			}
@@ -232,7 +234,7 @@
 
 		.ib-ibpb {
 			width: 138px;
-			height: 95px;
+			height: 90px;
 			margin-right: 15px;
 			flex-shrink: 0;
 			background-color: var(--color-gray-bd);

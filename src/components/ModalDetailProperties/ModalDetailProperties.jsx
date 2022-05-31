@@ -10,18 +10,28 @@ import { Select, Spin } from "antd";
 import { Segmented } from "antd";
 import { Collapse } from "antd";
 
+
 import {
   calculate_mortgage,
+  favoriteIcon,
   formatPrice,
   phoneFormat,
 } from "../../utils/utils";
 
 import RentalFormContact from "./RentalFormContact";
 import ModalSendToFriend from "./ModalSendToFriend";
-import { API_PROPERTIES_DETAIL_CHART } from "../../config/config";
-import { Chart } from "./Chart";
+import {
+  ACCESS_TOKEN,
+  anonymous,
+  API_PROPERTIES_DETAIL_CHART,
+  API_PROPERTIES_DETAIL_CHART_P,
+  LEAD_FAVORITES,
+  SAVE_FAVORITE,
+} from "../../config/config";
+import Cookies from "js-cookie";
 
 import { ChartTabs } from "./ChartTabs";
+import { ChartTabsP } from "./ChartTabsP";
 
 export const ModalDetailProperties = () => {
   const { closeModal, openModal, setSlug, slug, modalData } =
@@ -38,13 +48,32 @@ export const ModalDetailProperties = () => {
   const [propertymcir, setPropertymcir] = useState("3.215");
 
   const [chartDataApi, setChartDataApi] = useState([]);
+  const [chartDataApiP, setChartDataApiP] = useState([]);
+
   const [chartDataShow, setChartDataShow] = useState({});
+  const [chartDataShowP, setChartDataShowP] = useState({});
+
   const [defaultHome, setDefaultHome] = useState("1");
+  const [defaultHomeP, setDefaultHomeP] = useState("1");
+
   const [defaultCity, setDefaultCity] = useState("zip");
+  const [defaultCityP, setDefaultCityP] = useState("zip");
+
   const [loadingDataChart, setLoadingDataChart] = useState(true);
+  const [loadingDataChartP, setLoadingDataChartP] = useState(true);
+
   const [defaultTab, setDefaultTab] = useState("media_price");
+  const [defaultTabP, setDefaultTabP] = useState("sale_to_list");
+
   const [defaultYears, setDefaultYears] = useState(1);
+  const [defaultYearsP, setDefaultYearsP] = useState(1);
+
   const [defaultYearsSegment, setDefaultYearsSegment] = useState("1 year");
+  const [defaultYearsSegmentP, setDefaultYearsSegmentP] = useState("1 year");
+
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const refFormMortgage = useRef();
   const refPropertyMcTy = useRef();
@@ -135,7 +164,10 @@ export const ModalDetailProperties = () => {
 
   useEffect(() => {
     if (Object.keys(propertiesData).length > 0) {
+      isFavoriteF();
       chartsDetails();
+      chartsDetailsP();
+      console.log(propertiesData);
     }
   }, [propertiesData]);
 
@@ -149,7 +181,7 @@ export const ModalDetailProperties = () => {
 
     const response = await axios.get(
       API_PROPERTIES_DETAIL_CHART +
-      `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
     );
 
     if (response.data.length != 0) {
@@ -159,7 +191,107 @@ export const ModalDetailProperties = () => {
         categories: response.data.value.zip.month,
         series: response.data.value.zip.metadata["1"]["media_price"],
       });
-      setLoadingDataChart(false);
+    }
+    setLoadingDataChart(false);
+  };
+
+  const chartsDetailsP = async () => {
+    setDefaultHomeP("1");
+    setDefaultTabP("sale_to_list");
+    setDefaultYearsP(1);
+    setDefaultYearsSegmentP("1 year");
+    setLoadingDataChartP(true);
+    setDefaultCityP("zip");
+
+    const responseP = await axios.get(
+      API_PROPERTIES_DETAIL_CHART_P +
+        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+    );
+    setLoadingDataChartP(false);
+    if (responseP.data.length != 0) {
+      setChartDataApiP(responseP.data);
+      setChartDataShowP({});
+      setChartDataShowP({
+        categories: responseP.data.value.zip.month,
+        series: responseP.data.value.zip.metadata["1"]["sale_to_list"],
+      });
+    }
+  };
+
+  const handleFavorite = async () => {
+    if (anonymous === "yes") {
+      //active_modal($('#modal_login'));
+      jQuery("#modal_login")
+        .addClass("active_modal")
+        .find("[data-tab]")
+        .removeClass("active");
+      jQuery("#modal_login")
+        .addClass("active_modal")
+        .find("[data-tab]:eq(1)")
+        .addClass("active");
+      jQuery("#modal_login").find(".item_tab").removeClass("active");
+      jQuery("#tabRegister").addClass("active");
+      jQuery("button.close-modal").addClass("ib-close-mproperty");
+      jQuery(".overlay_modal").css("background-color", "rgba(0,0,0,0.8);");
+      jQuery("#modal_login h2").html(
+        jQuery("#modal_login").find("[data-tab]:eq(1)").data("text-force")
+      );
+      /*Asigamos el texto personalizado*/
+      var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr(
+        "data-text"
+      );
+      jQuery(
+        "#modal_login .modal_cm .content_md .heder_md .ms-title-modal"
+      ).html(titleText);
+    } else {
+      setIsFavoriteLoading(true);
+
+      var bodyFormData = new FormData();
+      bodyFormData.append("access_token", ACCESS_TOKEN);
+      bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
+      const response = await axios({
+        method: "post",
+        url: SAVE_FAVORITE + `${propertiesData.mls_num}/track`,
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      if (response.data.length != 0) {
+        if (response.data.type === "add") {
+          setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
+        }
+      }
+
+      setIsFavoriteLoading(false);
+    }
+  };
+
+  const isFavoriteF = async () => {
+    if (anonymous !== "yes") {
+      var bodyFormData = new FormData();
+      bodyFormData.append("access_token", ACCESS_TOKEN);
+      bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
+      bodyFormData.append("paging", "saved_listings");
+      const response = await axios({
+        method: "post",
+        url: LEAD_FAVORITES,
+        data: bodyFormData,
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      if (response.data.length != 0) {
+        let exits = response.data.lead_info?.saved_listings?.find(
+          (e) => e.mls_num === propertiesData.mls_num
+        );
+        if (exits) {
+          setIsFavorite(true);
+        } else {
+          setIsFavorite(false);
+        }
+      }
+    } else {
+      setIsFavorite(false);
     }
   };
 
@@ -175,6 +307,14 @@ export const ModalDetailProperties = () => {
     });
     setDefaultHome(value);
   }
+  function onChangeP(value) {
+    // console.log(`selected ${value}`);
+    setChartDataShowP({
+      ...chartDataShowP,
+      series: chartDataApiP.value[defaultCityP].metadata[value][defaultTabP],
+    });
+    setDefaultHomeP(value);
+  }
   function onChangeCity(value) {
     // console.log(`selected ${value}`);
     setChartDataShow({
@@ -183,9 +323,20 @@ export const ModalDetailProperties = () => {
     });
     setDefaultCity(value);
   }
+  function onChangeCityP(value) {
+    setChartDataShowP({
+      ...chartDataShowP,
+      series: chartDataApiP.value[value].metadata[defaultHomeP][defaultTabP],
+    });
+    setDefaultCityP(value);
+  }
   function changeYear(value) {
     setDefaultYears(value.charAt(0));
     setDefaultYearsSegment(value);
+  }
+  function changeYearP(value) {
+    setDefaultYearsP(value.charAt(0));
+    setDefaultYearsSegmentP(value);
   }
 
   function onSearch(val) {
@@ -198,6 +349,14 @@ export const ModalDetailProperties = () => {
       series: chartDataApi.value[defaultCity].metadata[defaultHome][key],
     });
     setDefaultTab(key);
+  }
+
+  function callbackP(key) {
+    setChartDataShowP({
+      ...chartDataShowP,
+      series: chartDataApiP.value[defaultCityP].metadata[defaultHomeP][key],
+    });
+    setDefaultTabP(key);
   }
 
   const [isOpenCarusel, setIsOpenCarusel] = useState(false);
@@ -397,7 +556,20 @@ export const ModalDetailProperties = () => {
               <div className="ib-modal-header">
                 <div className="ib-wrapper-flex">
                   <div className="ib-flex">
-                    <button className="ib-btn -addFavorite">Save</button>
+                    <button
+                      className={
+                        isFavorite
+                          ? `ib-btn -addFavorite ${favoriteIcon()} -active ${
+                              isFavoriteLoading ? "-loading" : ""
+                            }`
+                          : `ib-btn -addFavorite ${favoriteIcon()} ${
+                              isFavoriteLoading ? "-loading" : ""
+                            }`
+                      }
+                      onClick={handleFavorite}
+                    >
+                      Save
+                    </button>
                     <div className="ib-dropdown">
                       <button className="ib-share-btn">
                         <i className="idx-icons-shared"></i> Share
@@ -478,6 +650,16 @@ export const ModalDetailProperties = () => {
                         setDefaultYearsSegment("1 year");
                         setChartDataShow({});
                         setDefaultCity("zip");
+
+                        setDefaultHomeP("1");
+                        setDefaultTabP("sale_to_list");
+                        setDefaultYearsP(1);
+                        setDefaultYearsSegmentP("1 year");
+                        setChartDataShowP({});
+                        setDefaultCityP("zip");
+
+                        setIsFavorite(false);
+                        setIsFavoriteLoading(false);
                         closeModal();
                       }}
                     ></button>
@@ -598,13 +780,15 @@ export const ModalDetailProperties = () => {
                           <span className="ib-txt">Size sqft</span>{" "}
                           <span className="ib-txt -min">Sqft</span>
                         </li>
-                        <li className="ib-item ib-lsize">
-                          <span className="ib-number">
-                            {propertiesData.price_sqft}
-                          </span>
-                          <span className="ib-txt">$/Sqft</span>{" "}
-                          <span className="ib-txt -min">$/Sq.Ft</span>
-                        </li>
+                        {propertiesData.price_sqft && (
+                          <li className="ib-item ib-lsize">
+                            <span className="ib-number">
+                              {propertiesData.price_sqft}
+                            </span>
+                            <span className="ib-txt">$/Sqft</span>{" "}
+                            <span className="ib-txt -min">$/Sq.Ft</span>
+                          </li>
+                        )}
                       </ul>
                     </div>
 
@@ -618,56 +802,80 @@ export const ModalDetailProperties = () => {
                           Basic Information
                         </h2>
                         <ul className="ib-plist-list">
-                          <li>
-                            <span className="ib-plist-st">MLS #</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.mls_num}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Type</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.class_id}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Status</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.status_name}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Suddivision/Complex
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.subdivision}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Year Built</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.year}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Total Sqft</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.total_sqft}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Date Listed</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.list_date}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Days on Market</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.days_market}
-                            </span>
-                          </li>
+                          {propertiesData.mls_num && (
+                            <li>
+                              <span className="ib-plist-st">MLS #</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.mls_num}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.class_id && (
+                            <li>
+                              <span className="ib-plist-st">Type</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.class_id}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.status_name && (
+                            <li>
+                              <span className="ib-plist-st">Status</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.status_name}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.subdivision && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Suddivision/Complex
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.subdivision}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.year && (
+                            <li>
+                              <span className="ib-plist-st">Year Built</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.year}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.total_sqft && (
+                            <li>
+                              <span className="ib-plist-st">Total Sqft</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.total_sqft}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.list_date && (
+                            <li>
+                              <span className="ib-plist-st">Date Listed</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.list_date}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.days_market && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Days on Market
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.days_market}
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -678,90 +886,115 @@ export const ModalDetailProperties = () => {
                           Exterior Features
                         </h2>
                         <ul className="ib-plist-list">
-                          <li>
-                            <span className="ib-plist-st">Waterfront</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.water_front}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Pool</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.pool}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">View</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.view}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Construction Type
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.construction}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Design Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {
-                                propertiesData.more_info_info
-                                  .architectural_style
-                              }
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Exterior Features
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.feature_exterior.map(
-                                (feature_exterior, index) => (
-                                  <span key={feature_exterior}>
-                                    {" "}
-                                    {feature_exterior}
-                                    {propertiesData.feature_exterior.length >=
-                                      1 &&
-                                    propertiesData.feature_exterior.length !==
+                          {propertiesData.water_front && (
+                            <li>
+                              <span className="ib-plist-st">Waterfront</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.water_front}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.pool && (
+                            <li>
+                              <span className="ib-plist-st">Pool</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.pool}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.view && (
+                            <li>
+                              <span className="ib-plist-st">View</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.view}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.more_info_info.construction && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Construction Type
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.construction}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info
+                            .architectural_style && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Design Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {
+                                  propertiesData.more_info_info
+                                    .architectural_style
+                                }
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.feature_exterior && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Exterior Features
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.feature_exterior.map(
+                                  (feature_exterior, index) => (
+                                    <span key={feature_exterior}>
+                                      {" "}
+                                      {feature_exterior}
+                                      {propertiesData.feature_exterior.length >=
+                                        1 &&
+                                      propertiesData.feature_exterior.length !==
+                                        index + 1
+                                        ? ", "
+                                        : ""}
+                                      {propertiesData.feature_exterior
+                                        .length ===
                                       index + 1
-                                      ? ", "
-                                      : ""}
-                                    {propertiesData.feature_exterior.length ===
-                                    index + 1
-                                      ? "."
-                                      : ""}
-                                  </span>
-                                )
-                              )}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Parking Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.parking_desc}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Roof Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.roof}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Style</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.style}
-                            </span>
-                          </li>
+                                        ? "."
+                                        : ""}
+                                    </span>
+                                  )
+                                )}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.parking_desc && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Parking Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.parking_desc}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.more_info_info.roof && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Roof Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.roof}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.style && (
+                            <li>
+                              <span className="ib-plist-st">Style</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.style}
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -772,75 +1005,92 @@ export const ModalDetailProperties = () => {
                           Interior Features
                         </h2>
                         <ul className="ib-plist-list">
-                          <li>
-                            <span className="ib-plist-st">Adjusted Sqft</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.sqft}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Cooling Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.cooling}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Equipment Appliances
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.appliance}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Floor Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.floor_desc}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Heating Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.heating}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Interior Features
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.feature_interior.map(
-                                (feature_interior, index) => (
-                                  <span key={feature_interior}>
-                                    {" "}
-                                    {feature_interior}
-                                    {propertiesData.feature_interior.length >=
-                                      1 &&
-                                    propertiesData.feature_interior.length !==
+                          {propertiesData.sqft && (
+                            <li>
+                              <span className="ib-plist-st">Adjusted Sqft</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.sqft}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.more_info_info.cooling && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Cooling Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.cooling}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.appliance && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Equipment Appliances
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.appliance}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.more_info_info.floor_desc && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Floor Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.floor_desc}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.more_info_info.heating && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Heating Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.heating}
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.feature_interior && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Interior Features
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.feature_interior.map(
+                                  (feature_interior, index) => (
+                                    <span key={feature_interior}>
+                                      {" "}
+                                      {feature_interior}
+                                      {propertiesData.feature_interior.length >=
+                                        1 &&
+                                      propertiesData.feature_interior.length !==
+                                        index + 1
+                                        ? ", "
+                                        : ""}
+                                      {propertiesData.feature_interior
+                                        .length ===
                                       index + 1
-                                      ? ", "
-                                      : ""}
-                                    {propertiesData.feature_interior.length ===
-                                    index + 1
-                                      ? "."
-                                      : ""}
-                                  </span>
-                                )
-                              )}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Sqft</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.sqft}
-                            </span>
-                          </li>
+                                        ? "."
+                                        : ""}
+                                    </span>
+                                  )
+                                )}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.sqft && (
+                            <li>
+                              <span className="ib-plist-st">Sqft</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.sqft}
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -851,213 +1101,311 @@ export const ModalDetailProperties = () => {
                           Property Features
                         </h2>
                         <ul className="ib-plist-list">
-                          <li>
-                            <span className="ib-plist-st">Address</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.addres}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Aprox. Lot Size</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.lot_size}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Architectural Style
-                            </span>
-                            <span className="ib-plist-pt">
-                              {
-                                propertiesData.more_info_info
-                                  .architectural_style
-                              }
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">City</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.city}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Construction Materials
-                            </span>
-                            <span className="ib-plist-pt">
-                              {" "}
-                              {propertiesData.more_info_info.construction}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">County</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.county}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Direction Faces</span>
-                            <span className="ib-plist-pt">
-                              {" "}
-                              {propertiesData.more_info_info.faces}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Furnished Info</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.furnished}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Listing Terms</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.terms}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Lot Description</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.lot_desc}
-                            </span>
-                          </li>
+                          {propertiesData.more_info_info.addres && (
+                            <li>
+                              <span className="ib-plist-st">Address</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.addres}
+                              </span>
+                            </li>
+                          )}
 
-                          <li>
-                            <span className="ib-plist-st">Lot Features</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.lot_features}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Occupant Type</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.ocupant_type}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Parking Features
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.parking_features}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Pets Allowed</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.pets}
-                            </span>
-                          </li>
+                          {propertiesData.lot_size && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Aprox. Lot Size
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.lot_size}
+                              </span>
+                            </li>
+                          )}
 
-                          <li>
-                            <span className="ib-plist-st">Pool Features</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.pool_features}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Possession</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.possession}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Postal City </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.postal_city}
-                            </span>
-                          </li>
+                          {propertiesData.more_info_info
+                            .architectural_style && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Architectural Style
+                              </span>
+                              <span className="ib-plist-pt">
+                                {
+                                  propertiesData.more_info_info
+                                    .architectural_style
+                                }
+                              </span>
+                            </li>
+                          )}
+                          {propertiesData.more_info_info.city && (
+                            <li>
+                              <span className="ib-plist-st">City</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.city}
+                              </span>
+                            </li>
+                          )}
 
-                          <li>
-                            <span className="ib-plist-st">Roof</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.roof}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Sewer Description
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.sewer}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Short Sale</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.short_sale}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Subdivision Complex
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.complex}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Subdivision Info
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.subdivision}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Tax Amount</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.tax_amount}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Tax Legal desc</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.tax_information}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Tax Year</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.tax_year}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Terms Considered
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.terms}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">
-                              Type of Property
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.type_property}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">View</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.view}
-                            </span>
-                          </li>
-                          <li>
-                            <span className="ib-plist-st">Water Source</span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.water_source}
-                            </span>
-                          </li>
+                          {propertiesData.more_info_info.construction && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Construction Materials
+                              </span>
+                              <span className="ib-plist-pt">
+                                {" "}
+                                {propertiesData.more_info_info.construction}
+                              </span>
+                            </li>
+                          )}
 
-                          <li>
-                            <span className="ib-plist-st">
-                              Year Built Details
-                            </span>
-                            <span className="ib-plist-pt">
-                              {propertiesData.more_info_info.year_built_details}
-                            </span>
-                          </li>
+                          {propertiesData.more_info_info.county && (
+                            <li>
+                              <span className="ib-plist-st">County</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.county}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.faces && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Direction Faces
+                              </span>
+                              <span className="ib-plist-pt">
+                                {" "}
+                                {propertiesData.more_info_info.faces}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.furnished && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Furnished Info
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.furnished}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.terms && (
+                            <li>
+                              <span className="ib-plist-st">Listing Terms</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.terms}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.lot_desc && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Lot Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.lot_desc}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.lot_features && (
+                            <li>
+                              <span className="ib-plist-st">Lot Features</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.lot_features}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.ocupant_type && (
+                            <li>
+                              <span className="ib-plist-st">Occupant Type</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.ocupant_type}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.parking_features && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Parking Features
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.parking_features}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.pets && (
+                            <li>
+                              <span className="ib-plist-st">Pets Allowed</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.pets}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.pool_features && (
+                            <li>
+                              <span className="ib-plist-st">Pool Features</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.pool_features}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.possession && (
+                            <li>
+                              <span className="ib-plist-st">Possession</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.possession}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.postal_city && (
+                            <li>
+                              <span className="ib-plist-st">Postal City </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.postal_city}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.roof && (
+                            <li>
+                              <span className="ib-plist-st">Roof</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.roof}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.sewer && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Sewer Description
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.sewer}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.short_sale && (
+                            <li>
+                              <span className="ib-plist-st">Short Sale</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.short_sale}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.complex && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Subdivision Complex
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.complex}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.subdivision && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Subdivision Info
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.subdivision}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.tax_amount && (
+                            <li>
+                              <span className="ib-plist-st">Tax Amount</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.tax_amount}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.tax_information && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Tax Legal desc
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.tax_information}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.tax_year && (
+                            <li>
+                              <span className="ib-plist-st">Tax Year</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.tax_year}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.terms && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Terms Considered
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.terms}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.type_property && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Type of Property
+                              </span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.type_property}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.view && (
+                            <li>
+                              <span className="ib-plist-st">View</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.view}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.water_source && (
+                            <li>
+                              <span className="ib-plist-st">Water Source</span>
+                              <span className="ib-plist-pt">
+                                {propertiesData.more_info_info.water_source}
+                              </span>
+                            </li>
+                          )}
+
+                          {propertiesData.more_info_info.year_built_details && (
+                            <li>
+                              <span className="ib-plist-st">
+                                Year Built Details
+                              </span>
+                              <span className="ib-plist-pt">
+                                {
+                                  propertiesData.more_info_info
+                                    .year_built_details
+                                }
+                              </span>
+                            </li>
+                          )}
                         </ul>
                       </div>
                     </div>
@@ -1355,16 +1703,22 @@ export const ModalDetailProperties = () => {
                       </div>
                     </div> */}
 
-                    {Object.keys(chartDataShow).length > 0 && (
-                      <div className="ib-plist-details">
-                        <div className="ib-plist-card">
-                          <Spin spinning={loadingDataChart}>
-                            <Collapse
-                              bordered={false}
-                              defaultActiveKey={["1"]}
-                              expandIconPosition={"right"}
+                    <div className="ib-plist-details">
+                      <div className="ib-plist-card">
+                        <Spin spinning={loadingDataChart}>
+                          <Collapse
+                            bordered={false}
+                            defaultActiveKey={["1"]}
+                            expandIconPosition={"right"}
+                          >
+                            <Panel
+                              header={
+                                propertiesData.city_name +
+                                " Housing Market Trends"
+                              }
+                              key="1"
                             >
-                              <Panel header={propertiesData.city_name + " Housing Market Trends"} key="1">
+                              {Object.keys(chartDataShow).length > 0 && (
                                 <div style={{ padding: 12 }}>
                                   <div
                                     style={{
@@ -1391,11 +1745,15 @@ export const ModalDetailProperties = () => {
                                       >
                                         <Option value="zip">
                                           Zip Code:{" "}
-                                          {chartDataApi.value.zip.zip_code}
+                                          {chartDataApi?.value?.zip.zip_code
+                                            ? chartDataApi.value.zip.zip_code
+                                            : ""}
                                         </Option>
                                         <Option value="city">
                                           City:{" "}
-                                          {chartDataApi.value.city.city_name}
+                                          {chartDataApi?.value?.city.city_name
+                                            ? chartDataApi.value.city.city_name
+                                            : ""}
                                         </Option>
                                       </Select>
                                       <Select
@@ -1436,12 +1794,122 @@ export const ModalDetailProperties = () => {
                                     defaultCity={defaultCity}
                                   ></ChartTabs>
                                 </div>
-                              </Panel>
-                            </Collapse>
-                          </Spin>
-                        </div>
+                              )}
+                               {Object.keys(chartDataShow).length == 0 && !loadingDataChart && (
+                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                   <span>No data available</span>
+                                </div>
+                              )}
+                            </Panel>
+                          </Collapse>
+                        </Spin>
                       </div>
-                    )}
+                    </div>
+
+                    <div className="ib-plist-details">
+                      <div className="ib-plist-card">
+                        <Spin spinning={loadingDataChartP}>
+                          <Collapse
+                            bordered={false}
+                            defaultActiveKey={["1"]}
+                            expandIconPosition={"right"}
+                          >
+                            <Panel
+                              header={
+                                "How hot is the " +
+                                propertiesData.city_name +
+                                "housing market"
+                              }
+                              key="1"
+                            >
+                              {Object.keys(chartDataShowP).length > 0 && (
+                                <div style={{ padding: 12 }}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "space-between",
+                                      alignItems: "center",
+                                      marginBottom: "15px",
+                                    }}
+                                  >
+                                    <div>
+                                      <Select
+                                        style={{ width: 200, marginRight: 10 }}
+                                        showSearch
+                                        placeholder="Select"
+                                        optionFilterProp="children"
+                                        onChange={onChangeCityP}
+                                        value={defaultCityP}
+                                        onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                          option.children
+                                            .toLowerCase()
+                                            .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                      >
+                                        <Option value="zip">
+                                          Zip Code:{" "}
+                                          {chartDataApiP?.value?.zip.zip_code
+                                            ? chartDataApiP.value.zip.zip_code
+                                            : ""}
+                                        </Option>
+                                        <Option value="city">
+                                          City:{" "}
+                                          {chartDataApiP?.value?.city.city_name
+                                            ? chartDataApiP.value.city.city_name
+                                            : ""}
+                                        </Option>
+                                      </Select>
+                                      <Select
+                                        style={{ width: 200 }}
+                                        showSearch
+                                        placeholder="Select a home type"
+                                        optionFilterProp="children"
+                                        onChange={onChangeP}
+                                        value={defaultHomeP}
+                                        onSearch={onSearch}
+                                        filterOption={(input, option) =>
+                                          option.children
+                                            .toLowerCase()
+                                            .indexOf(input.toLowerCase()) >= 0
+                                        }
+                                      >
+                                        <Option value="1">Condos</Option>
+                                        <Option value="2">Homes</Option>
+                                        <Option value="26">Lands</Option>
+                                        <Option value="100">TownHomes</Option>
+                                      </Select>
+                                    </div>
+
+                                    <Segmented
+                                      options={["1 year", "2 years", "3 years"]}
+                                      value={defaultYearsSegmentP}
+                                      onChange={changeYearP}
+                                    />
+                                  </div>
+
+                                  <ChartTabsP
+                                    callback={callbackP}
+                                    defaultTab={defaultTabP}
+                                    chartDataApi={chartDataApiP}
+                                    defaultHome={defaultHomeP}
+                                    chartDataShow={chartDataShowP}
+                                    defaultYears={defaultYearsP}
+                                    defaultCity={defaultCityP}
+                                  ></ChartTabsP>
+                                </div>
+                              )}
+
+                              {Object.keys(chartDataShowP).length == 0 && !loadingDataChartP && (
+                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                   <span>No data available</span>
+                                </div>
+                              )}
+                            </Panel>
+                          </Collapse>
+                        </Spin>
+                      </div>
+                    </div>
 
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
@@ -1688,14 +2156,34 @@ export const ModalDetailProperties = () => {
               </div>
 
               <div className="ib-modal-footer">
-                <button className="ib-btn -addFavorite">Save</button>
+                <button
+                  className={
+                    isFavorite
+                      ? `ib-btn -addFavorite ${favoriteIcon()} -active ${
+                          isFavoriteLoading ? "-loading" : ""
+                        }`
+                      : `ib-btn -addFavorite ${favoriteIcon()} ${
+                          isFavoriteLoading ? "-loading" : ""
+                        }`
+                  }
+                  onClick={handleFavorite}
+                >
+                  Save
+                </button>
                 <div className="ib-dropdown">
                   <button className="ib-share-btn">
                     <i className="idx-icons-shared"></i> Share
                   </button>
                   <ul className="ib-share-list">
                     <li>
-                      <a href="#">
+                      <a
+                        href="#"
+                        className="js-show-modals"
+                        data-modal="#modalAlert"
+                        data-status={propertiesData.status_type}
+                        data-mls={propertiesData.mls_num}
+                        onClick={openModalEmailToFriend}
+                      >
                         <i className="idx-icons-envelope"></i> Email to a friend
                       </a>
                     </li>
@@ -1708,12 +2196,27 @@ export const ModalDetailProperties = () => {
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a
+                        href={`/property/${propertiesData.slug}`}
+                        ref={refSharedFacebook}
+                        className="ib-plsitem ib-plsifb"
+                        onClick={sharedFacebook}
+                      >
                         <i className="idx-icons-facebook"></i> Facebook
                       </a>
                     </li>
                     <li>
-                      <a href="#">
+                      <a
+                        href={`/property/${propertiesData.slug}`}
+                        className="ib-plsitem ib-plsitw"
+                        data-address={`${propertiesData.address_short} ${propertiesData.address_large}`}
+                        data-price={propertiesData.price}
+                        data-type={propertiesData.class_id}
+                        data-rental={propertiesData.is_rental}
+                        data-mls={propertiesData.mls_num}
+                        ref={refSharedTwiter}
+                        onClick={sharedTwitter}
+                      >
                         <i className="idx-icons-twitter"></i> Twitter
                       </a>
                     </li>
@@ -1791,7 +2294,7 @@ export const ModalDetailProperties = () => {
                             />
                             <div className="ms-wrapper-dropdown-menu">
                               <button
-                                id="calculatorYears"
+                                id="calculatorYears1"
                                 ref={refCalculatorYears}
                                 onClick={openCalculatorYears}
                               >
