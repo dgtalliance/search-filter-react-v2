@@ -27,7 +27,12 @@ const bootstrapURLKeys = {
 const MapJS = () => {
   console.log('Render MAP')
   const dispatch = useDispatch()
-  const { setModalInfoWindow, openModal } = useContext(FilterContext)
+  const {
+    setModalInfoWindow,
+    openModal,
+    autoMapSearch,
+    setAutoMapSearch,
+  } = useContext(FilterContext)
   //load Data from redux
   const paramsItems = useSelector(getpropertiesMapData)
   const params = useSelector(getparams)
@@ -35,7 +40,7 @@ const MapJS = () => {
   const [isDrawing, setIsDrawing] = useState(false)
   const [IB_MARKERS, set_IB_MARKERS] = useState([])
   const [markersData, setMarkersData] = useState([])
-  
+
   //ref elements
   const containerMap = useRef()
   const mapRef = useRef()
@@ -48,8 +53,6 @@ const MapJS = () => {
   var drawingManager = useRef()
   var newPolygons = useRef()
   var dontReloadBounds = useRef(true)
-  var autoMapSearch = useRef(true)
- 
 
   useEffect(() => {
     console.log('load data')
@@ -63,13 +66,14 @@ const MapJS = () => {
         removeloadMakers()
       }
     }
-    if (params?.kml_boundaries && '' != params.kml_boundaries && !isDrawing) {
-      drawPolygonInit(params.kml_boundaries)
-    }
   }, [paramsItems])
   useEffect(() => {
     console.log('change params')
     dontReloadBounds.current = true
+    if ('' != params.kml_boundaries && !isDrawing) {
+      console.log('polygonRef.current', params.kml_boundaries)
+      drawPolygonInit(params.kml_boundaries)
+    }
   }, [params])
 
   //Btn fullscreenButton
@@ -175,7 +179,7 @@ const MapJS = () => {
     e.preventDefault()
     document.body.classList.add('draw-map')
     setIsDrawing(false)
-   
+
     if (newPolygons.current?.getPath()) {
       var points = newPolygons.current.getPath()
       var coords = []
@@ -201,7 +205,7 @@ const MapJS = () => {
             currentPathArray[i].lng,
           ),
         )
-      }   
+      }
 
       var encodedPath = google.maps.geometry.encoding.encodePath(points)
 
@@ -239,7 +243,7 @@ const MapJS = () => {
 
     drawingManager.current?.setMap(null)
     drawingManager.current = null
-    
+    setAutoMapSearch(false)
   }
   const handleRemove = (e) => {
     e.stopPropagation()
@@ -281,9 +285,9 @@ const MapJS = () => {
         strokeOpacity: 0.8,
         strokeWeight: 1,
         fillColor: '#31239a',
-        clickable: true,
+        clickable: false,
         zIndex: 1,
-        editable: true,
+        editable: false,
       },
     })
 
@@ -296,17 +300,11 @@ const MapJS = () => {
         }
         newPolygons.current = event.overlay
         newPolygons.current.type = event.type
-        console.log(
-          newPolygons.current
-            .getPath()
-            .getArray()
-            .map((t) => t.lat() + '-' + t.lng()),
-        )
       },
     )
   }
 
-  const fitBounds = (map, arr) => {   
+  const fitBounds = (map, arr) => {
     const bounds = new google.maps.LatLngBounds()
     arr.forEach((element) => {
       let position = new google.maps.LatLng({
@@ -319,13 +317,18 @@ const MapJS = () => {
 
     if (isMobile) {
       map.setZoom(13)
+    } else {
+      if (arr.length < 10) {
+        map.setZoom(13)
+      }
     }
   }
 
   const drawPolygonInit = (kml_boundaries) => {
-    if ('undefined' === typeof mapRef.current || mapRef.current === null) {
+    if (mapRef.current === null || kml_boundaries === undefined) {
       return
     }
+
     if (polygonRef.current !== null && polygonRef.current !== undefined) {
       polygonRef.current.setMap(null)
     }
@@ -336,8 +339,7 @@ const MapJS = () => {
     }
 
     removePolygons()
-    
-   
+
     var kb_exp = kml_boundaries.split(',')
     var tmp_points = new google.maps.MVCArray()
     for (var nn = 0, mm = kb_exp.length; nn < mm; nn++) {
@@ -354,7 +356,7 @@ const MapJS = () => {
       strokeWeight: 1,
       fillColor: '#31239a',
     })
-
+    console.log('DRAWING', kml_boundaries)
     tmpPolygon.setMap(mapRef.current)
     polygonRef.current = tmpPolygon
   }
@@ -465,11 +467,11 @@ const MapJS = () => {
     })
 
     setMarkersData(markers)
-    if (dontReloadBounds.current === true && autoMapSearch.current === true) {
+    if (dontReloadBounds.current === true && autoMapSearch === true) {
       fitBounds(mapRef.current, data)
     }
     dontReloadBounds.current = false
-    autoMapSearch.current = true
+    setAutoMapSearch(true)
   }
 
   const onGoogleApiLoaded = ({ map, maps }) => {
@@ -478,19 +480,26 @@ const MapJS = () => {
       console.log('onGoogleApiLoaded onGoogleApiLoaded')
       loadMakers(IB_MARKERS)
     }
-    if (params?.kml_boundaries) {
-      drawPolygonInit(params.kml_boundaries)
-    }
-     
+
     mapRef.current.addListener('dragend', () => {
       var idleListener = mapRef.current.addListener('idle', function () {
         google.maps.event.removeListener(idleListener)
         handleDragSearchEvent()
       })
     })
-  }
-  const onChangeMap = (e) => {}
 
+    mapRef.current.addListener('idle', function () {
+      console.log(
+        'drawPolygonInit onGoogleApiLoaded - IDE',
+        params.kml_boundaries,
+      )
+
+      if (params.kml_boundaries !== undefined) {
+        console.log('drawPolygonInit onGoogleApiLoaded')
+        drawPolygonInit(params.kml_boundaries)
+      }
+    })
+  }
   const handleDragSearchEvent = () => {
     if (true === isDrawing) {
       return
@@ -507,7 +516,8 @@ const MapJS = () => {
 
       dispatch(updateForm(params))
       dispatch(fetchAsyncSearch())
-      autoMapSearch.current = false
+
+      setAutoMapSearch(false)
     }
   }
   return (
@@ -606,7 +616,6 @@ const MapJS = () => {
             bootstrapURLKeys={bootstrapURLKeys}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
-            onChange={(m) => onChangeMap(m)}
             yesIWantToUseGoogleMapApiInternals
             options={{
               scrollwheel: false,

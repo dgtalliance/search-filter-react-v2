@@ -54,14 +54,14 @@ const FilterPrice = ({
 
   const onChangeMin = (e) => {
     if ('' === e.target.value) {
-      console.log(e.target.value)
+     
       setMinPrice(0)
       updateTitle(parseInt(0), maxPrice)
       return
     }
     var inputValue = parseInt(numberNotCommas(e.target.value))
     if (!isNaN(inputValue)) {
-      console.log('min', e.target.value, maxPrice)
+     
       setMinPrice(parseInt(inputValue))
       updateTitle(parseInt(inputValue), maxPrice)
     }
@@ -69,7 +69,7 @@ const FilterPrice = ({
 
   const onChangeMax = (e) => {
     if ('' === e.target.value) {
-      console.log(e.target.value)
+    
       setMaxPrice(maxPriceDefault)
       updateTitle(minPrice, maxPriceDefault)
       return
@@ -77,7 +77,7 @@ const FilterPrice = ({
 
     var inputValue = parseInt(numberNotCommas(e.target.value))
     if (!isNaN(inputValue)) {
-      console.log('max', minPrice, inputValue)
+     
       setMaxPrice(parseInt(inputValue))
       updateTitle(minPrice, parseInt(inputValue))
     }
@@ -101,7 +101,7 @@ const FilterPrice = ({
   const numberNotCommas = (value) => value.replace(/,/g, '')
 
   const onChange = (value) => {
-    console.log(value)
+   
     if (parseInt(value[0]) < parseInt(value[1])) {
       setMinPrice(parseInt(value[0]))
       setMaxPrice(parseInt(value[1]))

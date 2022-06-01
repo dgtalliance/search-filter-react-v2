@@ -47,8 +47,6 @@ const FilterModalPrice = () => {
     }
     setTypingTimeout(
       setTimeout(function () {
-        console.log('typingTimeout', min, max, type)
-
         var tempPrice = {}
         if (parseInt(type) === 0) {
           tempPrice = {

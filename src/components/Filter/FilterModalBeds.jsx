@@ -39,7 +39,7 @@ const FilterModalBeds = () => {
     var max_v = parseInt(max_beds)
 
     if (isNaN(min_v) && isNaN(max_v)) {
-     // console.log('1 Beds', min_v, max_v)
+     
       setOptions(optionsAny)
       setexactMatch(false)
       setvalueOption(0)
@@ -52,14 +52,14 @@ const FilterModalBeds = () => {
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
-     // console.log('2 Beds', min_v, max_v)
+     
     }
     if (!isNaN(min_v) && !isNaN(max_v) && max_v !== min_v) {
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
       setOptions(optionsAny)
-     // console.log('3 Beds', min_v, max_v)
+     
     }
 
     if (!isNaN(min_v) && isNaN(max_v)) {
@@ -67,11 +67,10 @@ const FilterModalBeds = () => {
       setexactMatch(false)
       setvalueOption(min_v)
       setselectLeft(min_v)
-      setselectRight(10)
-     // console.log('4 Beds', min_v, max_v)
+      setselectRight(10)     
     }
     if (isNaN(min_v) && !isNaN(max_v)) {
-    //  console.log('5 Beds', min_v, max_v)
+    
       setOptions(optionsAny)
       setvalueOption(max_v)
       setexactMatch(false)
@@ -83,9 +82,7 @@ const FilterModalBeds = () => {
       clearTimeout(typingTimeout)
     }
     setTypingTimeout(
-      setTimeout(function () {
-        console.log('typingTimeout', min, max)
-
+      setTimeout(function () {     
         var temp = {
           min_beds: parseInt(min) === 10 ? '' : min,
           max_beds: parseInt(max) === 10 ? '' : max,

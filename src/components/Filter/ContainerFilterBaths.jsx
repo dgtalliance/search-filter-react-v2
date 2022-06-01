@@ -60,10 +60,7 @@ const ContainerFilterBaths = () => {
     var max = parseInt(maxBaths)
      if (min > max && max !==10) {
       return
-    } /*else {
-      setError(false)
-    } */
-    console.log('Click', min, max)
+    }    
     var min_temp = min !== 10 ? min : ''
     var max_temp = max !== 10 ? max : ''
 

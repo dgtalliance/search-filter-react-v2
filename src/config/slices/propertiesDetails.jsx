@@ -22,11 +22,11 @@ export const propertyDetailsSlice = createSlice({
   },
   extraReducers: {
     [fetchAsyncDetails.pending]: (state) => {
-      console.log('pending')
+     
       state.loading = true
     },
     [fetchAsyncDetails.fulfilled]: (state, actions) => {
-      console.log('Success')
+      
       state.loading = false
       if (actions.payload.status) {
         state.properties_data = actions.payload.data
@@ -35,7 +35,7 @@ export const propertyDetailsSlice = createSlice({
       }
     },
     [fetchAsyncDetails.rejected]: (state, actions) => {
-      console.log('Error')
+      
       state.loading = false
       state.error = {
         status: false,

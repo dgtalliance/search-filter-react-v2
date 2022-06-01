@@ -10,7 +10,7 @@ import {
 import CarouselLoadLazy from '../common/CarouselLoadLazy'
 import { isMobile } from 'react-device-detect'
 function PropertiesItem({ itemData }) {
-  const { openModal } = useContext(FilterContext)
+  const { openModal,setAutoMapSearch } = useContext(FilterContext)
   const dispatch = useDispatch()
   const getItemMap = useSelector(getpropertiesMapData)
   const [itemsMap, setItemsMap] = useState([])
@@ -36,6 +36,7 @@ function PropertiesItem({ itemData }) {
 
   const handleOnItemMouseEnter = (e, value) => {
     e.preventDefault()
+    setAutoMapSearch(false)
     if (!isMobile) {
       dispatch(updateDataMap({ mls_num: value, active: true, infoWin: true }))
     }
@@ -43,6 +44,7 @@ function PropertiesItem({ itemData }) {
 
   const handleOnItemMouseLeave = (e, value) => {
     e.preventDefault()
+    setAutoMapSearch(false)
     if (!isMobile) {
       dispatch(updateDataMap({ mls_num: value, active: false, infoWin: false }))
     }
@@ -55,7 +57,7 @@ function PropertiesItem({ itemData }) {
       onMouseLeave={(e) => handleOnItemMouseLeave(e, itemData.mls_num)}
     >
       <ul className="ib-info">
-        <li className="ib-item -price">{formatPrice(itemData.price)}</li>
+        <li className="ib-item -price">${formatPrice(itemData.price)}</li>
         <li className="ib-item -beds">{itemData.bed} Bed(s)</li>
         <li className="ib-item -baths">{itemData.bath} Bath(s)</li>
         <li className="ib-item -sqft">{itemData.sqft} Sq.Ft.</li>

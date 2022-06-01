@@ -3,22 +3,36 @@ import { useDispatch } from 'react-redux'
 import ContainerFiftyFifty from './components/ContainerFiftyFifty'
 import { fetchAsyncSearch } from './config/actions/properties'
 
-let zm = undefined
-
-export const defaultPropsShortCode ={
+export const defaultPropsShortCode = {
   center: {
-    lat: Number(document.getElementById('ib-wrapper-residentials').getAttribute('data-lat')),
-    lng: Number(document.getElementById('ib-wrapper-residentials').getAttribute('data-lng')),
+    lat: Number(
+      document
+        .getElementById('ib-wrapper-residentials')
+        .getAttribute('data-lat'),
+    ),
+    lng: Number(
+      document
+        .getElementById('ib-wrapper-residentials')
+        .getAttribute('data-lng'),
+    ),
   },
-  zoom: zm ? Number(zm) : Number(document.getElementById('ib-wrapper-residentials').getAttribute('data-zoom')),
-  filter: zm ? String(zm) : String(document.getElementById('ib-wrapper-residentials').getAttribute('data-filter')),
+  zoom: Number(
+    document
+      .getElementById('ib-wrapper-residentials')
+      .getAttribute('data-zoom'),
+  ),
+  filter: String(
+    document
+      .getElementById('ib-wrapper-residentials')
+      .getAttribute('data-filter'),
+  ),
 }
-console.log('defaultPropsShortCode',defaultPropsShortCode);
+
 const App = () => {
   const dispatch = useDispatch()
-  console.log("App render");
+  console.log('App started',defaultPropsShortCode);
   useEffect(() => {
-   dispatch(fetchAsyncSearch())
+    dispatch(fetchAsyncSearch())
   }, [dispatch])
 
   return (

@@ -23,7 +23,7 @@ function ContainerFilterPropertyType() {
 
   useEffect(() => {
     var property_type = params.property_type
-    console.log(params);
+   
     if (Array.isArray(property_type)) {
       defaultTitle(property_type_d, property_type)
     } else {

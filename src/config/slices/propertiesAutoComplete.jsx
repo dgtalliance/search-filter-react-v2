@@ -100,17 +100,17 @@ export const autoCompleteSlice = createSlice({
   initialState,
   reducers: {
     updateClean: (state, { payload }) => {
-      console.log(payload)
+     
       state.city_data = payload
     },
   },
   extraReducers: {
     [fetchAsyncAutoComplete.pending]: (state) => {
-      console.log('Auto pending')
+    
       state.loading = true
     },
     [fetchAsyncAutoComplete.fulfilled]: (state, actions) => {
-      console.log('Auto Success', actions.payload.data)
+      
       state.loading = false
       if (actions.payload.status) {
         state.city_data = actions.payload.data
@@ -120,7 +120,7 @@ export const autoCompleteSlice = createSlice({
       }
     },
     [fetchAsyncAutoComplete.rejected]: (state, actions) => {
-      console.log('Auto Error')
+      
       state.loading = false
       state.city_data = ib_fetch_default_cities(city)
       state.error = {

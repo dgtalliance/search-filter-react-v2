@@ -40,7 +40,7 @@ const FilterBaths = ({
     var max_v = parseInt(max_baths)
 
     if (isNaN(min_v) && isNaN(max_v)) {
-      console.log('1', min_v, max_v)
+      
       setOptions(optionsAny)
       setexactMatch(false)
       setvalueOption(0)
@@ -55,7 +55,7 @@ const FilterBaths = ({
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
-      console.log('2', min_v, max_v)
+      
     }
 
     if (!isNaN(min_v) && !isNaN(max_v) && max_v !== min_v) {
@@ -64,7 +64,7 @@ const FilterBaths = ({
       setselectRight(max_v)
       setOptions(optionsAny)
       setActiveMatch(false)
-      console.log('3', min_v, max_v)
+      
     }
 
     if (!isNaN(min_v) && isNaN(max_v)) {
@@ -74,10 +74,10 @@ const FilterBaths = ({
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(10)
-      console.log('4', min_v, max_v)
+      
     }
     if (isNaN(min_v) && !isNaN(max_v)) {
-      console.log('5', min_v, max_v)
+      
       setOptions(optionsAny)
       setvalueOption(max_v)
       setexactMatch(false)
@@ -104,7 +104,7 @@ const FilterBaths = ({
     }
 
     if (parseInt(valueOption) === 0 && !e.target.checked) {
-      console.log('my change')
+    
       setselectLeft(10)
       setselectRight(10)
     }

@@ -28,8 +28,7 @@ const FilterModalYearBuilt = () => {
       clearTimeout(yearBuiltTimeout)
     }
     setYearBuiltTimeout(
-      setTimeout(function () {
-        console.log('typingTimeout YearBuilt', min, max)
+      setTimeout(function () {       
         var temp = {
           min_year: parseInt(min) === 0 ? '' : min,
           max_year: parseInt(max) === maxYearBuiltDefault ? '' : max,

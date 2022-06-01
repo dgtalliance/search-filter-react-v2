@@ -16,7 +16,7 @@ function Properties() {
   const propertiesItems = useSelector(getpropertiesItems)
   const loading = useSelector(getloading)
   const dispatch = useDispatch()
-  console.log('Render Properties')
+ 
   const { setSlug } = useContext(FilterContext)
   useEffect(() => {
     setSlug(propertiesItems.slug)

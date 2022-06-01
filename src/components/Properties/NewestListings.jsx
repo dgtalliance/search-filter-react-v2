@@ -11,7 +11,6 @@ const NewestListings = () => {
   useEffect(() => {
     var { sort_type } = params
     setActive(sort_type)
-    console.log('NewestListings', sort_type)
   }, [params])
 
   const handleSort = (query) => {

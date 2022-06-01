@@ -42,8 +42,7 @@ function ContainerFilterBeds() {
   }
 
   useEffect(() => {
-    TitleChange(minBeds, maxBeds, activeMatch)
-    console.log('my change',minBeds, maxBeds, activeMatch)
+    TitleChange(minBeds, maxBeds, activeMatch)   
   }, [minBeds, maxBeds, activeMatch])
 
   const cleanBeds = () => {

@@ -30,7 +30,7 @@ const FilterModalLivingSize = () => {
     }
     setLivingTimeout(
       setTimeout(function () {
-        console.log('typingTimeout updateLiving', min, max)
+       
         var temp = {
           min_living_size: parseInt(min) === 0 ? '' : min,
           max_living_size: parseInt(max) === maxLivingDefault ? '' : max,

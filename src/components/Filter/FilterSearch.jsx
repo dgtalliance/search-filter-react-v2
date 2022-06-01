@@ -10,7 +10,7 @@ import ContainerFilterPropertyType from './ContainerFilterPropertyType'
 import FilterModal from './FilterModal'
 import { LazyLoadComponent } from 'react-lazy-load-image-component'
 const FilterSearch = () => {
-  console.log('Render Filter')
+ 
   const dispatch = useDispatch()
   const handleClean = () => {
     var params = {

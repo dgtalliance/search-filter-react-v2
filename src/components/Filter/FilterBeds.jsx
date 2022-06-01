@@ -41,7 +41,7 @@ const FilterBeds = ({
     var max_v = parseInt(max_beds)
 
     if (isNaN(min_v) && isNaN(max_v)) {
-     // console.log('1 Beds', min_v, max_v)
+   
       setOptions(optionsAny)
       setexactMatch(false)
       setvalueOption(0)
@@ -56,7 +56,7 @@ const FilterBeds = ({
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
-     // console.log('2 Beds', min_v, max_v)
+    
     }
 
     if (!isNaN(min_v) && !isNaN(max_v) && max_v !== min_v) {
@@ -65,7 +65,7 @@ const FilterBeds = ({
       setselectRight(max_v)
       setOptions(optionsAny)
       setActiveMatch(false)
-    //  console.log('3 Beds', min_v, max_v)
+    
     }
 
     if (!isNaN(min_v) && isNaN(max_v)) {
@@ -75,10 +75,10 @@ const FilterBeds = ({
       setselectRight(10)
       setexactMatch(false)
       setActiveMatch(false)
-     // console.log('4 Beds', min_v, max_v)
+     
     }
     if (isNaN(min_v) && !isNaN(max_v)) {
-    //  console.log('5 Beds', min_v, max_v)
+    
       setOptions(optionsAny)
       setvalueOption(max_v)
       setexactMatch(false)

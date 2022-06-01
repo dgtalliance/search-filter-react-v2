@@ -7,9 +7,9 @@ function PropertiesPaginate({ pagination, current,infoSearch }) {
   const { prev, next, range } = pagination
   const dispatch = useDispatch()
  
-  console.log('Render PropertiesPaginate')
+ 
   const paginate = useCallback((page) => {
-    console.log('page', page)
+    
     infoSearch.current.scrollIntoView({behavior: "smooth"})
     dispatch(updateForm({ page }))
     dispatch(fetchAsyncSearch())

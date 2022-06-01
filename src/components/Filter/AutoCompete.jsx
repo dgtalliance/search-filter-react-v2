@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef, useState } from 'react'
+import React, { memo, useContext, useEffect, useRef, useState } from 'react'
 import 'antd/dist/antd.css'
 import { Input, AutoComplete } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
@@ -8,15 +8,17 @@ import {
   updateClean,
 } from '../../config/slices/propertiesAutoComplete'
 import { ib_fetch_default_cities } from '../../utils/utils'
-import { updateForm } from '../../config/slices/properties'
+import { getparams, updateForm } from '../../config/slices/properties'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import { fetchAsyncAutoComplete } from '../../config/actions/propertiesAutoComplete'
+import FilterContext from '../../Contexts/FilterContext'
 
 const Complete = () => {
   const dispatch = useDispatch()
   const autocompleteData = useSelector(getautocompleteData)
+  const params = useSelector(getparams)
   const cities = ib_fetch_default_cities(city)
-
+  const { setAutoMapSearch } = useContext(FilterContext)
   const [keyword, setKeyword] = useState('')
   const [ib_autocomplete_cities, setIbAutoCompleteCities] = useState(cities)
 
@@ -24,8 +26,15 @@ const Complete = () => {
     setIbAutoCompleteCities(autocompleteData)
   }, [autocompleteData])
 
+  useEffect(() => {
+    if(params.filter_search_keyword_label !== ''){
+      setKeyword(params.filter_search_keyword_label)
+    }
+  }, [params])
+
+
   const setAutocompleteTerm = (term, type) => {
-    console.log(term, type)
+  
     var param = {
       filter_search_keyword_label: term,
       filter_search_keyword_type: null === type ? '' : type,
@@ -41,24 +50,24 @@ const Complete = () => {
 
   const handleKeyUpAutocompleteEvent = (val) => {
     var inputValue = val
-    setKeyword(inputValue)
-    console.log(inputValue)
+    setKeyword(inputValue)    
     if ('' !== inputValue) {
       dispatch(fetchAsyncAutoComplete(inputValue))
     } else {
       dispatch(updateClean(cities))
     }
+    
   }
-  const handleSelectAutocomplete = (value) => {
-    console.log(value)
+  const handleSelectAutocomplete = (value) => {    
     var tempterm = JSON.parse(value)
     setKeyword(tempterm.label)
     setAutocompleteTerm(tempterm.label, tempterm.type)
+    setAutoMapSearch(true)
   }
   const handleClearAutocompleteEvent = () => {
     setKeyword('')
 
-    var param = {
+     var param = {
       filter_search_keyword_label: '',
       filter_search_keyword_type: '',
       polygon_search: '',
@@ -66,35 +75,11 @@ const Complete = () => {
     }
     dispatch(updateForm(param))
     dispatch(updateClean(cities))
-    dispatch(fetchAsyncSearch())
+   dispatch(fetchAsyncSearch())
 
-    // update params para el mapa
+    // active pan in map
+    setAutoMapSearch(true)
 
-    /*  if ("undefined" !== typeof IB_POLYGON) {
-		IB_POLYGON.setMap(null);
-	}
-
-	if ("undefined" !== typeof IB_DRAWING_POLYGON) {		
-		IB_DRAWING_POLYGON.setMap(null);
-	}
-
-	IB_HAS_POLYGON = false;
-	var mapZoom = IB_MAP.getZoom();
-	var mapBounds = IB_MAP.getBounds();
-
-	IB_MAP_TOOLTIP.addClass("ib-removeb-hide");	
-
-	var boundCoords = [];
-
-	boundCoords.push(mapBounds.getSouthWest().lat());
-	boundCoords.push(mapBounds.getSouthWest().lng());
-	boundCoords.push(mapBounds.getNorthEast().lat());
-	boundCoords.push(mapBounds.getNorthEast().lat());
-
-	if ("undefined" !== typeof IB_MAP && jQuery('#flex_idx_search_filter').hasClass('ib-vmap-active')) {
-		IB_SEARCH_FILTER_FORM.find('[name="rect"]').val(mapBounds.toUrlValue());
-		IB_SEARCH_FILTER_FORM.find('[name="zm"]').val(mapZoom);
-	} */
   }
   const handleSubmitAutocompleteForm = (e) => {
     e.preventDefault()
@@ -125,6 +110,7 @@ const Complete = () => {
         }
       }
     }
+    setAutoMapSearch(true)
   }
 
   const capitalizarPrimeraLetra = (str) => {

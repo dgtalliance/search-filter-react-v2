@@ -39,7 +39,7 @@ const FilterModalBaths = () => {
     var max_v = parseInt(max_baths)
 
     if (isNaN(min_v) && isNaN(max_v)) {
-      console.log('1 baths', min_v, max_v)
+      
       setOptions(optionsAny)
       setexactMatch(false)
       setvalueOption(0)
@@ -52,14 +52,14 @@ const FilterModalBaths = () => {
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
-      console.log('2 baths', min_v, max_v)
+      
     }
     if (!isNaN(min_v) && !isNaN(max_v) && max_v !== min_v) {
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(max_v)
       setOptions(optionsAny)
-      console.log('3 baths', min_v, max_v)
+      
     }
 
     if (!isNaN(min_v) && isNaN(max_v)) {
@@ -68,10 +68,10 @@ const FilterModalBaths = () => {
       setvalueOption(min_v)
       setselectLeft(min_v)
       setselectRight(10)
-      console.log('4 baths', min_v, max_v)
+      
     }
     if (isNaN(min_v) && !isNaN(max_v)) {
-      console.log('5 baths', min_v, max_v)
+      
       setOptions(optionsAny)
       setvalueOption(max_v)
       setexactMatch(false)
@@ -83,9 +83,7 @@ const FilterModalBaths = () => {
       clearTimeout(typingTimeout)
     }
     setTypingTimeout(
-      setTimeout(function () {
-        console.log('typingTimeout', min, max)
-
+      setTimeout(function () {        
         var temp = {
           min_baths: parseInt(min) === 10 ? '' : min,
           max_baths: parseInt(max) === 10 ? '' : max,

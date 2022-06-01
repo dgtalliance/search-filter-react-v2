@@ -29,7 +29,7 @@ const FilterModalLandSize = () => {
     }
     setlandTimeout(
       setTimeout(function () {
-        console.log('typingTimeout updateland', min, max)
+        
         var temp = {
           min_lot_size: parseInt(min) === 0 ? '' : min,
           max_lot_size: parseInt(max) === maxlandDefault ? '' : max,

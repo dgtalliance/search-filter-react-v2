@@ -71,7 +71,7 @@ export const propertySlice = createSlice({
   },
   extraReducers: {
     [fetchAsyncSearch.pending]: (state) => {
-      console.log('pending')
+     
       state.loading = true
     },
     [fetchAsyncSearch.fulfilled]: (state, actions) => {
@@ -214,28 +214,18 @@ export const propertySlice = createSlice({
         state.event_triggered = 'yes'
 
         //Update Url
-        history.replaceState(null, null, '?' + actions.payload.data.slug)
+        history.replaceState(null, null, '?' + decodeURIComponent(actions.payload.data.slug))
 
         state.params = params
 
         //Load Data for map
         state.properties_maps = groupProperties(actions.payload.data.map_items)
-
-        /* if (parseInt(actions.payload.data.params?.currentpage) === 1) {
-        }
-        state.params.rect = actions.payload.data.params.rect
-        state.params.zm = actions.payload.data.params.zm
-        state.params.polygon_search = actions.payload.data.params.polygon_search
-        state.params.page = actions.payload.data.params.currentpage
-        state.params.property_type = actions.payload.data.params.property_type
-        state.params.sale_type = actions.payload.data.params.sale_type
-        state.params.sort_type = actions.payload.data.params.sort_type */
+       
       } else {
         state.error = actions.payload
       }
     },
-    [fetchAsyncSearch.rejected]: (state, actions) => {
-      console.log('Error')
+    [fetchAsyncSearch.rejected]: (state, actions) => {     
       state.loading = false
       state.error = {
         status: false,
