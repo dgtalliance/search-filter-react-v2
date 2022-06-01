@@ -37,7 +37,7 @@ const FilterModal = () => {
 
   const handleClean = () => {
     var params = {
-      sale_type: '',
+      sale_type: 0,
       property_type: [],
       filter_search_keyword_label: '',
       filter_search_keyword_type: '',
@@ -62,8 +62,9 @@ const FilterModal = () => {
       min_year: '',
       max_year: '',
       sort_type: '',
-      page: '',
+      page: 1,
     }
+    history.replaceState(null, null, '?')
     dispatch(updateTriggered('no'))
     dispatch(updateForm(params))
     dispatch(fetchAsyncSearch())

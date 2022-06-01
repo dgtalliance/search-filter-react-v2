@@ -3,6 +3,7 @@ import { groupProperties, hoveredItem } from '../../utils/utils'
 import { fetchAsyncSearch } from '../actions/properties'
 
 const initialState = {
+  mapObj:{},
   properties: {
     hackbox: null,
     currentpage: 1,
@@ -59,6 +60,9 @@ export const propertySlice = createSlice({
     },
     updateTriggered: (state, { payload }) => {
       state.event_triggered = payload
+    },
+    updateMapObj: (state, { payload }) => {
+      state.mapObj = payload
     },
     updateDataMap: (state, { payload }) => {
       state.properties_maps = hoveredItem(
@@ -237,6 +241,7 @@ export const propertySlice = createSlice({
 })
 
 export const getparams = (state) => state.properties.params
+export const getmapObj = (state) => state.properties.mapObj
 export const getpropertiesMapData = (state) => state.properties.properties_maps
 export const getpropertiesData = (state) => state.properties.properties_data
 export const getpropertiesItems = (state) => state.properties.properties
@@ -245,6 +250,7 @@ export const geterror = (state) => state.properties.error
 
 export const {
   updateForm,
+  updateMapObj,
   updateTriggered,
   updateDataMap,
 } = propertySlice.actions

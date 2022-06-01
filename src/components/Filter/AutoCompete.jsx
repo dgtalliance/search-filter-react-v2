@@ -8,7 +8,7 @@ import {
   updateClean,
 } from '../../config/slices/propertiesAutoComplete'
 import { ib_fetch_default_cities } from '../../utils/utils'
-import { getparams, updateForm } from '../../config/slices/properties'
+import { getmapObj, getparams, updateForm } from '../../config/slices/properties'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import { fetchAsyncAutoComplete } from '../../config/actions/propertiesAutoComplete'
 import FilterContext from '../../Contexts/FilterContext'
@@ -17,6 +17,7 @@ const Complete = () => {
   const dispatch = useDispatch()
   const autocompleteData = useSelector(getautocompleteData)
   const params = useSelector(getparams)
+  const getmapobj = useSelector(getmapObj)
   const cities = ib_fetch_default_cities(city)
   const { setAutoMapSearch } = useContext(FilterContext)
   const [keyword, setKeyword] = useState('')
@@ -27,14 +28,14 @@ const Complete = () => {
   }, [autocompleteData])
 
   useEffect(() => {
-    if(params.filter_search_keyword_label !== ''){
+    if (params.filter_search_keyword_label !== '') {
       setKeyword(params.filter_search_keyword_label)
+    }else{
+      setKeyword('')
     }
   }, [params])
 
-
   const setAutocompleteTerm = (term, type) => {
-  
     var param = {
       filter_search_keyword_label: term,
       filter_search_keyword_type: null === type ? '' : type,
@@ -43,22 +44,20 @@ const Complete = () => {
       zm: '',
       page: '1',
     }
-    //update_bounds_zoom_gmap();
     dispatch(updateForm(param))
     dispatch(fetchAsyncSearch())
   }
 
   const handleKeyUpAutocompleteEvent = (val) => {
     var inputValue = val
-    setKeyword(inputValue)    
+    setKeyword(inputValue)
     if ('' !== inputValue) {
       dispatch(fetchAsyncAutoComplete(inputValue))
     } else {
       dispatch(updateClean(cities))
     }
-    
   }
-  const handleSelectAutocomplete = (value) => {    
+  const handleSelectAutocomplete = (value) => {
     var tempterm = JSON.parse(value)
     setKeyword(tempterm.label)
     setAutocompleteTerm(tempterm.label, tempterm.type)
@@ -66,20 +65,21 @@ const Complete = () => {
   }
   const handleClearAutocompleteEvent = () => {
     setKeyword('')
-
-     var param = {
+   
+    var param = {
       filter_search_keyword_label: '',
       filter_search_keyword_type: '',
       polygon_search: '',
+      rect: getmapobj.rect,
+      zm: getmapobj.zm,
       page: '1',
     }
     dispatch(updateForm(param))
     dispatch(updateClean(cities))
-   dispatch(fetchAsyncSearch())
+    dispatch(fetchAsyncSearch())
 
     // active pan in map
-    setAutoMapSearch(true)
-
+    setAutoMapSearch(false)
   }
   const handleSubmitAutocompleteForm = (e) => {
     e.preventDefault()

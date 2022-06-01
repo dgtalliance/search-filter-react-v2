@@ -1772,6 +1772,9 @@
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper .rdrMonthAndYearWrapper {
           height: 40px;
           padding-top: 0; }
+      @media screen and (min-width: 1024px) {
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests {
+          padding-bottom: 0; } }
     .ib-guests-search-modal .ib-wrapper-modal .ib-modal-footer {
       position: fixed;
       bottom: 0;

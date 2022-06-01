@@ -289,15 +289,17 @@
 					.slick-slider{
 						height: 100%;
 						.slick-list{
+							height: 100%;
 							.slick-track{
+								height: 100%;
 								.slick-slide{
-									.slick-slide{
-										div{
+									height: 100%;
+									div{
+										height: 100%;
+										.lazy-load-image-background,
+										.lazy-load-image-loaded{
 											height: 100%;
-											.lazy-load-image-background,
-											.lazy-load-image-loaded{
-												height: 100%;
-											}
+											width: 100%;
 										}
 									}
 								}

@@ -5,6 +5,7 @@ import {
   getpropertiesMapData,
   updateDataMap,
   updateForm,
+  updateMapObj,
 } from '../../config/slices/properties'
 import { isMobile } from 'react-device-detect'
 import GoogleMapReact from 'google-map-react'
@@ -71,8 +72,10 @@ const MapJS = () => {
     console.log('change params')
     dontReloadBounds.current = true
     if ('' != params.kml_boundaries && !isDrawing) {
-      console.log('polygonRef.current', params.kml_boundaries)
       drawPolygonInit(params.kml_boundaries)
+    }
+    if (undefined === params.kml_boundaries){
+      removePolygons()
     }
   }, [params])
 
@@ -261,6 +264,7 @@ const MapJS = () => {
       polygon_search: '',
       page: 1,
     }
+    setAutoMapSearch(false)
     dispatch(updateForm(params))
     dispatch(fetchAsyncSearch())
   }
@@ -319,7 +323,7 @@ const MapJS = () => {
       map.setZoom(13)
     } else {
       if (arr.length < 10) {
-        map.setZoom(13)
+        map.setZoom(14)
       }
     }
   }
@@ -356,7 +360,7 @@ const MapJS = () => {
       strokeWeight: 1,
       fillColor: '#31239a',
     })
-    console.log('DRAWING', kml_boundaries)
+
     tmpPolygon.setMap(mapRef.current)
     polygonRef.current = tmpPolygon
   }
@@ -488,17 +492,10 @@ const MapJS = () => {
       })
     })
 
-    mapRef.current.addListener('idle', function () {
-      console.log(
-        'drawPolygonInit onGoogleApiLoaded - IDE',
-        params.kml_boundaries,
-      )
-
-      if (params.kml_boundaries !== undefined) {
-        console.log('drawPolygonInit onGoogleApiLoaded')
-        drawPolygonInit(params.kml_boundaries)
-      }
-    })
+    if (params.kml_boundaries !== undefined) {
+      console.log('drawPolygonInit onGoogleApiLoaded')
+      drawPolygonInit(params.kml_boundaries)
+    }
   }
   const handleDragSearchEvent = () => {
     if (true === isDrawing) {
@@ -518,6 +515,18 @@ const MapJS = () => {
       dispatch(fetchAsyncSearch())
 
       setAutoMapSearch(false)
+    }
+  }
+  const onChangeMap = (e) => {
+    if (mapRef.current !== undefined && mapRef.current !== null) {
+      var mapZoom = mapRef.current?.getZoom()
+      var mapBounds = mapRef.current?.getBounds()      
+      var params = {
+        rect: mapBounds.toUrlValue(),
+        zm: mapZoom,        
+      }
+
+      dispatch(updateMapObj(params))
     }
   }
   return (
@@ -616,6 +625,7 @@ const MapJS = () => {
             bootstrapURLKeys={bootstrapURLKeys}
             defaultCenter={defaultCenter}
             defaultZoom={defaultZoom}
+            onChange={(m) => onChangeMap(m)}
             yesIWantToUseGoogleMapApiInternals
             options={{
               scrollwheel: false,
