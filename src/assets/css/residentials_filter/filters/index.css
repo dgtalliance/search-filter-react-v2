@@ -1558,7 +1558,8 @@
     -ms-flex-pack: start;
     justify-content: flex-start;
     background-color: var(--color-white);
-    padding-bottom: 65px; }
+    height: 100vh;
+    padding-bottom: 0; }
     .ib-guests-search-modal .ib-wrapper-modal .ib-md-header {
       display: -webkit-box;
       display: -ms-flexbox;
@@ -1611,7 +1612,8 @@
     .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests {
       overflow: hidden;
       overflow-y: auto;
-      height: calc(100vh - 139px); }
+      height: calc(100vh - 139px);
+      padding-bottom: 100px; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests::-webkit-scrollbar {
         width: 10px; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests::-webkit-scrollbar-thumb {
@@ -1714,10 +1716,12 @@
             .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-property .ant-radio-group .ant-radio-button-wrapper {
               font-size: 14px;
               height: 45px;
-              width: 110px;
+              width: 49%;
               margin-right: 10px; }
               .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-property .ant-radio-group .ant-radio-button-wrapper .ant-radio-button {
                 display: none; }
+              .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-property .ant-radio-group .ant-radio-button-wrapper:last-child {
+                margin-right: 0; }
           .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-round .ant-radio-group {
             -webkit-box-pack: start;
             -ms-flex-pack: start;
@@ -1747,6 +1751,8 @@
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-year-built .ib-wrapper .ib-flex-wrapper .ib-flex-item.-icon-price:before {
           font-size: 18px;
           content: "\e919"; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-features {
+          border-bottom: 0 !important; }
       .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper {
         width: 100%; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .rdrDateRangePickerWrapper .rdrCalendarWrapper {
@@ -1803,14 +1809,18 @@
         height: auto;
         max-height: 90vh;
         border-radius: 10px;
-        overflow: hidden; }
+        overflow: hidden;
+        /*PARA EL CLASSIC*/
+        width: 950px; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-md-header {
           -webkit-box-shadow: none;
           box-shadow: none; }
         .ib-guests-search-modal .ib-wrapper-modal .ib-modal-footer {
           position: relative;
           -webkit-box-shadow: none;
-          box-shadow: none; } }
+          box-shadow: none; }
+        .ib-guests-search-modal .ib-wrapper-modal.-classic {
+          width: 950px; } }
   .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-wrapper-flex {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -1827,9 +1837,171 @@
           margin-right: 10px; }
 
 body.ms-show-guests-filter {
-  overflow: hidden; }
+  overflow: hidden;
+  height: 100vh; }
   body.ms-show-guests-filter .ib-guests-search {
     z-index: 32; }
   body.ms-show-guests-filter .ib-guests-search-modal {
     visibility: visible;
     opacity: 1; }
+
+/*ORDENANDO LOS ELEMENTOS*/
+.ib-guests-search-modal .ib-wrapper-modal .ib-body-guests {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start; }
+  .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item {
+    width: 100%; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-sale-type {
+      -webkit-box-ordinal-group: 1;
+      -ms-flex-order: 0;
+      order: 0; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-price-range {
+      -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+      order: 1; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-bedrooms {
+      -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+      order: 2; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-bathrooms {
+      -webkit-box-ordinal-group: 4;
+      -ms-flex-order: 3;
+      order: 3; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-property-type {
+      -webkit-box-ordinal-group: 5;
+      -ms-flex-order: 4;
+      order: 4; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-property-type .ib-typesList .ib-wrapper .ib-flex-wrapper .ib-amenitiesList .ib-chk-wrapper {
+        margin-bottom: 2px; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-parking-spaces {
+      -webkit-box-ordinal-group: 6;
+      -ms-flex-order: 5;
+      order: 5; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-living-size {
+      -webkit-box-ordinal-group: 7;
+      -ms-flex-order: 6;
+      order: 6; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-land-size {
+      -webkit-box-ordinal-group: 8;
+      -ms-flex-order: 7;
+      order: 7; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-year-built {
+      -webkit-box-ordinal-group: 9;
+      -ms-flex-order: 8;
+      order: 8; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-waterfront {
+      -webkit-box-ordinal-group: 10;
+      -ms-flex-order: 9;
+      order: 9; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-features {
+      -webkit-box-ordinal-group: 11;
+      -ms-flex-order: 10;
+      order: 10; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-features .ib-typesList .ib-wrapper .ib-flex-wrapper .ib-amenitiesList .ib-chk-wrapper {
+        margin-bottom: 2px; }
+
+@media screen and (min-width: 768px) {
+  .ib-guests-search-modal .ib-wrapper-modal {
+    width: 90%;
+    max-width: 1115px;
+    position: relative; } }
+
+@media screen and (min-width: 1024px) {
+  .ib-guests-search-modal .ib-wrapper-modal {
+    width: 97%; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-md-header {
+      padding: 0;
+      border: 0; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-md-header .ib-text {
+        display: none; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-md-header .ib-btn {
+        left: auto;
+        top: 8px;
+        right: 5px;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        font-size: 10px;
+        z-index: 3;
+        background-color: transparent; }
+        .ib-guests-search-modal .ib-wrapper-modal .ib-md-header .ib-btn:before {
+          padding-top: 2px; }
+    .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item {
+      width: 33.33%;
+      background-color: var(--color-white); }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-full {
+        width: 33.33%; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-sale-type {
+        -webkit-box-ordinal-group: 1;
+        -ms-flex-order: 0;
+        order: 0; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-parking-spaces {
+        -webkit-box-ordinal-group: 2;
+        -ms-flex-order: 1;
+        order: 1; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-waterfront {
+        -webkit-box-ordinal-group: 3;
+        -ms-flex-order: 2;
+        order: 2;
+        border-right: 0; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-price-range {
+        -webkit-box-ordinal-group: 4;
+        -ms-flex-order: 3;
+        order: 3; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-year-built {
+        -webkit-box-ordinal-group: 5;
+        -ms-flex-order: 4;
+        order: 4; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-property-type {
+        -webkit-box-ordinal-group: 6;
+        -ms-flex-order: 5;
+        order: 5;
+        border-right: 0; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-bedrooms {
+        -webkit-box-ordinal-group: 7;
+        -ms-flex-order: 6;
+        order: 6;
+        margin-top: -10px; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-bathrooms {
+        -webkit-box-ordinal-group: 8;
+        -ms-flex-order: 7;
+        order: 7;
+        margin-top: -10px; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-features {
+        -webkit-box-ordinal-group: 9;
+        -ms-flex-order: 8;
+        order: 8;
+        margin-top: -10px;
+        border-bottom: 0 !important;
+        border-right: 0; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-living-size {
+        -webkit-box-ordinal-group: 10;
+        -ms-flex-order: 9;
+        order: 9;
+        margin-top: -173px; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item.-land-size {
+        -webkit-box-ordinal-group: 11;
+        -ms-flex-order: 10;
+        order: 10;
+        margin-top: -173px; }
+      .ib-guests-search-modal .ib-wrapper-modal .ib-body-guests .ib-gs-item .ib-chk-list.-round .ant-radio-group {
+        zoom: 0.93; }
+  .ib-guests-search-modal .error-label {
+    color: #5e1717;
+    position: absolute;
+    bottom: -50px;
+    z-index: 2;
+    background-color: #f9a6a0;
+    border-radius: 4px;
+    width: calc(100% - 30px);
+    padding: 10px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%); } }

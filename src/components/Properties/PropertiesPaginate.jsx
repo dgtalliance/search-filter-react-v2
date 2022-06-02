@@ -6,14 +6,11 @@ import { updateForm } from '../../config/slices/properties'
 function PropertiesPaginate({ pagination, current,infoSearch }) {
   const { prev, next, range } = pagination
   const dispatch = useDispatch()
-  useEffect(() => {
-    infoSearch.current.scrollIntoView({behavior: "smooth"})
-  },[pagination])
-
+ 
   console.log('Render PropertiesPaginate')
   const paginate = useCallback((page) => {
     console.log('page', page)
-    
+    infoSearch.current.scrollIntoView({behavior: "smooth"})
     dispatch(updateForm({ page }))
     dispatch(fetchAsyncSearch())
   })

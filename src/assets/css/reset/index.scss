@@ -75,12 +75,14 @@ button, input, select{
 	appearance: none;
 }
 
-.gm-style >div:nth-child(2) {
-	>div:nth-child(2){
-		>div{
-			>div:nth-child(3){
-				display: inline-block;
-				z-index: -1;
+body.draw-map{
+	.gm-style >div:nth-child(2) {
+		>div:nth-child(2){
+			>div{
+				>div:nth-child(3){
+					display: none !important;
+					z-index: -1 !important;
+				}
 			}
 		}
 	}

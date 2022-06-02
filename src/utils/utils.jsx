@@ -149,7 +149,7 @@ export const groupProperties = (map_items) => {
       }
     }
     unique_properties.push({
-      item: Object.assign(row, { hovered: false }),
+      item: Object.assign(row, { hovered: false, infoWin: false }),
       group: related_properties,
     })
   }
@@ -157,46 +157,46 @@ export const groupProperties = (map_items) => {
   return unique_properties
 }
 
-export const hoveredItem = (mls, markers, active) => {
-  var updatedMarkers = []
-
-  markers.forEach((marker) => {
+export const hoveredItem = (mls, markers, active, info) => {
+  return markers.map((marker) => {
     var t = Object.assign({}, marker.item)
-    if (marker.item.mls_num === mls) {
-      updatedMarkers.push({
-        item: Object.assign(t, { hovered: active }),
+    var tem = marker.group.filter((group) => group.mls_num === mls)
+
+    if (tem.length > 0) {
+      return {
+        item: Object.assign(t, { hovered: active, infoWin: info }),
         group: marker.group,
-      })
+      }
     } else {
-      updatedMarkers.push({
-        item: Object.assign(t, { hovered: false }),
+      return {
+        item: Object.assign(t, { hovered: false, infoWin: false }),
         group: marker.group,
-      })
+      }
     }
   })
-  return updatedMarkers
 }
 export const hoverMapGrid = (ele) => {
-  Array.from(document.getElementsByClassName('markerOverlay')).forEach(f => {
+  Array.from(document.getElementsByClassName('markerOverlay')).forEach((f) => {
     if (f.className.includes('active')) {
       document.getElementById(f.id).classList.remove('active')
     }
-  });
+  })
   if (document.getElementById(ele) !== null)
     document.getElementById(ele).classList.add('active')
 }
 
 export const clearHover = () => {
-  Array.from(document.getElementsByClassName('markerOverlay')).forEach(f => {
+  Array.from(document.getElementsByClassName('markerOverlay')).forEach((f) => {
     if (f.className.includes('active')) {
       document.getElementById(f.id).classList.remove('active')
     }
-  });
+  })
 }
 
 export const removeChild = () => {
-  const removeChild = document.getElementsByClassName('gm-style')[0].children[1].children[1].children[0].children[2];
-  removeChild.innerHTML = '';
+  const removeChild = document.getElementsByClassName('gm-style')[0].children[1]
+    .children[1].children[0].children[2]
+  removeChild.innerHTML = ''
 }
 
 export const abbreviateNumber = (number) => {

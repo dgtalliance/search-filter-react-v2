@@ -8,7 +8,7 @@ import ContainerFilterBeds from './ContainerFilterBeds'
 import ContainerFilterPrice from './ContainerFilterPrice'
 import ContainerFilterPropertyType from './ContainerFilterPropertyType'
 import FilterModal from './FilterModal'
-
+import { LazyLoadComponent } from 'react-lazy-load-image-component'
 const FilterSearch = () => {
   console.log('Render Filter')
   const dispatch = useDispatch()
@@ -51,17 +51,23 @@ const FilterSearch = () => {
         <div className="ib-wrapper-item -default">
           <div className="ib-wrapper-dropdown -search">
             <div className="ib-action -search js-show-basic-filter">
-              <Complete />
+              <LazyLoadComponent>
+                <Complete />
+              </LazyLoadComponent>
             </div>
           </div>
-
-          <ContainerFilterPrice />
-
-          <ContainerFilterBeds />
-
-          <ContainerFilterBaths />
-
-          <ContainerFilterPropertyType />
+          <LazyLoadComponent>
+            <ContainerFilterPrice />
+          </LazyLoadComponent>
+          <LazyLoadComponent>
+            <ContainerFilterBeds />
+          </LazyLoadComponent>
+          <LazyLoadComponent>
+            <ContainerFilterBaths />
+          </LazyLoadComponent>
+          <LazyLoadComponent>
+            <ContainerFilterPropertyType />
+          </LazyLoadComponent>
 
           <div className="ib-wrapper-dropdown -filter">
             <button className="ib-action -filter js-show-all-filter">
@@ -81,8 +87,9 @@ const FilterSearch = () => {
             </button>
           </div>
         </div>
-
-        <FilterModal />
+        <LazyLoadComponent>
+          <FilterModal />
+        </LazyLoadComponent>
       </div>
     </>
   )
