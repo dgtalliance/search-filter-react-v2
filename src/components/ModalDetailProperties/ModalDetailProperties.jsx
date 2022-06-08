@@ -181,7 +181,11 @@ export const ModalDetailProperties = () => {
 
     const response = await axios.get(
       API_PROPERTIES_DETAIL_CHART +
-        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`,{
+          headers: {
+            'Authorization': 'Basic c3RhdHM6c3RhdHMyMDIy'
+          }
+        }
     );
 
     if (response.data.length != 0) {
@@ -205,7 +209,11 @@ export const ModalDetailProperties = () => {
 
     const responseP = await axios.get(
       API_PROPERTIES_DETAIL_CHART_P +
-        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`
+        `?city_id=${propertiesData.city_id}&board_id=${propertiesData.board_id}&zip=${propertiesData.zip}&is_rental=${propertiesData.is_rental}`,{
+          headers: {
+            'Authorization': 'Basic c3RhdHM6c3RhdHMyMDIy'
+          }
+        }
     );
     setLoadingDataChartP(false);
     if (responseP.data.length != 0) {

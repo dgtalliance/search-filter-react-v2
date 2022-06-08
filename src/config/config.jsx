@@ -21,13 +21,13 @@ export const API_PROPERTIES_DETAIL =
 
 export const API_PROPERTIES_DETAIL_CHART =
   window.location.host === 'localhost:3000'
-    ? 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details-mt'
-    : 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details-mt'
+    ? 'https://statistics.idxboost.dev/api/get-property-details-mt'
+    : 'https://statistics.idxboost.dev/api/get-property-details-mt'
 
 export const API_PROPERTIES_DETAIL_CHART_P =
   window.location.host === 'localhost:3000'
-    ? 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details-pt'
-    : 'https://dgtsrv5.dgtalliance.com/data-monitor/monitorBoards/public/api/get-property-details-pt'
+    ? 'https://statistics.idxboost.dev/api/get-property-details-pt'
+    : 'https://statistics.idxboost.dev/api/get-property-details-pt'
 
 export const API_AUTOCOMPLETE_URL =
   window.location.host === 'localhost:3000'
