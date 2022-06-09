@@ -1,4 +1,3 @@
-/* global google */
 
 const createHTMLMapMarker = ({
   OverlayView = google.maps.OverlayView,

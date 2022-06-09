@@ -22,6 +22,7 @@ function PropertiesItem({ itemData, isFavorite }) {
   const handleOpenModal = () => {
     dispatch(fetchAsyncDetails(itemData.mls_num))
     openModal({ mls_num: itemData.mls_num })
+    window.lastOpenedProperty = itemData.mls_num
   }
 
   const newListing = (property) => {
@@ -57,7 +58,10 @@ function PropertiesItem({ itemData, isFavorite }) {
         ? flex_g_settings
         : window.__flex_g_settings
 
-    if (__flex_g_settings.hasOwnProperty('anonymous') && 'yes' === __flex_g_settings.anonymous) {
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      'yes' === __flex_g_settings.anonymous
+    ) {
       jQuery('#modal_login')
         .addClass('active_modal')
         .find('[data-tab]')
@@ -86,6 +90,7 @@ function PropertiesItem({ itemData, isFavorite }) {
       jQuery(
         '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
       ).html(titleText)
+          
     } else {
       dispatch(fetchAsyncSaveFavorite({ mls_num: itemData.mls_num }))
       if (jQuery('#_ib_lead_activity_tab').length) {
@@ -130,7 +135,7 @@ function PropertiesItem({ itemData, isFavorite }) {
       ></button>
       <a
         mls={itemData.mls_num}
-        className="ib-pipermalink js-show-modals"
+        className="ib-pipermalink js-show-modals-item"
         onClick={() => handleOpenModal()}
       ></a>
     </li>

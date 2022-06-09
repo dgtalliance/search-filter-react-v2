@@ -224,8 +224,7 @@ export const abbreviateNumber = (number) => {
   return '$' + scaled.toFixed(1) + suffix
 }
 
-
-export const  flex_g_settings = {
+export const flex_g_settings = {
   events: {
     trackingServiceUrl: 'https://api.idxboost.dev/tracking/events',
   },
@@ -1636,8 +1635,7 @@ export const  flex_g_settings = {
   g_analytics_account: '',
   g_adwords_account: '',
   force_registration: '1',
-  page_setting: {  
-  },
+  page_setting: {},
   user_show_quizz: '1',
   has_dynamic_ads: '',
   has_seo_client: '',
@@ -1647,7 +1645,6 @@ export const  flex_g_settings = {
   recaptcha_site_key: null,
   recaptcha_api_key: null,
 }
-
 
 // init script to jquery
 export const initializeElement = () => {
@@ -1722,131 +1719,210 @@ export const initializeElement = () => {
     }
   })
 
-
   // FORCE REGISTRATION
-  
-var __flex_g_settings =
-window.location.host === 'localhost:3000'
-  ? flex_g_settings
-  : window.__flex_g_settings
 
-var IB_HAS_LEFT_CLICKS =
-__flex_g_settings.hasOwnProperty('signup_left_clicks') &&
-null != __flex_g_settings.signup_left_clicks
-var IB_CURRENT_LEFT_CLICKS
+  var __flex_g_settings =
+    window.location.host === 'localhost:3000'
+      ? flex_g_settings
+      : window.__flex_g_settings
 
-if (true === IB_HAS_LEFT_CLICKS) {
-if (typeof Cookies.get('_ib_left_click_force_registration') === 'undefined') {
-  Cookies.set(
-    '_ib_left_click_force_registration',
-    parseInt(__flex_g_settings.signup_left_clicks, 10),
-  )
-}
-}
+  var IB_HAS_LEFT_CLICKS =
+    __flex_g_settings.hasOwnProperty('signup_left_clicks') &&
+    null != __flex_g_settings.signup_left_clicks
+  var IB_CURRENT_LEFT_CLICKS
 
-jQuery(document).on(
-'click',
-'.js-show-modals ,.ib-wrapper-grid .slick-arrow.slick-next, .ib-wrapper-grid .slick-arrow.slick-prev',
-function (e) {
-  e.preventDefault()
-  e.stopPropagation()
-
-  if ('undefined' === typeof Cookies.get('_ib_disabled_forcereg')) {
-    if (true === IB_HAS_LEFT_CLICKS) {
-      IB_CURRENT_LEFT_CLICKS =
-        parseInt(Cookies.get('_ib_left_click_force_registration'), 10) - 1
-
-      Cookies.set('_ib_left_click_force_registration', IB_CURRENT_LEFT_CLICKS)
-
-      if (
-        parseInt(Cookies.get('_ib_left_click_force_registration'), 10) <= 0 &&
-        'yes' === __flex_g_settings.anonymous
-      ) {
-        // no left click then open popup registration
-        jQuery('#modal_login')
-          .addClass('active_modal')
-          .find('[data-tab]')
-          .removeClass('active')
-
-        jQuery('#modal_login')
-          .addClass('active_modal')
-          .find('[data-tab]:eq(1)')
-          .addClass('active')
-
-        jQuery('#modal_login').find('.item_tab').removeClass('active')
-
-        jQuery('#tabRegister').addClass('active')
-
-        jQuery('button.close-modal').addClass('ib-close-mproperty')
-        jQuery('.overlay_modal').css('background-color', 'rgba(0,0,0,0.8);')
-
-        jQuery('#modal_login h2').html(
-          jQuery('#modal_login').find('[data-tab]:eq(1)').data('text-force'),
-        )
-
-        /*Asigamos el texto personalizado*/
-        var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr(
-          'data-text',
-        )
-        jQuery(
-          '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
-        ).html(titleText)
-      }
-    } else {
-      if ('yes' === __flex_g_settings.anonymous) {
-        if (
-          __flex_g_settings.hasOwnProperty('force_registration') &&
-          1 == __flex_g_settings.force_registration
-        ) {
-          console.log('is forced registration')
-          jQuery('#modal_login')
-            .addClass('active_modal')
-            .find('[data-tab]')
-            .removeClass('active')
-
-          jQuery('#modal_login')
-            .addClass('active_modal')
-            .find('[data-tab]:eq(1)')
-            .addClass('active')
-
-          jQuery('#modal_login').find('.item_tab').removeClass('active')
-
-          jQuery('#tabRegister').addClass('active')
-
-          jQuery('button.close-modal').addClass('ib-close-mproperty')
-          jQuery('.overlay_modal').css('background-color', 'rgba(0,0,0,0.8);')
-
-          jQuery('#modal_login h2').html(
-            jQuery('#modal_login')
-              .find('[data-tab]:eq(1)')
-              .data('text-force'),
-          )
-
-          /*Asigamos el texto personalizado*/
-          var titleText = jQuery(
-            ".header-tab a[data-tab='tabRegister']",
-          ).attr('data-text')
-          jQuery(
-            '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
-          ).html(titleText)
-        }
-      }
+  if (true === IB_HAS_LEFT_CLICKS) {
+    if (
+      typeof Cookies.get('_ib_left_click_force_registration') === 'undefined'
+    ) {
+      Cookies.set(
+        '_ib_left_click_force_registration',
+        parseInt(__flex_g_settings.signup_left_clicks, 10),
+      )
     }
   }
-},
-)
 
-jQuery(document).on('click', '.ib-close-mproperty', function (event) {
-event.preventDefault()
+  jQuery(document).on(
+    'click',
+    '.js-show-modals-item ,.ib-wrapper-grid .slick-arrow.slick-next, .ib-wrapper-grid .slick-arrow.slick-prev',
+    function (e) {
+      e.preventDefault()
+      e.stopPropagation()
 
-if (
-  __flex_g_settings.hasOwnProperty('force_registration_forced') &&
-  'yes' == __flex_g_settings.force_registration_forced
-) {
-  jQuery('.js-close-modals').click()
-}
-})
+      if ('undefined' === typeof Cookies.get('_ib_disabled_forcereg')) {
+        if (true === IB_HAS_LEFT_CLICKS) {
+          IB_CURRENT_LEFT_CLICKS =
+            parseInt(Cookies.get('_ib_left_click_force_registration'), 10) - 1
 
+          Cookies.set(
+            '_ib_left_click_force_registration',
+            IB_CURRENT_LEFT_CLICKS,
+          )
+
+          if (
+            parseInt(Cookies.get('_ib_left_click_force_registration'), 10) <=
+              0 &&
+            'yes' === __flex_g_settings.anonymous
+          ) {
+            // no left click then open popup registration
+            jQuery('#modal_login')
+              .addClass('active_modal')
+              .find('[data-tab]')
+              .removeClass('active')
+
+            jQuery('#modal_login')
+              .addClass('active_modal')
+              .find('[data-tab]:eq(1)')
+              .addClass('active')
+
+            jQuery('#modal_login').find('.item_tab').removeClass('active')
+
+            jQuery('#tabRegister').addClass('active')
+
+            jQuery('button.close-modal').addClass('ib-close-mproperty')
+            jQuery('.overlay_modal').css('background-color', 'rgba(0,0,0,0.8);')
+
+            jQuery('#modal_login h2').html(
+              jQuery('#modal_login')
+                .find('[data-tab]:eq(1)')
+                .data('text-force'),
+            )
+
+            /*Asigamos el texto personalizado*/
+            var titleText = jQuery(
+              ".header-tab a[data-tab='tabRegister']",
+            ).attr('data-text')
+            jQuery(
+              '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
+            ).html(titleText)
+          }
+        } else {
+          if ('yes' === __flex_g_settings.anonymous) {
+            if (
+              __flex_g_settings.hasOwnProperty('force_registration') &&
+              1 == __flex_g_settings.force_registration
+            ) {
+              console.log('is forced registration')
+              jQuery('#modal_login')
+                .addClass('active_modal')
+                .find('[data-tab]')
+                .removeClass('active')
+
+              jQuery('#modal_login')
+                .addClass('active_modal')
+                .find('[data-tab]:eq(1)')
+                .addClass('active')
+
+              jQuery('#modal_login').find('.item_tab').removeClass('active')
+
+              jQuery('#tabRegister').addClass('active')
+
+              jQuery('button.close-modal').addClass('ib-close-mproperty')
+              jQuery('.overlay_modal').css(
+                'background-color',
+                'rgba(0,0,0,0.8);',
+              )
+
+              jQuery('#modal_login h2').html(
+                jQuery('#modal_login')
+                  .find('[data-tab]:eq(1)')
+                  .data('text-force'),
+              )
+
+              /*Asigamos el texto personalizado*/
+              var titleText = jQuery(
+                ".header-tab a[data-tab='tabRegister']",
+              ).attr('data-text')
+              jQuery(
+                '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
+              ).html(titleText)
+            }
+          }
+        }
+      }
+    },
+  )
+
+  jQuery(document).on('click', '.ib-close-mproperty', function (event) {
+    event.preventDefault()
+
+    if (
+      __flex_g_settings.hasOwnProperty('force_registration_forced') &&
+      'yes' == __flex_g_settings.force_registration_forced
+    ) {
+      jQuery('.js-close-modals').click()
+    }
+  })
+
+  jQuery(document).on('click', '.js-show-modals', function (e) {
+    e.preventDefault()
+
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
+
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      'yes' === __flex_g_settings.anonymous
+    ) {
+      jQuery('#modal_login')
+        .addClass('active_modal')
+        .find('[data-tab]')
+        .removeClass('active')
+
+      jQuery('#modal_login')
+        .addClass('active_modal')
+        .find('[data-tab]:eq(1)')
+        .addClass('active')
+
+      jQuery('#modal_login').find('.item_tab').removeClass('active')
+
+      jQuery('#tabRegister').addClass('active')
+
+      jQuery('button.close-modal').addClass('ib-close-mproperty')
+      jQuery('.overlay_modal').css('background-color', 'rgba(0,0,0,0.8);')
+
+      jQuery('#modal_login h2').html(
+        jQuery('#modal_login').find('[data-tab]:eq(1)').data('text-force'),
+      )
+
+      /*Asigamos el texto personalizado*/
+      var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr(
+        'data-text',
+      )
+      jQuery(
+        '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
+      ).html(titleText)
+    } else {
+      
+    }
+    if (document.body.classList.contains('openModals')) {
+      document.body.classList.remove('openModals')
+    } else {
+      document.body.classList.add('openModals')
+    }
+
+    var parent = jQuery('#modalSaveSearch')
+    if (parent.hasClass('active')) {
+      parent.removeClass('active')
+    } else {
+      parent.addClass('active')
+    }
+  })
+
+  jQuery(document).on('click', '.js-close-modals', function (e) {
+    e.preventDefault()
+
+    if (document.body.classList.contains('openModals')) {
+      document.body.classList.remove('openModals')
+    }
+
+    var parent = jQuery('#modalSaveSearch')
+    if (parent.hasClass('active')) {
+      parent.removeClass('active')
+    }
+  })
 
   jQuery(document).on('click', '.js-show-basic-filter', function (e) {
     e.preventDefault()
@@ -1991,9 +2067,10 @@ export const phoneFormat = (val) => {
   return val.replace(/[^\d]/g, '')
 }
 export const favoriteIcon = () => {
-  let options = ['-heart','-star', '-square']
-  const position = window.location.host !== 'localhost:3000'
-    ? parseInt(window.__flex_g_settings.params.view_icon_type)
-    : 0
-  return options[position];
+  let options = ['-heart', '-star', '-square']
+  const position =
+    window.location.host !== 'localhost:3000'
+      ? parseInt(window.__flex_g_settings.params.view_icon_type)
+      : 0
+  return options[position]
 }

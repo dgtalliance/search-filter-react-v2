@@ -1,10 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { groupProperties, hoveredItem } from '../../utils/utils'
-import { fetchAsyncGetSaveFavorite, fetchAsyncSearch } from '../actions/properties'
+import {
+  fetchAsyncGetSaveFavorite,
+  fetchAsyncSearch,
+} from '../actions/properties'
 
 const initialState = {
   saved_listings: [],
-  loadinglisted:false,
+  loadinglisted: false,
   mapObj: {},
   properties: {
     hackbox: null,
@@ -50,6 +53,7 @@ const initialState = {
     sort_type: '',
     page: '',
     kml_boundaries: '',
+    name: '',
   },
 }
 
@@ -209,6 +213,10 @@ export const propertySlice = createSlice({
             actions.payload.data.params.currentpage !== null
               ? actions.payload.data.params.currentpage
               : '',
+          name:
+            actions.payload.data.params.name !== null
+              ? actions.payload.data.params.name
+              : '',
         }
 
         var temp_properties = {
@@ -232,7 +240,7 @@ export const propertySlice = createSlice({
         state.params = params
 
         //Load Data for map
-        state.properties_maps = groupProperties(actions.payload.data.map_items)
+        state.properties_maps = groupProperties(actions.payload.data.map_items)        
       } else {
         state.error = actions.payload
       }
@@ -269,7 +277,7 @@ export const getpropertiesMapData = (state) => state.properties.properties_maps
 export const getpropertiesData = (state) => state.properties.properties_data
 export const getpropertiesItems = (state) => state.properties.properties
 export const getloading = (state) => state.properties.loading
-export const getloadingfav= (state) => state.properties.loadinglisted
+export const getloadingfav = (state) => state.properties.loadinglisted
 
 export const geterror = (state) => state.properties.error
 

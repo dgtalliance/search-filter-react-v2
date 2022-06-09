@@ -361,9 +361,9 @@
                   font-family: 'idxboost-icons';
                   //content: "\e91e";
                   display: inline-block;
-                  font-size: 30px;
+                  font-size: 25px;
                   font-weight: normal;
-                  margin-right: 7px
+                  margin-right: 10px
                 }
 
                 &.-heart{
@@ -1112,7 +1112,7 @@
   //SI NO ES LA PAGINA INTERNA DEL DETALLE
   &:not(.-internal-page){
     opacity: 0;
-    z-index: -1;
+    z-index: 999;
     visibility: hidden;
     transition: all .4s;
     position: fixed;
@@ -1516,14 +1516,16 @@
 
         >.ib-modal-header{
           > .ib-close {
-            width: 45px;
-            height: 45px;
+            width: 35px;
+            height: 35px;
             position: absolute;
-            top: 0;
-            right: 0;
+            top: -15px;
+            right: -15px;
             transition: all .3s;
-            color: var(--color-gray-light);
-            background-color: transparent;
+            color: var(--color-white);
+            border-radius: 100%;
+            background-color: var(--color-black);
+            box-shadow: 1px 3px 9px -1px rgba(0,0,0,0.25);
             &:before {
               content: "\e909";
               display: flex;
@@ -1534,8 +1536,14 @@
               position: absolute;
               top: 0;
               left: 0;
-              font-size: 16px;
+              font-size: 25px;
               font-family: var(--icons-font);
+              transform: rotate(45deg);
+            }
+
+            &:hover{
+              background-color: var(--color-white);
+              color: var(--color-black);
             }
           }
         }
@@ -2306,4 +2314,12 @@ body{
 		-webkit-transform:rotate(360deg);
 		transform:rotate(360deg);
 	}
+}
+
+
+#modalSaveSearch{
+  .ms-wrapper-form-info{
+    margin-top: -10px;
+    padding: 0 10px 10px 10px;
+  }
 }

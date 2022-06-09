@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import ContainerFiftyFifty from './components/ContainerFiftyFifty'
 import { fetchAsyncSearch } from './config/actions/properties'
+import Cookies from 'js-cookie'
 
 export const defaultPropsShortCode = {
   center: {
@@ -30,7 +31,9 @@ export const defaultPropsShortCode = {
 
 const App = () => {
   const dispatch = useDispatch()
+
   console.log('App started',defaultPropsShortCode);
+  
   useEffect(() => {
     dispatch(fetchAsyncSearch())
   }, [dispatch])

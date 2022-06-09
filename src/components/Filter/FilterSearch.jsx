@@ -9,8 +9,8 @@ import ContainerFilterPrice from './ContainerFilterPrice'
 import ContainerFilterPropertyType from './ContainerFilterPropertyType'
 import FilterModal from './FilterModal'
 import { LazyLoadComponent } from 'react-lazy-load-image-component'
+import { flex_g_settings } from '../../utils/utils'
 const FilterSearch = () => {
- 
   const dispatch = useDispatch()
   const handleClean = () => {
     var params = {
@@ -40,12 +40,57 @@ const FilterSearch = () => {
       max_year: '',
       sort_type: '',
       page: 1,
-    }    
+    }
     history.replaceState(null, null, '?')
     dispatch(updateTriggered('no'))
     dispatch(updateForm(params))
     dispatch(fetchAsyncSearch())
   }
+
+  const onClickSave = () => {
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
+
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      'yes' === __flex_g_settings.anonymous
+    ) {
+      jQuery('#modal_login')
+        .addClass('active_modal')
+        .find('[data-tab]')
+        .removeClass('active')
+
+      jQuery('#modal_login')
+        .addClass('active_modal')
+        .find('[data-tab]:eq(1)')
+        .addClass('active')
+
+      jQuery('#modal_login').find('.item_tab').removeClass('active')
+
+      jQuery('#tabRegister').addClass('active')
+
+      jQuery('button.close-modal').addClass('ib-close-mproperty')
+      jQuery('.overlay_modal').css('background-color', 'rgba(0,0,0,0.8);')
+
+      jQuery('#modal_login h2').html(
+        jQuery('#modal_login').find('[data-tab]:eq(1)').data('text-force'),
+      )
+
+      /*Asigamos el texto personalizado*/
+      var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr(
+        'data-text',
+      )
+      jQuery(
+        '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
+      ).html(titleText)
+    } else {
+      // openModal save
+      jQuery('#ib-fsearch-save-modal').addClass('ib-md-active')
+    }
+  }
+
   return (
     <>
       <div className="ib-guests-search">
@@ -83,7 +128,10 @@ const FilterSearch = () => {
           </div>
 
           <div className="ib-wrapper-dropdown -save">
-            <button className="ib-action">
+            <button
+              className="ib-action js-show-modals"
+              data-modal="#modalSaveSearch"              
+            >
               <i className="idx-icons-save"></i> Save
             </button>
           </div>

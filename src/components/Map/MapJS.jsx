@@ -9,7 +9,7 @@ import {
 } from '../../config/slices/properties'
 import { isMobile } from 'react-device-detect'
 import GoogleMapReact from 'google-map-react'
-import { abbreviateNumber } from '../../utils/utils'
+import { abbreviateNumber, flex_g_settings } from '../../utils/utils'
 import createHTMLMapMarker from './HtmlMarker'
 import { renderToString } from 'react-dom/server'
 import CustomInfoWindow from './CustomInfoWindow'
@@ -68,7 +68,7 @@ const MapJS = () => {
       if (!isDrawing) {
         removeloadMakers()
       }
-    }    
+    }
   }, [paramsItems])
   useEffect(() => {
     console.log('change params')
@@ -171,15 +171,15 @@ const MapJS = () => {
     e.stopPropagation()
     e.preventDefault()
 
-    document.body.classList.add('draw-map')    
-     
+    document.body.classList.add('draw-map')
+
     polygonRef.current = polygonRefTemp.current
-    
+
     polygonRefTemp.current.setMap(null)
     polygonRefTemp.current = null
 
     polygonRef.current?.setMap(mapRef.current)
-    
+
     loadMakers(IB_MARKERS)
 
     if (isMobile) {
@@ -250,7 +250,7 @@ const MapJS = () => {
       }
       dispatch(updateForm(params))
       dispatch(fetchAsyncSearch())
-      
+
       polygonRef.current = newPolygons.current
 
       if (isMobile) {
@@ -277,7 +277,6 @@ const MapJS = () => {
     }
 
     setAutoMapSearch(false)
-   
 
     setIsDrawing(false)
     dontDrawing.current = false
@@ -301,7 +300,7 @@ const MapJS = () => {
     setAutoMapSearch(false)
     dispatch(updateForm(params))
     dispatch(fetchAsyncSearch())
-    if(isMobile){
+    if (isMobile) {
       setModalInfoWindow([])
     }
   }
@@ -364,7 +363,7 @@ const MapJS = () => {
           zIndex: 1,
         })
         google.maps.event.removeListener(mouseup)
-        newPolygons.current = polygonFreeRef.current        
+        newPolygons.current = polygonFreeRef.current
       },
     )
   }
@@ -458,7 +457,7 @@ const MapJS = () => {
 
   const removePolygons = () => {
     if (polygonRef.current?.getPath()) {
-      console.log('Removed');
+      console.log('Removed')
       polygonRefTemp.current = polygonRef.current
       polygonRef.current.setMap(null)
       polygonRef.current = null
@@ -467,7 +466,7 @@ const MapJS = () => {
 
   const removePolygonsInMarkers = () => {
     if (polygonRef.current?.getPath()) {
-      console.log('Removed In Marker');     
+      console.log('Removed In Marker')
       polygonRef.current.setMap(null)
       polygonRef.current = null
     }
@@ -584,7 +583,7 @@ const MapJS = () => {
 
   const onGoogleApiLoaded = ({ map, maps }) => {
     mapRef.current = map
-    if (IB_MARKERS.length > 0) {     
+    if (IB_MARKERS.length > 0) {
       loadMakers(IB_MARKERS)
     }
 
@@ -595,7 +594,7 @@ const MapJS = () => {
       })
     })
 
-    if (params.kml_boundaries !== undefined) {      
+    if (params.kml_boundaries !== undefined) {
       drawPolygonInit(params.kml_boundaries)
     }
   }
@@ -604,7 +603,7 @@ const MapJS = () => {
       return
     }
 
-    if(isMobile){
+    if (isMobile) {
       setModalInfoWindow([])
     }
 
@@ -705,7 +704,10 @@ const MapJS = () => {
 
         <div className="ib-wrapper-float-actions -grid -view-map">
           <div className="ib-wrapper -round-sv">
-            <button className="ib-btn">
+            <button
+              className="ib-btn js-show-modals"
+              data-modal="#modalSaveSearch"
+            >
               Save <i className="idx-icons-save"></i>
             </button>
             <button className="ib-btn js-show-grid">

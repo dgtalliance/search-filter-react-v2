@@ -135,6 +135,8 @@ export const ModalDetailProperties = () => {
     dispatch(fetchAsyncDetails(mls_num))
   }
 
+  
+
   const calculate = (val_cal) => {
     var price = val_cal.price
     if (refFormMortgage.current.length > 0) {
@@ -292,6 +294,7 @@ export const ModalDetailProperties = () => {
       jQuery(
         '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
       ).html(titleText)
+     
     } else {
       dispatch(fetchAsyncSaveFavorite({ mls_num: propertiesData.mls_num }))
       if (jQuery('#_ib_lead_activity_tab').length) {
