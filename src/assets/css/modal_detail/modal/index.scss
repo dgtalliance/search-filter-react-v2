@@ -1572,7 +1572,7 @@
       height: 40px;
       margin-bottom: 5px;
       cursor: pointer;
-      background-image: url("../img/ico-map.png");
+      background-image: url("https://idxboost-spw-assets.idxboost.us/images/search/ico-map.png");
       background-repeat: no-repeat;
       background-color: var(--color-white);
       box-shadow: rgba(0,0,0,0.30) 0px 1px 4px -1px;
@@ -1603,6 +1603,9 @@
 
     .flex-map-draw {
       background-position: 8px -67px;
+      @media (max-width: 767px){
+        background-position: 8px -350px!important;
+      }
     }
   }
 }

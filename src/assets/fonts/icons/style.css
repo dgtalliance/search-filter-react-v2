@@ -25,6 +25,15 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.idx-icons-heart-solid:before {
+  content: "\e924";
+}
+.idx-icons-star-solid:before {
+  content: "\e92c";
+}
+.idx-icons-square-solid:before {
+  content: "\e92d";
+}
 .idx-icons-my-building:before {
   content: "\e921";
 }

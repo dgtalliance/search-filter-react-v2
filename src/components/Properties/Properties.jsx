@@ -1,26 +1,79 @@
 import { memo, useContext, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchAsyncSearch } from '../../config/actions/properties'
+import {
+  fetchAsyncGetSaveFavorite,
+  fetchAsyncSearch,
+} from '../../config/actions/properties'
 import {
   getpropertiesItems,
   getloading,
   updateForm,
   updateTriggered,
+  getsavedlistings,
 } from '../../config/slices/properties'
 import FilterContext from '../../Contexts/FilterContext'
+import { flex_g_settings } from '../../utils/utils'
 import NewestListings from './NewestListings'
 import PropertiesItem from './PropertiesItem'
 import PropertiesPaginate from './PropertiesPaginate'
 
+const useMutationObserver = (
+  ref,
+  callback,
+  options = {
+    attributes: false,
+    characterData: false,
+    childList: false,
+    subtree: false,
+  },
+) => {
+  useEffect(() => {
+    if (ref.current) {
+      const observer = new MutationObserver(callback)
+      observer.observe(ref.current, options)
+      return () => observer.disconnect()
+    }
+  }, [callback, options])
+}
+
 function Properties() {
   const propertiesItems = useSelector(getpropertiesItems)
+  const savedlistings = useSelector(getsavedlistings)
   const loading = useSelector(getloading)
   const dispatch = useDispatch()
- 
+
+  // Observable for html elements
+  const observerRef = useRef()
+
+  observerRef.current = document.getElementById('ip-header')
+
+  const getSaveListings = () => {
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
+
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      __flex_g_settings.anonymous === 'no'
+    ) {
+      dispatch(fetchAsyncGetSaveFavorite())
+    }
+  }
+
+  useMutationObserver(observerRef, getSaveListings, {
+    attributes: true,
+    characterData: false,
+    childList: true,
+    subtree: true,
+  })
+
   const { setSlug } = useContext(FilterContext)
+
   useEffect(() => {
     setSlug(propertiesItems.slug)
-  }, [propertiesItems])
+  }, [propertiesItems, savedlistings])
+
   const infoSearch = useRef()
 
   const handleClean = () => {
@@ -56,14 +109,24 @@ function Properties() {
     dispatch(updateForm(params))
     dispatch(fetchAsyncSearch())
   }
+  const isFavorite = (mls_num) => {
+    if (Object.keys(savedlistings).length > 0) {
+      var result = savedlistings.filter((item) => item.mls_num == mls_num)
+      if (result.length === 1) {
+        return true
+      }
+    }
+    return false
+  }
 
-  const renderItem = (index, itemData, hackbox) => {
+  const renderItem = (index, itemData, hackbox, isFavorite) => {
     return (
       <PropertiesItem
         key={index}
         index={index}
         itemData={itemData}
         hackbox={hackbox}
+        isFavorite={isFavorite}
       />
     )
   }
@@ -81,7 +144,12 @@ function Properties() {
             <div className="ib-wrapper-grid-result">
               <ul className="ib-lproperties ib-listings-ct">
                 {propertiesItems.items.map((itemData, index) =>
-                  renderItem(index, itemData, propertiesItems.hackbox),
+                  renderItem(
+                    index,
+                    itemData,
+                    propertiesItems.hackbox,
+                    isFavorite(itemData.mls_num),
+                  ),
                 )}
               </ul>
             </div>

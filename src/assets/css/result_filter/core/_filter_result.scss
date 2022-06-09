@@ -373,6 +373,22 @@
 							&:before{
 								content: "\e91f";
 							}
+
+							&:after{
+								content: "\e924";
+								font-family: 'idxboost-icons';
+								position: absolute;
+								z-index: -1;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								color: #FFF;
+								zoom: 0.93;
+							}
 						}
 					}
 
@@ -384,6 +400,22 @@
 						&.-active{
 							&:before{
 								content: "\e91d";
+							}
+
+							&:after{
+								content: "\e92c";
+								font-family: 'idxboost-icons';
+								position: absolute;
+								z-index: -1;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								color: #FFF;
+								zoom: 0.93;
 							}
 						}
 					}
@@ -397,6 +429,42 @@
 							&:before{
 								content: "\e918";
 							}
+
+							&:after{
+								content: "\e92d";
+								font-family: 'idxboost-icons';
+								position: absolute;
+								z-index: -1;
+								top: 0;
+								left: 0;
+								width: 100%;
+								height: 100%;
+								display: flex;
+								align-items: center;
+								justify-content: center;
+								color: #FFF;
+								zoom: 0.83;
+							}
+						}
+					}
+
+					&.-loading{
+						&:after{
+							display: none !important;
+						}
+
+						&:before{
+							content: "\e94a"!important;
+							font-size: 25px!important;
+							animation: spinLoading 1s linear infinite;
+							background-color: #FFF;
+							border-radius: 100%;
+							width: 80%;
+							height: 80%;
+							top: 50%;
+							left: 50%;
+							margin-top: -40%;
+							margin-left: -40%;
 						}
 					}
 				}
@@ -998,6 +1066,12 @@ body{
 					}
 				}
 
+				#ib-idx-search-filter{
+					>.ib-wrapper-map {
+						height: calc(100vh - 180px);
+					}
+				}
+
 				@media screen and (min-width: 1024px){
 					#ib-idx-search-filter{
 						>.ib-wrapper-map,
@@ -1149,6 +1223,11 @@ body{
 
 			.ib-text-title{
 				padding: 0 15px;
+				overflow: hidden;
+				-o-text-overflow: ellipsis;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				width: calc(100% - 95px);
 			}
 		}
 

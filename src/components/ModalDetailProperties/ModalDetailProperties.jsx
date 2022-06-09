@@ -1,112 +1,116 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import FilterContext from "../../Contexts/FilterContext";
-import Carousel from "../common/Carousel";
-import { getpropertiesDetails } from "../../config/slices/propertiesDetails";
-import { useDispatch, useSelector } from "react-redux";
-import ModalPropertyMap from "../common/ModalPropertyMap";
-import axios from "axios";
-import { fetchAsyncDetails } from "../../config/actions/propertiesDetails";
-import { Select, Spin } from "antd";
-import { Segmented } from "antd";
-import { Collapse } from "antd";
-
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import FilterContext from '../../Contexts/FilterContext'
+import Carousel from '../common/Carousel'
+import { getpropertiesDetails } from '../../config/slices/propertiesDetails'
+import { useDispatch, useSelector } from 'react-redux'
+import ModalPropertyMap from '../common/ModalPropertyMap'
+import axios from 'axios'
+import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
+import { Select, Spin } from 'antd'
+import { Segmented } from 'antd'
+import { Collapse } from 'antd'
 
 import {
   calculate_mortgage,
   favoriteIcon,
+  flex_g_settings,
   formatPrice,
   phoneFormat,
-} from "../../utils/utils";
+} from '../../utils/utils'
 
-import RentalFormContact from "./RentalFormContact";
-import ModalSendToFriend from "./ModalSendToFriend";
+import RentalFormContact from './RentalFormContact'
+import ModalSendToFriend from './ModalSendToFriend'
 import {
-  ACCESS_TOKEN,
-  anonymous,
   API_PROPERTIES_DETAIL_CHART,
   API_PROPERTIES_DETAIL_CHART_P,
-  LEAD_FAVORITES,
-  SAVE_FAVORITE,
-} from "../../config/config";
-import Cookies from "js-cookie";
+} from '../../config/config'
+import Cookies from 'js-cookie'
 
-import { ChartTabs } from "./ChartTabs";
-import { ChartTabsP } from "./ChartTabsP";
+import { ChartTabs } from './ChartTabs'
+import { ChartTabsP } from './ChartTabsP'
+import { getloadingfav, getsavedlistings } from '../../config/slices/properties'
+import {
+  fetchAsyncGetSaveFavorite,
+  fetchAsyncSaveFavorite,
+} from '../../config/actions/properties'
 
 export const ModalDetailProperties = () => {
-  const { closeModal, openModal, setSlug, slug, modalData } =
-    useContext(FilterContext);
-  const [showModal, setShowModal] = useState(false);
-  const dispatch = useDispatch();
-  const [showModalEmailThankYou, setShowModalEmailThankYou] = useState(false);
-  const { Panel } = Collapse;
+  const { closeModal, setSlug, slug } = useContext(FilterContext)
+  const [showModal, setShowModal] = useState(false)
+  const dispatch = useDispatch()
+  const getloading = useSelector(getloadingfav)
+  useEffect(() => {
+    setIsFavoriteLoading(getloading)
+  }, [getloading])
 
-  const [mediaElement, setMediaElement] = useState(0);
-  const [propertymcpp, setPropertymcpp] = useState("$");
-  const [propertymcty, setPropertymcty] = useState("30");
-  const [propertymcdp, setPropertymcdp] = useState("20");
-  const [propertymcir, setPropertymcir] = useState("3.215");
+  const [showModalEmailThankYou, setShowModalEmailThankYou] = useState(false)
+  const { Panel } = Collapse
 
-  const [chartDataApi, setChartDataApi] = useState([]);
-  const [chartDataApiP, setChartDataApiP] = useState([]);
+  const [propertymcpp, setPropertymcpp] = useState('$')
+  const [propertymcty, setPropertymcty] = useState('30')
+  const [propertymcdp, setPropertymcdp] = useState('20')
+  const [propertymcir, setPropertymcir] = useState('3.215')
 
-  const [chartDataShow, setChartDataShow] = useState({});
-  const [chartDataShowP, setChartDataShowP] = useState({});
+  const [chartDataApi, setChartDataApi] = useState([])
+  const [chartDataApiP, setChartDataApiP] = useState([])
 
-  const [defaultHome, setDefaultHome] = useState("1");
-  const [defaultHomeP, setDefaultHomeP] = useState("1");
+  const [chartDataShow, setChartDataShow] = useState({})
+  const [chartDataShowP, setChartDataShowP] = useState({})
 
-  const [defaultCity, setDefaultCity] = useState("zip");
-  const [defaultCityP, setDefaultCityP] = useState("zip");
+  const [defaultHome, setDefaultHome] = useState('1')
+  const [defaultHomeP, setDefaultHomeP] = useState('1')
 
-  const [loadingDataChart, setLoadingDataChart] = useState(true);
-  const [loadingDataChartP, setLoadingDataChartP] = useState(true);
+  const [defaultCity, setDefaultCity] = useState('zip')
+  const [defaultCityP, setDefaultCityP] = useState('zip')
 
-  const [defaultTab, setDefaultTab] = useState("media_price");
-  const [defaultTabP, setDefaultTabP] = useState("sale_to_list");
+  const [loadingDataChart, setLoadingDataChart] = useState(true)
+  const [loadingDataChartP, setLoadingDataChartP] = useState(true)
 
-  const [defaultYears, setDefaultYears] = useState(1);
-  const [defaultYearsP, setDefaultYearsP] = useState(1);
+  const [defaultTab, setDefaultTab] = useState('media_price')
+  const [defaultTabP, setDefaultTabP] = useState('sale_to_list')
 
-  const [defaultYearsSegment, setDefaultYearsSegment] = useState("1 year");
-  const [defaultYearsSegmentP, setDefaultYearsSegmentP] = useState("1 year");
+  const [defaultYears, setDefaultYears] = useState(1)
+  const [defaultYearsP, setDefaultYearsP] = useState(1)
 
-  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false);
+  const [defaultYearsSegment, setDefaultYearsSegment] = useState('1 year')
+  const [defaultYearsSegmentP, setDefaultYearsSegmentP] = useState('1 year')
 
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false)
 
-  const refFormMortgage = useRef();
-  const refPropertyMcTy = useRef();
-  const refPropertyMcDp = useRef();
-  const refPropertyMcIr = useRef();
-  const refEstPayment = useRef();
-  const refMortageCalculator = useRef();
-  const refPriceCalculator = useRef();
-  const refCalcMcMonthly = useRef();
-  const refPropertyMcPp = useRef();
-  const refCalculatorYears = useRef();
-  const refCalculatorYearsList = useRef();
-  const agentPhone = "(305) 614-4048";
+  const [isFavorite, setIsFavorite] = useState(false)
+
+  const refFormMortgage = useRef()
+  const refPropertyMcTy = useRef()
+  const refPropertyMcDp = useRef()
+  const refPropertyMcIr = useRef()
+  const refEstPayment = useRef()
+  const refMortageCalculator = useRef()
+  const refPriceCalculator = useRef()
+  const refCalcMcMonthly = useRef()
+  const refPropertyMcPp = useRef()
+  const refCalculatorYears = useRef()
+  const refCalculatorYearsList = useRef()
+  const agentPhone = '(305) 614-4048'
 
   const styleMapModalShared = {
-    position: "absolute",
-    overflow: "hidden",
-    height: "100%",
-    width: "100%",
-    top: "0",
-    left: "0",
-  };
+    position: 'absolute',
+    overflow: 'hidden',
+    height: '100%',
+    width: '100%',
+    top: '0',
+    left: '0',
+  }
 
   const styleMapModal = {
-    backgroundColor: "rgb(238, 238, 238)",
-    height: "100%",
-    width: "100%",
-    margin: "0px",
-    left: "0px",
-    top: "0px",
-    position: "absolute",
-    overflow: "hidden",
-  };
+    backgroundColor: 'rgb(238, 238, 238)',
+    height: '100%',
+    width: '100%',
+    margin: '0px',
+    left: '0px',
+    top: '0px',
+    position: 'absolute',
+    overflow: 'hidden',
+  }
 
   const handleOpenModal = (mls_num) => {
     // var new_slug = slug ? slug +`&show=${mls_num}`: `show=${mls_num}`;
@@ -124,60 +128,84 @@ export const ModalDetailProperties = () => {
     //   setSlug("");
     // }
 
-    var currentSlug = "show=" + propertiesData.mls_num;
-    var str = slug.replace(new RegExp(currentSlug, "g"), `show=${mls_num}`);
-    history.replaceState(null, null, "?" + str);
-    setSlug(str);
-    dispatch(fetchAsyncDetails(mls_num));
-  };
+    var currentSlug = 'show=' + propertiesData.mls_num
+    var str = slug.replace(new RegExp(currentSlug, 'g'), `show=${mls_num}`)
+    history.replaceState(null, null, '?' + str)
+    setSlug(str)
+    dispatch(fetchAsyncDetails(mls_num))
+  }
 
   const calculate = (val_cal) => {
-    var price = val_cal.price;
+    var price = val_cal.price
     if (refFormMortgage.current.length > 0) {
-      refFormMortgage.current.reset();
+      refFormMortgage.current.reset()
 
-      var dp = refPropertyMcDp.current.value;
-      var ty = refPropertyMcTy.current.value;
-      var ir = refPropertyMcIr.current.value;
+      var dp = refPropertyMcDp.current.value
+      var ty = refPropertyMcTy.current.value
+      var ir = refPropertyMcIr.current.value
 
-      var calc_mg = calculate_mortgage(price, dp, ty, ir);
+      var calc_mg = calculate_mortgage(price, dp, ty, ir)
 
       // refPriceCalculator.current.innerText = "$" + calc_mg.monthly + "/mo";
-      refPriceCalculator.current.innerText = calc_mg.monthly + "/mo";
+      refPriceCalculator.current.innerText = calc_mg.monthly + '/mo'
 
-      var pp = price.replace(/[^\d]/g, "");
-      setPropertymcpp("$" + formatPrice(pp));
+      var pp = price.replace(/[^\d]/g, '')
+      setPropertymcpp('$' + formatPrice(pp))
 
-      refEstPayment.current.style.display = "none";
+      refEstPayment.current.style.display = 'none'
 
-      if (val_cal.is_rental == "0") {
-        refEstPayment.current.style.display = "block";
+      if (val_cal.is_rental == '0') {
+        refEstPayment.current.style.display = 'block'
       }
     }
-  };
+  }
 
-  const propertiesData = useSelector(getpropertiesDetails);
+  const propertiesData = useSelector(getpropertiesDetails)
+  const savedlistings = useSelector(getsavedlistings)
 
   useEffect(() => {
-    if (Object.keys(propertiesData).length > 0) calculate(propertiesData);
-  }, [propertiesData]);
+    if (Object.keys(propertiesData).length > 0) calculate(propertiesData)
+  }, [propertiesData])
+
+  useEffect(() => {
+    setIsFavorite(isFavoriteActive(propertiesData.mls_num))
+  }, [savedlistings])
+
+  const isFavoriteActive = (mls_num) => {
+    if (Object.keys(savedlistings).length > 0) {
+      var result = savedlistings.filter((item) => item.mls_num == mls_num)
+      if (result.length === 1) {
+        return true
+      }
+    }
+    return false
+  }
 
   useEffect(() => {
     if (Object.keys(propertiesData).length > 0) {
-      isFavoriteF();
-      chartsDetails();
-      chartsDetailsP();
-      console.log(propertiesData);
+      chartsDetails()
+      chartsDetailsP()
+
+      var __flex_g_settings =
+        window.location.host === 'localhost:3000'
+          ? flex_g_settings
+          : window.__flex_g_settings
+      if (
+        __flex_g_settings.hasOwnProperty('anonymous') &&
+        __flex_g_settings.anonymous === 'no'
+      ) {
+        dispatch(fetchAsyncGetSaveFavorite())
+      }
     }
-  }, [propertiesData]);
+  }, [propertiesData])
 
   const chartsDetails = async () => {
-    setDefaultHome("1");
-    setDefaultTab("media_price");
-    setDefaultYears(1);
-    setDefaultYearsSegment("1 year");
-    setLoadingDataChart(true);
-    setDefaultCity("zip");
+    setDefaultHome('1')
+    setDefaultTab('media_price')
+    setDefaultYears(1)
+    setDefaultYearsSegment('1 year')
+    setLoadingDataChart(true)
+    setDefaultCity('zip')
 
     const response = await axios.get(
       API_PROPERTIES_DETAIL_CHART +
@@ -189,23 +217,23 @@ export const ModalDetailProperties = () => {
     );
 
     if (response.data.length != 0) {
-      setChartDataApi(response.data);
-      setChartDataShow({});
+      setChartDataApi(response.data)
+      setChartDataShow({})
       setChartDataShow({
         categories: response.data.value.zip.month,
-        series: response.data.value.zip.metadata["1"]["media_price"],
-      });
+        series: response.data.value.zip.metadata['1']['media_price'],
+      })
     }
-    setLoadingDataChart(false);
-  };
+    setLoadingDataChart(false)
+  }
 
   const chartsDetailsP = async () => {
-    setDefaultHomeP("1");
-    setDefaultTabP("sale_to_list");
-    setDefaultYearsP(1);
-    setDefaultYearsSegmentP("1 year");
-    setLoadingDataChartP(true);
-    setDefaultCityP("zip");
+    setDefaultHomeP('1')
+    setDefaultTabP('sale_to_list')
+    setDefaultYearsP(1)
+    setDefaultYearsSegmentP('1 year')
+    setLoadingDataChartP(true)
+    setDefaultCityP('zip')
 
     const responseP = await axios.get(
       API_PROPERTIES_DETAIL_CHART_P +
@@ -217,134 +245,134 @@ export const ModalDetailProperties = () => {
     );
     setLoadingDataChartP(false);
     if (responseP.data.length != 0) {
-      setChartDataApiP(responseP.data);
-      setChartDataShowP({});
+      setChartDataApiP(responseP.data)
+      setChartDataShowP({})
       setChartDataShowP({
         categories: responseP.data.value.zip.month,
-        series: responseP.data.value.zip.metadata["1"]["sale_to_list"],
-      });
+        series: responseP.data.value.zip.metadata['1']['sale_to_list'],
+      })
     }
-  };
+  }
 
-  const handleFavorite = async () => {
-    if (anonymous === "yes") {
-      //active_modal($('#modal_login'));
-      jQuery("#modal_login")
-        .addClass("active_modal")
-        .find("[data-tab]")
-        .removeClass("active");
-      jQuery("#modal_login")
-        .addClass("active_modal")
-        .find("[data-tab]:eq(1)")
-        .addClass("active");
-      jQuery("#modal_login").find(".item_tab").removeClass("active");
-      jQuery("#tabRegister").addClass("active");
-      jQuery("button.close-modal").addClass("ib-close-mproperty");
-      jQuery(".overlay_modal").css("background-color", "rgba(0,0,0,0.8);");
-      jQuery("#modal_login h2").html(
-        jQuery("#modal_login").find("[data-tab]:eq(1)").data("text-force")
-      );
+  const handleFavoriteClick = () => {
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
+
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      'yes' === __flex_g_settings.anonymous
+    ) {
+      jQuery('#modal_login')
+        .addClass('active_modal')
+        .find('[data-tab]')
+        .removeClass('active')
+
+      jQuery('#modal_login')
+        .addClass('active_modal')
+        .find('[data-tab]:eq(1)')
+        .addClass('active')
+
+      jQuery('#modal_login').find('.item_tab').removeClass('active')
+
+      jQuery('#tabRegister').addClass('active')
+
+      jQuery('button.close-modal').addClass('ib-close-mproperty')
+      jQuery('.overlay_modal').css('background-color', 'rgba(0,0,0,0.8);')
+
+      jQuery('#modal_login h2').html(
+        jQuery('#modal_login').find('[data-tab]:eq(1)').data('text-force'),
+      )
+
       /*Asigamos el texto personalizado*/
       var titleText = jQuery(".header-tab a[data-tab='tabRegister']").attr(
-        "data-text"
-      );
+        'data-text',
+      )
       jQuery(
-        "#modal_login .modal_cm .content_md .heder_md .ms-title-modal"
-      ).html(titleText);
+        '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
+      ).html(titleText)
     } else {
-      setIsFavoriteLoading(true);
+      dispatch(fetchAsyncSaveFavorite({ mls_num: propertiesData.mls_num }))
+      if (jQuery('#_ib_lead_activity_tab').length) {
+        jQuery('#_ib_lead_activity_tab button:eq(1)').click()
+      }
+    }
+  }
 
-      var bodyFormData = new FormData();
-      bodyFormData.append("access_token", ACCESS_TOKEN);
-      bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
-      const response = await axios({
-        method: "post",
-        url: SAVE_FAVORITE + `${propertiesData.mls_num}/track`,
-        data: bodyFormData,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+  const iniView = () => {
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
 
-      if (response.data.length != 0) {
-        if (response.data.type === "add") {
-          setIsFavorite(true);
-        } else {
-          setIsFavorite(false);
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      'yes' === __flex_g_settings.anonymous
+    ) {
+      var _ib_user_listing_views = []
+      if ('undefined' !== typeof Cookies.get('_ib_user_listing_views')) {
+        _ib_user_listing_views = JSON.parse(
+          Cookies.get('_ib_user_listing_views'),
+        )
+
+        if (
+          -1 === jQuery.inArray(propertiesData.mls_num, _ib_user_listing_views)
+        ) {
+          _ib_user_listing_views.push(propertiesData.mls_num)
+          Cookies.set(
+            '_ib_user_listing_views',
+            JSON.stringify(_ib_user_listing_views),
+          )
         }
       }
-
-      setIsFavoriteLoading(false);
     }
-  };
+  }
 
-  const isFavoriteF = async () => {
-    if (anonymous !== "yes") {
-      var bodyFormData = new FormData();
-      bodyFormData.append("access_token", ACCESS_TOKEN);
-      bodyFormData.append("flex_credentials", Cookies.get("ib_lead_token"));
-      bodyFormData.append("paging", "saved_listings");
-      const response = await axios({
-        method: "post",
-        url: LEAD_FAVORITES,
-        data: bodyFormData,
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      if (response.data.length != 0) {
-        let exits = response.data.lead_info?.saved_listings?.find(
-          (e) => e.mls_num === propertiesData.mls_num
-        );
-        if (exits) {
-          setIsFavorite(true);
-        } else {
-          setIsFavorite(false);
-        }
-      }
-    } else {
-      setIsFavorite(false);
-    }
-  };
+  //iniView()
 
   //cart events
 
-  const { Option } = Select;
+  const { Option } = Select
 
   function onChange(value) {
     // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[defaultCity].metadata[value][defaultTab],
-    });
-    setDefaultHome(value);
+    })
+    setDefaultHome(value)
   }
   function onChangeP(value) {
     // console.log(`selected ${value}`);
     setChartDataShowP({
       ...chartDataShowP,
       series: chartDataApiP.value[defaultCityP].metadata[value][defaultTabP],
-    });
-    setDefaultHomeP(value);
+    })
+    setDefaultHomeP(value)
   }
   function onChangeCity(value) {
     // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[value].metadata[defaultHome][defaultTab],
-    });
-    setDefaultCity(value);
+    })
+    setDefaultCity(value)
   }
   function onChangeCityP(value) {
     setChartDataShowP({
       ...chartDataShowP,
       series: chartDataApiP.value[value].metadata[defaultHomeP][defaultTabP],
-    });
-    setDefaultCityP(value);
+    })
+    setDefaultCityP(value)
   }
   function changeYear(value) {
-    setDefaultYears(value.charAt(0));
-    setDefaultYearsSegment(value);
+    setDefaultYears(value.charAt(0))
+    setDefaultYearsSegment(value)
   }
   function changeYearP(value) {
-    setDefaultYearsP(value.charAt(0));
-    setDefaultYearsSegmentP(value);
+    setDefaultYearsP(value.charAt(0))
+    setDefaultYearsSegmentP(value)
   }
 
   function onSearch(val) {
@@ -355,119 +383,115 @@ export const ModalDetailProperties = () => {
     setChartDataShow({
       ...chartDataShow,
       series: chartDataApi.value[defaultCity].metadata[defaultHome][key],
-    });
-    setDefaultTab(key);
+    })
+    setDefaultTab(key)
   }
 
   function callbackP(key) {
     setChartDataShowP({
       ...chartDataShowP,
       series: chartDataApiP.value[defaultCityP].metadata[defaultHomeP][key],
-    });
-    setDefaultTabP(key);
+    })
+    setDefaultTabP(key)
   }
 
-  const [isOpenCarusel, setIsOpenCarusel] = useState(false);
+  const [isOpenCarusel, setIsOpenCarusel] = useState(false)
   const handlefullscreenButton = (e) => {
-    e.preventDefault();
-    setIsOpenCarusel(true);
-  };
+    e.preventDefault()
+    setIsOpenCarusel(true)
+  }
 
   const address_large = (resultDetail) => {
-    return resultDetail.address_large !== null
-      ? resultDetail.address_large
-      : "";
-  };
+    return resultDetail.address_large !== null ? resultDetail.address_large : ''
+  }
 
   const formatPriceSqft = (sqft, price) => {
     if (sqft > 0 && price > 0) {
-      return formatPrice(price / sqft);
+      return formatPrice(price / sqft)
     }
-    return "";
-  };
+    return ''
+  }
 
-  const refOpenUrl = useRef();
+  const refOpenUrl = useRef()
   const openUrl = (e) => {
-    e.preventDefault();
-    const linkToOpen = refOpenUrl.current.getAttribute("data-permalink");
+    e.preventDefault()
+    const linkToOpen = refOpenUrl.current.getAttribute('data-permalink')
     //window.open(linkToOpen);
-    window.open(linkToOpen);
-  };
+    window.open(linkToOpen)
+  }
 
   const urlParseOpen = () => {
-    return `/property/${propertiesData.slug}`;
-  };
+    return `/property/${propertiesData.slug}`
+  }
 
-  const refSharedTwiter = useRef();
+  const refSharedTwiter = useRef()
   const sharedTwitter = (e) => {
-    e.preventDefault();
-    let shareURL = "http://twitter.com/share?"; // url base
-    const buildTextShare = [];
+    e.preventDefault()
+    let shareURL = 'http://twitter.com/share?' // url base
+    const buildTextShare = []
     const propertyRental =
-      refSharedTwiter.current.getAttribute("data-rental") == 1
-        ? "Rent "
-        : "Sale ";
-    buildTextShare.push(refSharedTwiter.current.getAttribute("data-type"));
-    buildTextShare.push(` for ${propertyRental}`);
-    buildTextShare.push(refSharedTwiter.current.getAttribute("data-price"));
+      refSharedTwiter.current.getAttribute('data-rental') == 1
+        ? 'Rent '
+        : 'Sale '
+    buildTextShare.push(refSharedTwiter.current.getAttribute('data-type'))
+    buildTextShare.push(` for ${propertyRental}`)
+    buildTextShare.push(refSharedTwiter.current.getAttribute('data-price'))
+    buildTextShare.push(` #${refSharedTwiter.current.getAttribute('data-mls')}`)
+    buildTextShare.push(' in ')
     buildTextShare.push(
-      ` #${refSharedTwiter.current.getAttribute("data-mls")}`
-    );
-    buildTextShare.push(" in ");
-    buildTextShare.push(
-      `${refSharedTwiter.current.getAttribute("data-address")} `
-    );
+      `${refSharedTwiter.current.getAttribute('data-address')} `,
+    )
 
     // params
     const params = {
       url: refSharedTwiter.current.href,
-      text: buildTextShare.join(""),
-    };
+      text: buildTextShare.join(''),
+    }
 
     for (const prop in params) {
-      shareURL += `&${prop}=${encodeURIComponent(params[prop])}`;
+      shareURL += `&${prop}=${encodeURIComponent(params[prop])}`
     }
 
     const wo = window.open(
       shareURL,
-      "",
-      "left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0"
-    );
+      '',
+      'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0',
+    )
 
     if (wo.focus) {
-      wo.focus();
+      wo.focus()
     }
-  };
+  }
 
-  const refSharedFacebook = useRef();
+  const refSharedFacebook = useRef()
 
   const sharedFacebook = (e) => {
-    e.preventDefault();
-    let shareURL = "https://www.facebook.com/sharer/sharer.php?";
+    e.preventDefault()
+    let shareURL = 'https://www.facebook.com/sharer/sharer.php?'
 
     // params
     const params = {
       u: refSharedFacebook.current.href,
-    };
+    }
 
     for (const prop in params) {
-      shareURL += `&${prop}=${encodeURIComponent(params[prop])}`;
+      shareURL += `&${prop}=${encodeURIComponent(params[prop])}`
     }
     // console.log(shareURL);
     const wo = window.open(
       shareURL,
-      "",
-      "left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0"
-    );
+      '',
+      'left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0',
+    )
 
     if (wo.focus) {
-      wo.focus();
+      wo.focus()
     }
-  };
+  }
 
   const openModalEmailToFriend = (e) => {
-    e.preventDefault();
-    setShowModal(true);
+    e.preventDefault()
+    setShowModal(true)
 
     // update fields from store data user
     // var fn = (typeof Cookies.get("_ib_user_firstname") !== "undefined") ? Cookies.get("_ib_user_firstname") : "";
@@ -477,83 +501,104 @@ export const ModalDetailProperties = () => {
     // 	$("#_sf_name").val(fn + " " + ln);
     // }
     // $("#_sf_email").val(em);
-  };
+  }
 
   const closeModalEmailToFriend = (e) => {
-    e.preventDefault();
-    setShowModal(false);
-  };
+    e.preventDefault()
+    setShowModal(false)
+  }
 
   const openEmailThankYou = (e) => {
-    e.preventDefault();
-    setShowModalEmailThankYou(true);
-  };
+    e.preventDefault()
+    setShowModalEmailThankYou(true)
+  }
 
   const handleSubmitSendToFriend = (e, data) => {
-    e.preventDefault();
+    e.preventDefault()
     // console.log('resultDetail.mls_num:',resultDetail.mls_num);
-  };
+  }
 
   const openCalculatorYears = (e) => {
-    e.preventDefault();
-    refCalculatorYearsList.current.style.display = "block";
-  };
+    e.preventDefault()
+    refCalculatorYearsList.current.style.display = 'block'
+  }
 
   const closeCalculatorYears = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    var itemValue = e.target.getAttribute("data-value");
-    var itemText = e.target.innerText;
+    var itemValue = e.target.getAttribute('data-value')
+    var itemText = e.target.innerText
 
-    setPropertymcty(itemValue);
-    refCalculatorYears.current.innerText = itemText;
+    setPropertymcty(itemValue)
+    refCalculatorYears.current.innerText = itemText
 
-    refCalculatorYearsList.current.style.display = "none";
-  };
+    refCalculatorYearsList.current.style.display = 'none'
+  }
 
   const calculatePrice = (e) => {
-    e.preventDefault();
-    var pp = refPropertyMcPp.current.value.replace(/[^\d]/g, "");
-    var dp = refPropertyMcDp.current.value;
-    var ty = refPropertyMcTy.current.value;
-    var ir = refPropertyMcIr.current.value;
+    e.preventDefault()
+    var pp = refPropertyMcPp.current.value.replace(/[^\d]/g, '')
+    var dp = refPropertyMcDp.current.value
+    var ty = refPropertyMcTy.current.value
+    var ir = refPropertyMcIr.current.value
 
-    var calc_mg = calculate_mortgage(pp, dp, ty, ir);
+    var calc_mg = calculate_mortgage(pp, dp, ty, ir)
 
     // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
-    refCalcMcMonthly.current.innerText = calc_mg.monthly;
-  };
+    refCalcMcMonthly.current.innerText = calc_mg.monthly
+  }
 
   const onClosePriceCalculator = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (refFormMortgage.current.length > 0) {
-      refFormMortgage.current.reset();
-      setPropertymcty("30");
-      setPropertymcdp("20");
-      setPropertymcir("3.215");
+      refFormMortgage.current.reset()
+      setPropertymcty('30')
+      setPropertymcdp('20')
+      setPropertymcir('3.215')
     }
-    refMortageCalculator.current.classList.remove("ib-md-active");
-  };
+    refMortageCalculator.current.classList.remove('ib-md-active')
+  }
 
   const onClickPriceCalculator = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    var pp = refPropertyMcPp.current.value;
-    var dp = refPropertyMcDp.current.value;
-    var ty = refPropertyMcTy.current.value;
-    var ir = refPropertyMcIr.current.value;
+    var pp = refPropertyMcPp.current.value
+    var dp = refPropertyMcDp.current.value
+    var ty = refPropertyMcTy.current.value
+    var ir = refPropertyMcIr.current.value
 
-    var calc_mg = calculate_mortgage(pp, dp, ty, ir);
+    var calc_mg = calculate_mortgage(pp, dp, ty, ir)
 
-    var price = pp.replace(/[^\d]/g, "");
+    var price = pp.replace(/[^\d]/g, '')
     // setPropertymcpp("$" + formatPrice(price));
-    setPropertymcpp(formatPrice(price));
+    setPropertymcpp(formatPrice(price))
 
-    refMortageCalculator.current.classList.add("ib-md-active");
+    refMortageCalculator.current.classList.add('ib-md-active')
 
     // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
-    refCalcMcMonthly.current.innerText = calc_mg.monthly;
-  };
+    refCalcMcMonthly.current.innerText = calc_mg.monthly
+  }
+
+  const close = () => {
+    setDefaultHome('1')
+    setDefaultTab('media_price')
+    setDefaultYears(1)
+    setDefaultYearsSegment('1 year')
+    setChartDataShow({})
+    setDefaultCity('zip')
+
+    setDefaultHomeP('1')
+    setDefaultTabP('sale_to_list')
+    setDefaultYearsP(1)
+    setDefaultYearsSegmentP('1 year')
+    setChartDataShowP({})
+    setDefaultCityP('zip')
+
+    setIsFavorite(false)
+    setIsFavoriteLoading(false)
+    iniView()
+    closeModal()
+  }
 
   return (
     <>
@@ -568,13 +613,13 @@ export const ModalDetailProperties = () => {
                       className={
                         isFavorite
                           ? `ib-btn -addFavorite ${favoriteIcon()} -active ${
-                              isFavoriteLoading ? "-loading" : ""
+                              isFavoriteLoading ? '-loading' : ''
                             }`
                           : `ib-btn -addFavorite ${favoriteIcon()} ${
-                              isFavoriteLoading ? "-loading" : ""
+                              isFavoriteLoading ? '-loading' : ''
                             }`
                       }
-                      onClick={handleFavorite}
+                      onClick={handleFavoriteClick}
                     >
                       Save
                     </button>
@@ -598,10 +643,10 @@ export const ModalDetailProperties = () => {
                         </li>
                         <li>
                           <a href="#" className="-clipboard">
-                            <i className="idx-icons-link"></i> Copy Link{" "}
+                            <i className="idx-icons-link"></i> Copy Link{' '}
                             <span
                               className="-copied"
-                              style={{ display: "none" }}
+                              style={{ display: 'none' }}
                             >
                               URL copied!
                             </span>
@@ -651,25 +696,7 @@ export const ModalDetailProperties = () => {
                       className="ib-close js-close-modals"
                       aria-label="Close"
                       data-modal="#modalDetailProperty"
-                      onClick={() => {
-                        setDefaultHome("1");
-                        setDefaultTab("media_price");
-                        setDefaultYears(1);
-                        setDefaultYearsSegment("1 year");
-                        setChartDataShow({});
-                        setDefaultCity("zip");
-
-                        setDefaultHomeP("1");
-                        setDefaultTabP("sale_to_list");
-                        setDefaultYearsP(1);
-                        setDefaultYearsSegmentP("1 year");
-                        setChartDataShowP({});
-                        setDefaultCityP("zip");
-
-                        setIsFavorite(false);
-                        setIsFavoriteLoading(false);
-                        closeModal();
-                      }}
+                      onClick={() => close()}
                     ></button>
                   </div>
                   <div className="ib-header-detail">
@@ -712,7 +739,7 @@ export const ModalDetailProperties = () => {
                             itemsSlider={true}
                             address={
                               propertiesData.address_short +
-                              " " +
+                              ' ' +
                               address_large(propertiesData)
                             }
                             images={propertiesData.gallery}
@@ -764,28 +791,28 @@ export const ModalDetailProperties = () => {
                           <span className="ib-number">
                             {propertiesData.bed}
                           </span>
-                          <span className="ib-txt">Bedroom(s)</span>{" "}
+                          <span className="ib-txt">Bedroom(s)</span>{' '}
                           <span className="ib-txt -min">Beds(s)</span>
                         </li>
                         <li className="ib-item ib-baths">
                           <span className="ib-number">
                             {propertiesData.bath}
                           </span>
-                          <span className="ib-txt">Bathroom(s)</span>{" "}
+                          <span className="ib-txt">Bathroom(s)</span>{' '}
                           <span className="ib-txt -min">Baths(s)</span>
                         </li>
                         <li className="ib-item ib-hbaths">
                           <span className="ib-number">
                             {propertiesData.baths_half}
                           </span>
-                          <span className="ib-txt">Half Bath(s)</span>{" "}
+                          <span className="ib-txt">Half Bath(s)</span>{' '}
                           <span className="ib-txt -min">Half Bath(s)</span>
                         </li>
                         <li className="ib-item ib-size">
                           <span className="ib-number">
                             {propertiesData.sqft}
                           </span>
-                          <span className="ib-txt">Size sqft</span>{" "}
+                          <span className="ib-txt">Size sqft</span>{' '}
                           <span className="ib-txt -min">Sqft</span>
                         </li>
                         {propertiesData.price_sqft && (
@@ -793,7 +820,7 @@ export const ModalDetailProperties = () => {
                             <span className="ib-number">
                               {propertiesData.price_sqft}
                             </span>
-                            <span className="ib-txt">$/Sqft</span>{" "}
+                            <span className="ib-txt">$/Sqft</span>{' '}
                             <span className="ib-txt -min">$/Sq.Ft</span>
                           </li>
                         )}
@@ -954,21 +981,21 @@ export const ModalDetailProperties = () => {
                                 {propertiesData.feature_exterior.map(
                                   (feature_exterior, index) => (
                                     <span key={feature_exterior}>
-                                      {" "}
+                                      {' '}
                                       {feature_exterior}
                                       {propertiesData.feature_exterior.length >=
                                         1 &&
                                       propertiesData.feature_exterior.length !==
                                         index + 1
-                                        ? ", "
-                                        : ""}
+                                        ? ', '
+                                        : ''}
                                       {propertiesData.feature_exterior
                                         .length ===
                                       index + 1
-                                        ? "."
-                                        : ""}
+                                        ? '.'
+                                        : ''}
                                     </span>
-                                  )
+                                  ),
                                 )}
                               </span>
                             </li>
@@ -1071,21 +1098,21 @@ export const ModalDetailProperties = () => {
                                 {propertiesData.feature_interior.map(
                                   (feature_interior, index) => (
                                     <span key={feature_interior}>
-                                      {" "}
+                                      {' '}
                                       {feature_interior}
                                       {propertiesData.feature_interior.length >=
                                         1 &&
                                       propertiesData.feature_interior.length !==
                                         index + 1
-                                        ? ", "
-                                        : ""}
+                                        ? ', '
+                                        : ''}
                                       {propertiesData.feature_interior
                                         .length ===
                                       index + 1
-                                        ? "."
-                                        : ""}
+                                        ? '.'
+                                        : ''}
                                     </span>
-                                  )
+                                  ),
                                 )}
                               </span>
                             </li>
@@ -1158,7 +1185,7 @@ export const ModalDetailProperties = () => {
                                 Construction Materials
                               </span>
                               <span className="ib-plist-pt">
-                                {" "}
+                                {' '}
                                 {propertiesData.more_info_info.construction}
                               </span>
                             </li>
@@ -1179,7 +1206,7 @@ export const ModalDetailProperties = () => {
                                 Direction Faces
                               </span>
                               <span className="ib-plist-pt">
-                                {" "}
+                                {' '}
                                 {propertiesData.more_info_info.faces}
                               </span>
                             </li>
@@ -1450,16 +1477,16 @@ export const ModalDetailProperties = () => {
                                       <li className="ib-sqft">
                                         <strong>
                                           {formatPrice(element.sqft)}
-                                        </strong>{" "}
+                                        </strong>{' '}
                                         Sqft
                                       </li>
                                       <li className="ib-sqft">
                                         <strong>
                                           {formatPriceSqft(
                                             element.sqft,
-                                            element.price
+                                            element.price,
                                           )}
-                                        </strong>{" "}
+                                        </strong>{' '}
                                         / Sqft
                                       </li>
                                     </ul>
@@ -1482,7 +1509,7 @@ export const ModalDetailProperties = () => {
                                     {element.address_large}
                                   </a>
                                 </li>
-                              )
+                              ),
                             )}
                           </ul>
                         </div>
@@ -1716,13 +1743,13 @@ export const ModalDetailProperties = () => {
                         <Spin spinning={loadingDataChart}>
                           <Collapse
                             bordered={false}
-                            defaultActiveKey={["1"]}
-                            expandIconPosition={"right"}
+                            defaultActiveKey={['1']}
+                            expandIconPosition={'right'}
                           >
                             <Panel
                               header={
                                 propertiesData.city_name +
-                                " Housing Market Trends"
+                                ' Housing Market Trends'
                               }
                               key="1"
                             >
@@ -1730,10 +1757,10 @@ export const ModalDetailProperties = () => {
                                 <div style={{ padding: 12 }}>
                                   <div
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      marginBottom: "15px",
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center',
+                                      marginBottom: '15px',
                                     }}
                                   >
                                     <div>
@@ -1752,16 +1779,16 @@ export const ModalDetailProperties = () => {
                                         }
                                       >
                                         <Option value="zip">
-                                          Zip Code:{" "}
+                                          Zip Code:{' '}
                                           {chartDataApi?.value?.zip.zip_code
                                             ? chartDataApi.value.zip.zip_code
-                                            : ""}
+                                            : ''}
                                         </Option>
                                         <Option value="city">
-                                          City:{" "}
+                                          City:{' '}
                                           {chartDataApi?.value?.city.city_name
                                             ? chartDataApi.value.city.city_name
-                                            : ""}
+                                            : ''}
                                         </Option>
                                       </Select>
                                       <Select
@@ -1786,7 +1813,7 @@ export const ModalDetailProperties = () => {
                                     </div>
 
                                     <Segmented
-                                      options={["1 year", "2 years", "3 years"]}
+                                      options={['1 year', '2 years', '3 years']}
                                       value={defaultYearsSegment}
                                       onChange={changeYear}
                                     />
@@ -1803,11 +1830,18 @@ export const ModalDetailProperties = () => {
                                   ></ChartTabs>
                                 </div>
                               )}
-                               {Object.keys(chartDataShow).length == 0 && !loadingDataChart && (
-                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                   <span>No data available</span>
-                                </div>
-                              )}
+                              {Object.keys(chartDataShow).length == 0 &&
+                                !loadingDataChart && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                    }}
+                                  >
+                                    <span>No data available</span>
+                                  </div>
+                                )}
                             </Panel>
                           </Collapse>
                         </Spin>
@@ -1819,14 +1853,14 @@ export const ModalDetailProperties = () => {
                         <Spin spinning={loadingDataChartP}>
                           <Collapse
                             bordered={false}
-                            defaultActiveKey={["1"]}
-                            expandIconPosition={"right"}
+                            defaultActiveKey={['1']}
+                            expandIconPosition={'right'}
                           >
                             <Panel
                               header={
-                                "How hot is the " +
+                                'How hot is the ' +
                                 propertiesData.city_name +
-                                "housing market"
+                                'housing market'
                               }
                               key="1"
                             >
@@ -1834,10 +1868,10 @@ export const ModalDetailProperties = () => {
                                 <div style={{ padding: 12 }}>
                                   <div
                                     style={{
-                                      display: "flex",
-                                      justifyContent: "space-between",
-                                      alignItems: "center",
-                                      marginBottom: "15px",
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center',
+                                      marginBottom: '15px',
                                     }}
                                   >
                                     <div>
@@ -1856,16 +1890,16 @@ export const ModalDetailProperties = () => {
                                         }
                                       >
                                         <Option value="zip">
-                                          Zip Code:{" "}
+                                          Zip Code:{' '}
                                           {chartDataApiP?.value?.zip.zip_code
                                             ? chartDataApiP.value.zip.zip_code
-                                            : ""}
+                                            : ''}
                                         </Option>
                                         <Option value="city">
-                                          City:{" "}
+                                          City:{' '}
                                           {chartDataApiP?.value?.city.city_name
                                             ? chartDataApiP.value.city.city_name
-                                            : ""}
+                                            : ''}
                                         </Option>
                                       </Select>
                                       <Select
@@ -1890,7 +1924,7 @@ export const ModalDetailProperties = () => {
                                     </div>
 
                                     <Segmented
-                                      options={["1 year", "2 years", "3 years"]}
+                                      options={['1 year', '2 years', '3 years']}
                                       value={defaultYearsSegmentP}
                                       onChange={changeYearP}
                                     />
@@ -1908,11 +1942,18 @@ export const ModalDetailProperties = () => {
                                 </div>
                               )}
 
-                              {Object.keys(chartDataShowP).length == 0 && !loadingDataChartP && (
-                                <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                   <span>No data available</span>
-                                </div>
-                              )}
+                              {Object.keys(chartDataShowP).length == 0 &&
+                                !loadingDataChartP && (
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      alignItems: 'center',
+                                    }}
+                                  >
+                                    <span>No data available</span>
+                                  </div>
+                                )}
                             </Panel>
                           </Collapse>
                         </Spin>
@@ -1922,7 +1963,7 @@ export const ModalDetailProperties = () => {
                     <div className="ib-plist-details -map">
                       <div className="ib-pheader">
                         <h2 className="ib-ptitle">
-                          {" "}
+                          {' '}
                           {propertiesData.address_short}
                         </h2>
                         <span> {propertiesData.address_large}</span>
@@ -1955,16 +1996,16 @@ export const ModalDetailProperties = () => {
                         subject to prior sale or withdrawal. All information
                         provided is deemed reliable but is not guaranteed
                         accurate, and should be independently verified. Listing
-                        courtesy of:{" "}
+                        courtesy of:{' '}
                         <span className="ib-bdcourtesy">
                           The K Company Realty, LLC
-                        </span>{" "}
+                        </span>{' '}
                         <a className="ib-phone-office" href="tel:954-545-5583">
                           Ph.954-545-5583
                         </a>
                       </p>
                       <p>
-                        Real Estate IDX Powered by:{" "}
+                        Real Estate IDX Powered by:{' '}
                         <a
                           href="https://www.tremgroup.com"
                           title="TREMGROUP"
@@ -2139,16 +2180,16 @@ export const ModalDetailProperties = () => {
                         subject to prior sale or withdrawal. All information
                         provided is deemed reliable but is not guaranteed
                         accurate, and should be independently verified. Listing
-                        courtesy of:{" "}
+                        courtesy of:{' '}
                         <span className="ib-bdcourtesy">
                           The K Company Realty, LLC
-                        </span>{" "}
+                        </span>{' '}
                         <a className="ib-phone-office" href="tel:954-545-5583">
                           Ph.954-545-5583
                         </a>
                       </p>
                       <p>
-                        Real Estate IDX Powered by:{" "}
+                        Real Estate IDX Powered by:{' '}
                         <a
                           href="https://www.tremgroup.com"
                           title="TREMGROUP"
@@ -2168,13 +2209,13 @@ export const ModalDetailProperties = () => {
                   className={
                     isFavorite
                       ? `ib-btn -addFavorite ${favoriteIcon()} -active ${
-                          isFavoriteLoading ? "-loading" : ""
+                          isFavoriteLoading ? '-loading' : ''
                         }`
                       : `ib-btn -addFavorite ${favoriteIcon()} ${
-                          isFavoriteLoading ? "-loading" : ""
+                          isFavoriteLoading ? '-loading' : ''
                         }`
                   }
-                  onClick={handleFavorite}
+                  onClick={handleFavoriteClick}
                 >
                   Save
                 </button>
@@ -2197,8 +2238,8 @@ export const ModalDetailProperties = () => {
                     </li>
                     <li>
                       <a href="#" className="-clipboard">
-                        <i className="idx-icons-link"></i> Copy Link{" "}
-                        <span className="-copied" style={{ display: "none" }}>
+                        <i className="idx-icons-link"></i> Copy Link{' '}
+                        <span className="-copied" style={{ display: 'none' }}>
                           URL copied!
                         </span>
                       </a>
@@ -2248,7 +2289,7 @@ export const ModalDetailProperties = () => {
                   <h4 className="ib-mghtitle">Estimated Monthly Payment</h4>
                 </div>
                 <div className="ib-mg-detail">
-                  <p style={{ marginTop: "0" }}>Monthly Amount</p>
+                  <p style={{ marginTop: '0' }}>Monthly Amount</p>
                   <span
                     className="ib-price-mont ib-mcdinumbers ib-calc-mc-monthly"
                     ref={refCalcMcMonthly}
@@ -2428,7 +2469,7 @@ export const ModalDetailProperties = () => {
                   </div>
                   <div className="mb-mcdata">
                     <p>
-                      Let's us know the best time for showing.{" "}
+                      Let's us know the best time for showing.{' '}
                       <a
                         href={`tel:${phoneFormat(agentPhone)}`}
                         title={`Call Us ${phoneFormat(agentPhone)}`}
@@ -2453,8 +2494,8 @@ export const ModalDetailProperties = () => {
             openEmailThankYou={openEmailThankYou}
             mediaElement={
               (parseInt(propertiesData.img_cnt, 10) > 0 ? 1 : 0) > 0
-                ? "ib-pva-photos"
-                : "ib-pva-map"
+                ? 'ib-pva-photos'
+                : 'ib-pva-map'
             }
             itemLt={parseFloat(propertiesData.lat)}
             itemLg={parseFloat(propertiesData.lng)}
@@ -2464,19 +2505,19 @@ export const ModalDetailProperties = () => {
             itemCity={propertiesData.city_name}
             origin={1}
             imgProp={
-              propertiesData.gallery.length > 0 ? propertiesData.gallery[0] : ""
+              propertiesData.gallery.length > 0 ? propertiesData.gallery[0] : ''
             }
             itemPrice={propertiesData.price}
             itemBeds={propertiesData.bed}
             itemBaths={propertiesData.bath}
             itemSqft={propertiesData.sqft}
             itemAddress={
-              propertiesData.address_short + ", " + propertiesData.address_large
+              propertiesData.address_short + ', ' + propertiesData.address_large
             }
             handleSubmitSendToFriend={handleSubmitSendToFriend}
           />
         </div>
       )}
     </>
-  );
-};
+  )
+}

@@ -1011,15 +1011,7 @@ const lot_size_range = [
   },
 ]
 
-
-
 export const lot_size_range_d = 
   window.location.host === 'localhost:3000'
     ? lot_size_range
     : window.__flex_g_settings.params.lot_size_range
-
-
-export const anonymous =
-window.location.host === 'localhost:3000'
-? 'yes'
-: window.__flex_g_settings.anonymous

@@ -1,9 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { groupProperties, hoveredItem } from '../../utils/utils'
-import { fetchAsyncSearch } from '../actions/properties'
+import { fetchAsyncGetSaveFavorite, fetchAsyncSearch } from '../actions/properties'
 
 const initialState = {
-  mapObj:{},
+  saved_listings: [],
+  loadinglisted:false,
+  mapObj: {},
   properties: {
     hackbox: null,
     currentpage: 1,
@@ -64,6 +66,10 @@ export const propertySlice = createSlice({
     updateMapObj: (state, { payload }) => {
       state.mapObj = payload
     },
+    savedListings: (state, { payload }) => {
+      state.saved_listings = payload
+      console.log('payload', payload)
+    },
     updateDataMap: (state, { payload }) => {
       state.properties_maps = hoveredItem(
         payload.mls_num,
@@ -75,7 +81,6 @@ export const propertySlice = createSlice({
   },
   extraReducers: {
     [fetchAsyncSearch.pending]: (state) => {
-     
       state.loading = true
     },
     [fetchAsyncSearch.fulfilled]: (state, actions) => {
@@ -218,19 +223,37 @@ export const propertySlice = createSlice({
         state.event_triggered = 'yes'
 
         //Update Url
-        history.replaceState(null, null, '?' + decodeURIComponent(actions.payload.data.slug))
+        history.replaceState(
+          null,
+          null,
+          '?' + decodeURIComponent(actions.payload.data.slug),
+        )
 
         state.params = params
 
         //Load Data for map
         state.properties_maps = groupProperties(actions.payload.data.map_items)
-       
       } else {
         state.error = actions.payload
       }
     },
-    [fetchAsyncSearch.rejected]: (state, actions) => {     
+    [fetchAsyncSearch.rejected]: (state, actions) => {
       state.loading = false
+      state.error = {
+        status: false,
+        code: '',
+        message: actions.error.message,
+      }
+    },
+    [fetchAsyncGetSaveFavorite.pending]: (state) => {
+      state.loadinglisted = true
+    },
+    [fetchAsyncGetSaveFavorite.fulfilled]: (state, actions) => {
+      state.loadinglisted = false
+      state.saved_listings = actions.payload
+    },
+    [fetchAsyncGetSaveFavorite.rejected]: (state, actions) => {
+      state.loadinglisted = false
       state.error = {
         status: false,
         code: '',
@@ -239,13 +262,15 @@ export const propertySlice = createSlice({
     },
   },
 })
-
+export const getsavedlistings = (state) => state.properties.saved_listings
 export const getparams = (state) => state.properties.params
 export const getmapObj = (state) => state.properties.mapObj
 export const getpropertiesMapData = (state) => state.properties.properties_maps
 export const getpropertiesData = (state) => state.properties.properties_data
 export const getpropertiesItems = (state) => state.properties.properties
 export const getloading = (state) => state.properties.loading
+export const getloadingfav= (state) => state.properties.loadinglisted
+
 export const geterror = (state) => state.properties.error
 
 export const {
@@ -253,6 +278,7 @@ export const {
   updateMapObj,
   updateTriggered,
   updateDataMap,
+  savedListings,
 } = propertySlice.actions
 
 export default propertySlice.reducer
