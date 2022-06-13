@@ -1,12 +1,11 @@
 import { memo } from 'react'
-import { flex_g_settings, initializeElement } from '../utils/utils'
+import { initializeElement } from '../utils/utils'
 import FilterSearch from './Filter/FilterSearch'
 import { ModalDetailProperties } from './ModalDetailProperties/ModalDetailProperties'
 import Properties from './Properties/Properties'
 import MapJS from './Map/MapJS'
 import CustomInfoWindowMobile from './Map/CustomInfoWindowMobile'
 import { LazyLoadComponent } from 'react-lazy-load-image-component'
-import { defaultPropsShortCode } from '../App'
 import PropertiesModalSave from './Properties/PropertiesModalSave'
 
 initializeElement()
@@ -30,7 +29,7 @@ const ContainerFiftyFifty = () => {
         <div className="ib-wrapper-float-actions -grid">
           <div className="ib-wrapper -round-sv">
             <button
-              className="ib-btn js-show-modals"
+              className="ib-btn js-show-modals-save"
               data-modal="#modalSaveSearch"
             >
                Save <i className="idx-icons-save"></i>

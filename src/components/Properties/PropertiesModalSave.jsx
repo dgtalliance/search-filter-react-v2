@@ -1,6 +1,9 @@
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { defaultPropsShortCode } from '../../App'
+import { fetchAsyncSaveSearch } from '../../config/actions/properties'
 import { getpropertiesData } from '../../config/slices/properties'
+import { flex_g_settings, flex_idx_search_filter } from '../../utils/utils'
 const alerts = [
   {
     label: 'No Alert',
@@ -20,41 +23,51 @@ const alerts = [
   },
 ]
 function PropertiesModalSave() {
+  const dispatch = useDispatch()
   const [nameSave, setName] = useState('')
   const [typeAlert, setTypeAlert] = useState('--')
-
   const [newListing, setNewListing] = useState(true)
   const [priceChange, setPriceChange] = useState(true)
   const [statusChange, setStatusChange] = useState(true)
+  const properties = useSelector(getpropertiesData)
 
-  const propertiesData = useSelector(getpropertiesData)
+  const filter_id = defaultPropsShortCode.filter
 
   const onChangeNewListing = (e) => {
-    console.log(e.target.checked)
     setNewListing(e.target.checked)
   }
   const onChangePriceChange = (e) => {
-    console.log(e.target.checked)
     setPriceChange(e.target.checked)
   }
   const onChangeStatusChange = (e) => {
-    console.log(e.target.checked)
     setStatusChange(e.target.checked)
   }
 
   const onChangeValue = (e) => {
     setTypeAlert(e.target.value)
   }
-  const handleClickSudmit = () => {
+  const handleClickSudmit = (event) => {
+    event.preventDefault()
+
+    var name = nameSave.trim()
     
-    var temp = {
-      search_name:nameSave,
-      notification_day: typeAlert
+    if ( parseInt(typeAlert) === 1 || parseInt(typeAlert) === 7 || parseInt(typeAlert) === 30) {
+    if (!newListing && !priceChange && !statusChange) {
+      sweetAlert(
+        'Oops...',
+        'You must select at least one checkbox from below.',
+        'error',
+      )
+      return
     }
-    if(newListing){
-    //  temp = {...temp, {'notification_type[]' : 'new_listing'}}
+  }
+
+    if (name != null && name.length > 0) {
+      var bodyFormData = jQuery('#form-save-search').serialize()
+      dispatch(fetchAsyncSaveSearch({ bodyFormData }))
+    } else {
+      sweetAlert('Oops...', 'You must provide a name for this search.', 'error')
     }
-    console.log(nameSave, typeAlert, newListing, priceChange, statusChange)
   }
   return (
     <>
@@ -80,14 +93,18 @@ function PropertiesModalSave() {
                   listings and price reductions.
                 </p>
 
-                <div className="ms-form">
+                <form
+                  className="ms-form"
+                  id="form-save-search"
+                  onSubmit={(e) => handleClickSudmit(e)}
+                >
                   <div className="ms-item">
                     <label className="ms-label" htmlFor="searchSave_name">
                       Name your search*
                     </label>
                     <input
                       className="ms-input"
-                      name="name"
+                      name="search_name"
                       type="text"
                       placeholder="Name your search"
                       id="searchSave_name"
@@ -105,7 +122,7 @@ function PropertiesModalSave() {
 
                     <select
                       className="ms-input"
-                      name="notification"
+                      name="notification_day"
                       id="searchSave_notification"
                       value={typeAlert}
                       onChange={(e) => onChangeValue(e)}
@@ -130,46 +147,43 @@ function PropertiesModalSave() {
                         <input
                           type="checkbox"
                           id="newListing"
-                          name="update"
+                          name="notification_type[]"
                           value="new_listing"
                           checked={newListing}
                           onChange={(e) => onChangeNewListing(e)}
                         />
                         <label htmlFor="newListing">New Listing (Always)</label>
                       </div>
-                       <div className="ib-chk-wrapper">
+                      <div className="ib-chk-wrapper">
                         <input
                           type="checkbox"
                           id="priceChange"
-                          name="update"
+                          name="notification_type[]"
                           value="price_change"
                           checked={priceChange}
-                          onChange={(e) =>onChangePriceChange(e)}
+                          onChange={(e) => onChangePriceChange(e)}
                         />
                         <label htmlFor="priceChange">Price Change</label>
                       </div>
-                     <div className="ib-chk-wrapper">
+                      <div className="ib-chk-wrapper">
                         <input
                           type="checkbox"
                           id="statusChange"
-                          name="update"
+                          name="notification_type[]"
                           value="status_change"
                           checked={statusChange}
-                          onChange={(e)=>onChangeStatusChange(e)}
+                          onChange={(e) => onChangeStatusChange(e)}
                         />
                         <label htmlFor="statusChange">Status Change</label>
-                      </div> 
+                      </div>
                     </div>
                   </div>
                   <div className="ms-wrapper-btn">
-                    <button
-                      className="ms-btn"
-                      onClick={() => handleClickSudmit()}
-                    >
+                    <button className="ms-btn" type="submit">
                       Save Search
                     </button>
                   </div>
-                </div>
+                </form>
               </div>
             </div>
           </div>

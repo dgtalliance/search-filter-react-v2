@@ -302,37 +302,7 @@ export const ModalDetailProperties = () => {
       }
     }
   }
-
-  const iniView = () => {
-    var __flex_g_settings =
-      window.location.host === 'localhost:3000'
-        ? flex_g_settings
-        : window.__flex_g_settings
-
-    if (
-      __flex_g_settings.hasOwnProperty('anonymous') &&
-      'yes' === __flex_g_settings.anonymous
-    ) {
-      var _ib_user_listing_views = []
-      if ('undefined' !== typeof Cookies.get('_ib_user_listing_views')) {
-        _ib_user_listing_views = JSON.parse(
-          Cookies.get('_ib_user_listing_views'),
-        )
-
-        if (
-          -1 === jQuery.inArray(propertiesData.mls_num, _ib_user_listing_views)
-        ) {
-          _ib_user_listing_views.push(propertiesData.mls_num)
-          Cookies.set(
-            '_ib_user_listing_views',
-            JSON.stringify(_ib_user_listing_views),
-          )
-        }
-      }
-    }
-  }
-
-  //iniView()
+ 
 
   //cart events
 

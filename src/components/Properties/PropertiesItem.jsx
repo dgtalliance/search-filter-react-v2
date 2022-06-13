@@ -2,22 +2,17 @@ import { memo, useContext, useEffect, useState } from 'react'
 import FilterContext from '../../Contexts/FilterContext'
 import { favoriteIcon, flex_g_settings, formatPrice } from '../../utils/utils'
 import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
-import { useDispatch, useSelector } from 'react-redux'
-import { getloadingfav, updateDataMap } from '../../config/slices/properties'
+import { useDispatch } from 'react-redux'
+import { updateDataMap } from '../../config/slices/properties'
 import CarouselLoadLazy from '../common/CarouselLoadLazy'
 import { isMobile } from 'react-device-detect'
-import Cookies from 'js-cookie'
 import { fetchAsyncSaveFavorite } from '../../config/actions/properties'
+import PropertiesHackBox from './PropertiesHackBox'
 
-function PropertiesItem({ itemData, isFavorite }) {
+function PropertiesItem({ index, itemData, isFavorite, hackbox,count }) {
   const { openModal, setAutoMapSearch } = useContext(FilterContext)
-  const getloading = useSelector(getloadingfav)
-  const dispatch = useDispatch()
 
-  const [isFavoriteLoading, setIsFavoriteLoading] = useState(false)
-  useEffect(() => {
-    setIsFavoriteLoading(getloading)
-  }, [getloading])
+  const dispatch = useDispatch()
 
   const handleOpenModal = () => {
     dispatch(fetchAsyncDetails(itemData.mls_num))
@@ -90,7 +85,6 @@ function PropertiesItem({ itemData, isFavorite }) {
       jQuery(
         '#modal_login .modal_cm .content_md .heder_md .ms-title-modal',
       ).html(titleText)
-          
     } else {
       dispatch(fetchAsyncSaveFavorite({ mls_num: itemData.mls_num }))
       if (jQuery('#_ib_lead_activity_tab').length) {
@@ -100,45 +94,48 @@ function PropertiesItem({ itemData, isFavorite }) {
   }
 
   return (
-    <li
-      className="ib-pitem"
-      onMouseEnter={(e) => handleOnItemMouseEnter(e, itemData.mls_num)}
-      onMouseLeave={(e) => handleOnItemMouseLeave(e, itemData.mls_num)}
-    >
-      <ul className="ib-info">
-        <li className="ib-item -price">${formatPrice(itemData.price)}</li>
-        <li className="ib-item -beds">{itemData.bed} Bed(s)</li>
-        <li className="ib-item -baths">{itemData.bath} Bath(s)</li>
-        <li className="ib-item -sqft">{itemData.sqft} Sq.Ft.</li>
-        <li className="ib-item -address">
-          {itemData.address_short}, {itemData.address_large}
-        </li>
-        {newListing(itemData)}
-        <li className="ms-logo-board"></li>
-      </ul>
-      <div className="ib-pislider gs-container-slider">
-        <CarouselLoadLazy
-          itemsSlider={false}
-          swipe={true}
-          address={itemData.address_short + ' ' + itemData.address_large}
-          images={itemData.gallery}
-        />
-      </div>
-      <button
-        className={
-          isFavorite
-            ? `ib-favorite-btn ${favoriteIcon()} -active`
-            : `ib-favorite-btn ${favoriteIcon()}`
-        }
-        aria-label="Add Favorite"
-        onClick={() => handleFavoriteClick(itemData)}
-      ></button>
-      <a
-        mls={itemData.mls_num}
-        className="ib-pipermalink js-show-modals-item"
-        onClick={() => handleOpenModal()}
-      ></a>
-    </li>
+    <>     
+      <li
+        className="ib-pitem"
+        onMouseEnter={(e) => handleOnItemMouseEnter(e, itemData.mls_num)}
+        onMouseLeave={(e) => handleOnItemMouseLeave(e, itemData.mls_num)}
+      >
+        <ul className="ib-info">
+          <li className="ib-item -price">${formatPrice(itemData.price)}</li>
+          <li className="ib-item -beds">{itemData.bed} Bed(s)</li>
+          <li className="ib-item -baths">{itemData.bath} Bath(s)</li>
+          <li className="ib-item -sqft">{itemData.sqft} Sq.Ft.</li>
+          <li className="ib-item -address">
+            {itemData.address_short}, {itemData.address_large}
+          </li>
+          {newListing(itemData)}
+          <li className="ms-logo-board"></li>
+        </ul>
+        <div className="ib-pislider gs-container-slider">
+          <CarouselLoadLazy
+            itemsSlider={false}
+            swipe={true}
+            address={itemData.address_short + ' ' + itemData.address_large}
+            images={itemData.gallery}
+          />
+        </div>
+        <button
+          className={
+            isFavorite
+              ? `ib-favorite-btn ${favoriteIcon()} -active`
+              : `ib-favorite-btn ${favoriteIcon()}`
+          }
+          aria-label="Add Favorite"
+          onClick={() => handleFavoriteClick(itemData)}
+        ></button>
+        <a
+          mls={itemData.mls_num}
+          className="ib-pipermalink js-show-modals-item"
+          onClick={() => handleOpenModal()}
+        ></a>
+      </li>
+      {hackbox!=='' ?<PropertiesHackBox index={index} hackbox={hackbox} count={count} />:''} 
+    </>
   )
 }
 

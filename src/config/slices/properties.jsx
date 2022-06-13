@@ -69,11 +69,7 @@ export const propertySlice = createSlice({
     },
     updateMapObj: (state, { payload }) => {
       state.mapObj = payload
-    },
-    savedListings: (state, { payload }) => {
-      state.saved_listings = payload
-      console.log('payload', payload)
-    },
+    },    
     updateDataMap: (state, { payload }) => {
       state.properties_maps = hoveredItem(
         payload.mls_num,

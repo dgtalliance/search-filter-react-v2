@@ -129,7 +129,7 @@ const FilterSearch = () => {
 
           <div className="ib-wrapper-dropdown -save">
             <button
-              className="ib-action js-show-modals"
+              className="ib-action js-show-modals-save"
               data-modal="#modalSaveSearch"              
             >
               <i className="idx-icons-save"></i> Save

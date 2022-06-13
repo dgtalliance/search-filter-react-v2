@@ -119,7 +119,7 @@ function Properties() {
     return false
   }
 
-  const renderItem = (index, itemData, hackbox, isFavorite) => {
+  const renderItem = (index, itemData, hackbox, isFavorite, count) => {
     return (
       <PropertiesItem
         key={index}
@@ -127,6 +127,7 @@ function Properties() {
         itemData={itemData}
         hackbox={hackbox}
         isFavorite={isFavorite}
+        count={count}
       />
     )
   }
@@ -142,13 +143,14 @@ function Properties() {
               <NewestListings />
             </div>
             <div className="ib-wrapper-grid-result">
-              <ul className="ib-lproperties ib-listings-ct">
+              <ul className="ib-lproperties ib-listings-ct">               
                 {propertiesItems.items.map((itemData, index) =>
                   renderItem(
                     index,
                     itemData,
                     propertiesItems.hackbox,
                     isFavorite(itemData.mls_num),
+                    propertiesItems.items?.length
                   ),
                 )}
               </ul>

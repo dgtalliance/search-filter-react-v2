@@ -705,7 +705,7 @@ const MapJS = () => {
         <div className="ib-wrapper-float-actions -grid -view-map">
           <div className="ib-wrapper -round-sv">
             <button
-              className="ib-btn js-show-modals"
+              className="ib-btn js-show-modals-save"
               data-modal="#modalSaveSearch"
             >
               Save <i className="idx-icons-save"></i>

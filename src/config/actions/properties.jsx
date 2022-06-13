@@ -1,7 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
-import { generateSlug } from '../../utils/utils'
-import { ACCESS_TOKEN, API_SEARCH_FILTER_URL, LEAD_FAVORITES, SAVE_FAVORITE } from '../config'
+import { flex_g_settings, generateSlug } from '../../utils/utils'
+import {
+  ACCESS_TOKEN,
+  API_SEARCH_FILTER_URL,
+  LEAD_FAVORITES,
+  SAVE_FAVORITE,
+} from '../config'
 import Cookies from 'js-cookie'
 import { defaultPropsShortCode } from '../../App'
 
@@ -82,7 +87,7 @@ export const fetchAsyncGetSaveFavorite = createAsyncThunk(
 
 export const fetchAsyncSaveFavorite = createAsyncThunk(
   'properties/fetchAsyncSaveFavorite',
-  async (arg,thunkAPI) => {
+  (arg, thunkAPI) => {
     try {
       var bodyFormData = new FormData()
       bodyFormData.append('access_token', ACCESS_TOKEN)
@@ -94,10 +99,70 @@ export const fetchAsyncSaveFavorite = createAsyncThunk(
         headers: { 'Content-Type': 'multipart/form-data' },
       }).then((response) => {
         if (response.data.success === true) {
-          console.log('fetchAsyncSaveFavorite');
           thunkAPI.dispatch(fetchAsyncGetSaveFavorite())
         }
       })
+    } catch (error) {
+      return {
+        message: error.response.data,
+        code: error.response.status,
+        status: false,
+      }
+    }
+  },
+)
+
+export const fetchAsyncSaveSearch = createAsyncThunk(
+  'properties/fetchAsyncSaveSearch',
+  async (arg, { getState }) => {
+    try {
+      var __flex_g_settings =
+        window.location.host === 'localhost:3000'
+          ? flex_g_settings
+          : window.__flex_g_settings
+
+      const { properties } = getState()
+      var search_url = encodeURIComponent(location.href)
+      var search_count = properties.properties_data.pagination.count
+      var search_condition = encodeURIComponent(
+        properties.properties_data.condition,
+      )
+      var search_filter_params = properties.properties_data.params
+      var search_filter_ID = filter_id
+      var formData = arg.bodyFormData
+
+      formData =
+        formData +
+        '&search_url=' +
+        search_url +
+        '&search_count=' +
+        search_count +
+        '&search_condition=' +
+        search_condition +
+        '&search_filter_params=' +
+        JSON.stringify(search_filter_params) +
+        '&search_filter_ID=' +
+        search_filter_ID +
+        '&action=idxboost_new_filter_save_search_xhr_fn'
+
+      var response = await axios.post(__flex_g_settings.ajaxUrl, formData)
+      if (response.data.success === true) {
+        jQuery('.js-close-modals').click()
+        
+        if (jQuery("#_ib_lead_activity_tab").length) {
+          jQuery("#_ib_lead_activity_tab button:eq(2)").click();
+        }
+
+        swal({
+          title: 'Search Saved!',
+          text: 'Your search has been saved successfuly',
+          type: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        })
+      } else {
+        sweetAlert("Oops...", response.data.message, 'error')
+      }
     } catch (error) {
       return {
         message: error.response.data,
