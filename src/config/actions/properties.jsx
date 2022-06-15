@@ -17,7 +17,7 @@ export const fetchAsyncSearch = createAsyncThunk(
     const { properties } = thunkAPI.getState()
 
     var mls_num = null
-    var urlParams = null
+    var urlParams = ''
     var url = null
 
     if (window.location.search !== '') {
