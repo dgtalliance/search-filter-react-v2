@@ -14,10 +14,30 @@ export const ChartTabsP = ({
 
   useEffect(() => {}, []);
 
-  const median = (arr) => {
-    const mid = Math.floor(arr.length / 2),
-      nums = [...arr].sort((a, b) => a - b);
-    let m = arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+
+  const round = (num)=> {
+    var m = Number((Math.abs(num) * 100).toPrecision(15));
+    return Math.round(m) / 100 * Math.sign(num);
+  }
+
+  const percent = (arr, total) => {
+    let arrSum = 0;
+    arr.forEach (function(numero){
+      arrSum += numero;
+    });
+
+    let totalSum = 0;
+    total.forEach (function(numero){
+      totalSum += numero;
+    });
+
+   
+
+
+    
+
+
+    let m = totalSum !== 0 ? round(arrSum * 100 / totalSum)  : 0;
     return (
       <>{m === 0 ? <span style={{ color: "red" }}>N/A</span> : <>{m}%</>}</>
     );
@@ -40,9 +60,12 @@ export const ChartTabsP = ({
             <h3>Sale-to-list-Price</h3>
             <h3>
               {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
-                median(
+                percent(
                   chartDataApi.value[defaultCity].metadata[defaultHome][
-                    "sale_to_list"
+                    "sale_to_list_value"
+                  ].slice(-12 * defaultYears),
+                  chartDataApi.value[defaultCity].metadata[defaultHome][
+                    "total"
                   ].slice(-12 * defaultYears)
                 )
               ) : (
@@ -95,9 +118,12 @@ export const ChartTabsP = ({
             <h3>Homes Sold Above Price</h3>
             <h3>
               {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
-                median(
+                percent(
                   chartDataApi.value[defaultCity].metadata[defaultHome][
-                    "sale_upper_list"
+                    "sale_upper_list_value"
+                  ].slice(-12 * defaultYears),
+                  chartDataApi.value[defaultCity].metadata[defaultHome][
+                    "total"
                   ].slice(-12 * defaultYears)
                 )
               ) : (
@@ -150,9 +176,12 @@ export const ChartTabsP = ({
             <h3>Homes with Price Drops</h3>
             <h3>
               {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
-                median(
+                percent(
                   chartDataApi.value[defaultCity].metadata[defaultHome][
-                    "sale_lower_list"
+                    "sale_lower_list_value"
+                  ].slice(-12 * defaultYears),
+                  chartDataApi.value[defaultCity].metadata[defaultHome][
+                    "total"
                   ].slice(-12 * defaultYears)
                 )
               ) : (
