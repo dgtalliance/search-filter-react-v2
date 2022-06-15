@@ -18,13 +18,9 @@ export const ChartTabs = ({
     const mid = Math.floor(arr.length / 2),
       nums = [...arr].sort((a, b) => a - b);
     let m = arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
-     return(
-       <>
-       {
-         m === 0 ? <span style={{color: 'red'}}>N/A</span> : <>${m}</>
-       }
-       </>
-     );
+    return (
+      <>{m === 0 ? <span style={{ color: "red" }}>N/A</span> : <>{m}</>}</>
+    );
   };
 
   const sold = (arr) => {
@@ -43,33 +39,48 @@ export const ChartTabs = ({
           <div>
             <h3>Median Sale Price</h3>
             <h3>
-              {median(
-                chartDataApi.value[defaultCity].metadata[defaultHome][
-                  "media_price"
-                ].slice(-12 * defaultYears)
+              {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
+              
+               <> $
+               {median(
+                  chartDataApi.value[defaultCity].metadata[defaultHome][
+                    "media_price"
+                  ].slice(-12 * defaultYears)
+                )}
+                </>
+              ) : (
+                <span style={{ color: "red" }}>N/A</span>
               )}
             </h3>
             <h5>
               <span
                 style={{
                   color:
+                    chartDataApi.value[defaultCity].metadata[defaultHome] &&
                     chartDataApi.value[defaultCity].metadata[defaultHome]
                       .percent[defaultYears].media_price_percent >= 0
                       ? "#75b945"
                       : "red",
                 }}
               >
-                {chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                  .media_price_percent > 0
+                {chartDataApi.value[defaultCity].metadata[defaultHome] &&
+                chartDataApi.value[defaultCity].metadata[defaultHome].percent[
+                  defaultYears
+                ].media_price_percent > 0
                   ? "+"
                   : ""}
-                {
-                  chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                    .media_price_percent
-                }
+                {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
+                  chartDataApi.value[defaultCity].metadata[defaultHome].percent[
+                    defaultYears
+                  ].media_price_percent
+                ) : (
+                  <span style={{ color: "red" }}>N/A</span>
+                )}
                 %
               </span>{" "}
-              {defaultYears == 1 ? 'year-over-year' : `${defaultYears} years back`}
+              {defaultYears == 1
+                ? "year-over-year"
+                : `${defaultYears} years back`}
             </h5>
           </div>
         }
@@ -86,33 +97,45 @@ export const ChartTabs = ({
           <div>
             <h3># of Homes Sold</h3>
             <h3>
-              {sold(
-                chartDataApi.value[defaultCity].metadata[defaultHome][
-                  "sold_cant"
-                ].slice(-12 * defaultYears)
+              {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
+                sold(
+                  chartDataApi.value[defaultCity].metadata[defaultHome][
+                    "sold_cant"
+                  ].slice(-12 * defaultYears)
+                )
+              ) : (
+                <span style={{ color: "red" }}>N/A</span>
               )}
             </h3>
             <h5>
               <span
                 style={{
                   color:
+                    chartDataApi.value[defaultCity].metadata[defaultHome] &&
                     chartDataApi.value[defaultCity].metadata[defaultHome]
                       .percent[defaultYears].sold_cant_percent >= 0
                       ? "#75b945"
                       : "red",
                 }}
               >
-                {chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                  .sold_cant_percent > 0
+                {chartDataApi.value[defaultCity].metadata[defaultHome] &&
+                chartDataApi.value[defaultCity].metadata[defaultHome].percent[
+                  defaultYears
+                ].sold_cant_percent > 0
                   ? "+"
                   : ""}
-                {
-                  chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                    .sold_cant_percent
-                }
+                {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
+                  chartDataApi.value[defaultCity].metadata[defaultHome].percent[
+                    defaultYears
+                  ].sold_cant_percent
+                ) : (
+                  <span style={{ color: "red" }}>N/A</span>
+                )}
                 %
               </span>{" "}
-              {defaultYears == 1 ? 'year-over-year' : `${defaultYears} years back`}
+              {defaultYears == 1
+                ? "year-over-year"
+                : `${defaultYears} years back`}
             </h5>
           </div>
         }
@@ -129,34 +152,45 @@ export const ChartTabs = ({
           <div>
             <h3>Median Days on Market</h3>
             <h3>
-              
-               {median(
-                chartDataApi.value[defaultCity].metadata[defaultHome][
-                  "media_adom"
-                ].slice(-12 * defaultYears)
+              {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
+                median(
+                  chartDataApi.value[defaultCity].metadata[defaultHome][
+                    "media_adom"
+                  ].slice(-12 * defaultYears)
+                )
+              ) : (
+                <span style={{ color: "red" }}>N/A</span>
               )}
             </h3>
             <h5>
               <span
                 style={{
                   color:
+                    chartDataApi.value[defaultCity].metadata[defaultHome] &&
                     chartDataApi.value[defaultCity].metadata[defaultHome]
                       .percent[defaultYears].media_price_percent >= 0
                       ? "#75b945"
                       : "red",
                 }}
               >
-                {chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                  .media_price_percent > 0
+                {chartDataApi.value[defaultCity].metadata[defaultHome] &&
+                chartDataApi.value[defaultCity].metadata[defaultHome].percent[
+                  defaultYears
+                ].media_price_percent > 0
                   ? "+"
                   : ""}
-                {
-                  chartDataApi.value[defaultCity].metadata[defaultHome].percent[defaultYears]
-                    .media_price_percent
-                }
+                {chartDataApi.value[defaultCity].metadata[defaultHome] ? (
+                  chartDataApi.value[defaultCity].metadata[defaultHome].percent[
+                    defaultYears
+                  ].media_price_percent
+                ) : (
+                  <span style={{ color: "red" }}>N/A</span>
+                )}
                 %
               </span>{" "}
-              {defaultYears == 1 ? 'year-over-year' : `${defaultYears} years back`}
+              {defaultYears == 1
+                ? "year-over-year"
+                : `${defaultYears} years back`}
             </h5>
           </div>
         }

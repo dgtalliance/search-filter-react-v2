@@ -10,7 +10,7 @@ import {
   GoogleReCaptcha,
 } from 'react-google-recaptcha-v3'
 import Cookies from 'js-cookie'
-import { ACCESS_TOKEN } from '../../config/config'
+import { ACCESS_TOKEN, API_CONTACT_FORM_URL } from '../../config/config'
 import axios from 'axios'
 import validator from 'validator'
 import FilterContext from '../../Contexts/FilterContext'
@@ -170,13 +170,9 @@ const RentalFormContact = ({
     lead_credentials,
   ) {
     try {
-      setDisable(true)
-      const API_SEARCH_URL =
-        window.location.host === 'localhost:3000'
-          ? 'https://api.idxboost.dev/tracking/property_inquiries'
-          : `${window.__flex_g_settings.domain_service}/tracking/property_inquiries`
+      setDisable(true)      
       const body = `access_token=${ACCESS_TOKEN}&ib_tags=${ib_tags}&is_vacation_rentals=${is_vacation_rentals}&recaptcha_response=${recaptcha_response}&lead_credentials=${lead_credentials}&data=${form_data}`
-      const response = await axios.post(API_SEARCH_URL, body)
+      const response = await axios.post(API_CONTACT_FORM_URL, body)
       if (response.data.success) {
         isOpenModalAlert(true)
         defSuccess(true)

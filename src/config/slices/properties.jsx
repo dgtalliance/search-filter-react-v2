@@ -6,6 +6,7 @@ import {
 } from '../actions/properties'
 
 const initialState = {
+  mls_active: null,
   saved_listings: [],
   loadinglisted: false,
   mapObj: {},
@@ -69,6 +70,9 @@ export const propertySlice = createSlice({
     },
     updateMapObj: (state, { payload }) => {
       state.mapObj = payload
+    },    
+    updateMLS: (state, { payload }) => {
+      state.mls_active = payload
     },    
     updateDataMap: (state, { payload }) => {
       state.properties_maps = hoveredItem(

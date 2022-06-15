@@ -3,7 +3,7 @@ import axios from 'axios'
 import { flex_g_settings, generateSlug } from '../../utils/utils'
 import {
   ACCESS_TOKEN,
-  API_SEARCH_FILTER_URL,
+  API_SEARCH_URL,
   LEAD_FAVORITES,
   SAVE_FAVORITE,
 } from '../config'
@@ -13,10 +13,28 @@ import { defaultPropsShortCode } from '../../App'
 const filter_id = defaultPropsShortCode.filter
 export const fetchAsyncSearch = createAsyncThunk(
   'properties/fetchAsyncSearch',
-  async (arg, { getState }) => {
-    const { properties } = getState()
+  async (arg, thunkAPI) => {
+    const { properties } = thunkAPI.getState()
 
-    var urlParams = new URLSearchParams(window.location.search)
+    var mls_num = null
+    var urlParams = null
+    var url = null
+
+    if (window.location.search !== '') {
+      url = window.location.search
+
+      urlParams = new URLSearchParams(url)
+      mls_num = urlParams.get('show')
+
+      if (mls_num !== null) {
+        if (url.includes('&')) {
+          var pos = slurlug.lastIndexOf('&')
+          url = url.slice(0, pos)
+          urlParams = new URLSearchParams(url)
+        }
+
+      }
+    }
 
     const post_params = encodeURIComponent(generateSlug(properties.params))
 
@@ -28,9 +46,15 @@ export const fetchAsyncSearch = createAsyncThunk(
     try {
       const body = `access_token=${ACCESS_TOKEN}&search_filter_id=${filter_id}&flex_credentials=${flex_credentials}&event_triggered=${event_triggered}&query_params=${query_params_val}&device_width=${window.innerWidth}&post_params=${post_params}`
 
-      const response = await axios.post(API_SEARCH_FILTER_URL, body)
+      const response = await axios.post(API_SEARCH_URL, body)
 
       if (response.data.length != 0) {
+        /* if (mls_num !== null) {
+         console.log(mls_num)
+         thunkAPI.dispatch(updateMLSupdateMLS(mls_num))
+         window.lastOpenedProperty = mls_num
+        } */
+
         if (response.data?.success !== false) {
           return {
             data: response.data,
@@ -148,9 +172,9 @@ export const fetchAsyncSaveSearch = createAsyncThunk(
       var response = await axios.post(__flex_g_settings.ajaxUrl, formData)
       if (response.data.success === true) {
         jQuery('.js-close-modals').click()
-        
-        if (jQuery("#_ib_lead_activity_tab").length) {
-          jQuery("#_ib_lead_activity_tab button:eq(2)").click();
+
+        if (jQuery('#_ib_lead_activity_tab').length) {
+          jQuery('#_ib_lead_activity_tab button:eq(2)').click()
         }
 
         swal({
@@ -161,7 +185,7 @@ export const fetchAsyncSaveSearch = createAsyncThunk(
           showConfirmButton: false,
         })
       } else {
-        sweetAlert("Oops...", response.data.message, 'error')
+        sweetAlert('Oops...', response.data.message, 'error')
       }
     } catch (error) {
       return {

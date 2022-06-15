@@ -13,6 +13,7 @@ initializeElement()
 const ContainerFiftyFifty = () => {
   document.body.classList.add('-react-filter')
   document.body.classList.add('draw-map')
+ 
 
   return (
     <>
@@ -32,7 +33,7 @@ const ContainerFiftyFifty = () => {
               className="ib-btn js-show-modals-save"
               data-modal="#modalSaveSearch"
             >
-               Save <i className="idx-icons-save"></i>
+              Save <i className="idx-icons-save"></i>
             </button>
             <button className="ib-btn js-show-map">
               Map <i className="idx-icons-map"></i>
@@ -47,7 +48,7 @@ const ContainerFiftyFifty = () => {
       {/* COMPONENTS MODALES PARA EL SEARCH FILTER */}
       <LazyLoadComponent>
         <ModalDetailProperties />
-      </LazyLoadComponent>     
+      </LazyLoadComponent>
       <LazyLoadComponent>
         <PropertiesModalSave />
       </LazyLoadComponent>

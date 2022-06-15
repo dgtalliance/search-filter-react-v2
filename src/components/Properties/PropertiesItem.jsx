@@ -8,8 +8,9 @@ import CarouselLoadLazy from '../common/CarouselLoadLazy'
 import { isMobile } from 'react-device-detect'
 import { fetchAsyncSaveFavorite } from '../../config/actions/properties'
 import PropertiesHackBox from './PropertiesHackBox'
+import Cookies from 'js-cookie'
 
-function PropertiesItem({ index, itemData, isFavorite, hackbox,count }) {
+function PropertiesItem({ index, itemData, isFavorite, hackbox, count }) {
   const { openModal, setAutoMapSearch } = useContext(FilterContext)
 
   const dispatch = useDispatch()
@@ -18,6 +19,26 @@ function PropertiesItem({ index, itemData, isFavorite, hackbox,count }) {
     dispatch(fetchAsyncDetails(itemData.mls_num))
     openModal({ mls_num: itemData.mls_num })
     window.lastOpenedProperty = itemData.mls_num
+
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
+        
+
+    if ('yes' === __flex_g_settings.anonymous) {
+      var _ib_user_listing_views = JSON.parse(
+        Cookies.get('_ib_user_listing_views'),
+      )
+
+      if (-1 === jQuery.inArray(itemData.mls_num, _ib_user_listing_views)) {
+        _ib_user_listing_views.push(itemData.mls_num)
+        Cookies.set(
+          '_ib_user_listing_views',
+          JSON.stringify(_ib_user_listing_views),
+        )
+      }
+    }
   }
 
   const newListing = (property) => {
@@ -94,7 +115,7 @@ function PropertiesItem({ index, itemData, isFavorite, hackbox,count }) {
   }
 
   return (
-    <>     
+    <>
       <li
         className="ib-pitem"
         onMouseEnter={(e) => handleOnItemMouseEnter(e, itemData.mls_num)}
@@ -134,7 +155,11 @@ function PropertiesItem({ index, itemData, isFavorite, hackbox,count }) {
           onClick={() => handleOpenModal()}
         ></a>
       </li>
-      {hackbox!=='' ?<PropertiesHackBox index={index} hackbox={hackbox} count={count} />:''} 
+      {hackbox !== '' ? (
+        <PropertiesHackBox index={index} hackbox={hackbox} count={count} />
+      ) : (
+        ''
+      )}
     </>
   )
 }

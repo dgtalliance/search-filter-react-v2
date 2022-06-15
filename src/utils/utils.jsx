@@ -1652,9 +1652,10 @@ export const flex_idx_search_filter = {
   ajaxUrl: 'https://idxbrentalsdev.wpengine.com/wp-admin/admin-ajax.php',
   hackbox: {
     status: true,
-    content: '',
+    content:
+      '<link href="https://api-cms.idxboost.dev/assets/css/hackbox.css" type="text/css" rel="stylesheet" />\n\n\n\n\n\n \n\n<div class="ip-hackbox   ip-arrows-format-a ip-hackbox-loaded js-hackbox" style="--ip-section-background-color: rgba(0,0,0,.4);--ip-hackbox-title-color: #fff;--ip-hackbox-text-color: #fff;--ip-hackbox-margin-title: 4px;--ip-hackbox-button-background-color: #000;--ip-hackbox-button-border-color: #000;--ip-hackbox-button-text-color: #fff;--ip-hackbox-button-hover-background-color: #fff;--ip-hackbox-button-hover-border-color: #fff;--ip-hackbox-button-hover-text-color: #000;--ip-hackbox-button-margin-y: 15px;--ip-hackbox-padding-y: 25px;--ip-hackbox-padding-x: 25px">\n    <div class="ip-hackbox-wrapper">\n\n                    <div class="ip-section-background">\n                                    <div class="ip-section-background-overlay"></div>\n                            </div>\n        \n                    <img src="https://idxboost-single-property.s3.amazonaws.com/78ec7ba1c129b0371cfd4ec6d27dda62/slider/ec0db835f6aa5621016abb9a8363429a.jpg" >\n            \n            <div class="ip-content-hackbox">\n                <div class="ip-head-hackbox">\n                    <h3 class="ip-title heading-md"> Test Hackbook </h3>\n                    <span class="body-md"> Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>\n                </div>\n            </div>\n        \n         \n\n         \n\n                                \n                \n                    <a class="ip-hackbox-btn "\n                        href="/"\n                        >\n                        Connect With Us\n                    </a>\n\n                \n                     \n\n    </div>\n</div>\n\n<script>\n    (function () {\n\n        // Namespace\n        var idxpages = idxpages || {};\n\n        idxpages.hackbox = {\n            init: function () {\n                let hackboxes = document.querySelectorAll(\'.js-hackbox\');\n\n                if (hackboxes) {\n                    hackboxes.forEach(hackbox => {\n                        this.handleVideo();\n                        this.handleSlider();\n                    });\n                    \n                    this.addPortal();\n                    this.handleModal();\n                }\n            },\n            \n            handleVideo: function () {\n                let btns = document.querySelectorAll(\'.js-open-hackbox-video\');\n                \n                if (btns) {\n                    btns.forEach(btn => {\n                        btn.addEventListener(\'click\', evt => {\n                            \n                            let src = btn.dataset.src;\n                            let id = btn.dataset.videoId;\n                            let type = btn.dataset.videoType;\n                            let video = `<video src="${src}" autoplay muted controls loop></video>`;\n                            \n                            btn.classList.add(\'activeVideo\');\n\n                            switch (type) {\n                                case \'youtube\':\n                                    src = `https://www.youtube.com/embed/${id}?autoplay=1;rel=0&showinfo=0&mute=1&loop=1&playlist=${id}`;\n                                    video = `\n                                        <iframe allow="autoplay; encrypted-media" \n                                            src="${src}" title="" \n                                            frameborder="0" allowfullscreen>\n                                        </iframe>\n                                    `;\n                                    break;\n                                case \'vimeo\':\n                                    src = `https://player.vimeo.com/video/${id}?autoplay=1&byline=0&muted=1&loop=1&title=1&transparent=0`;\n                                    video = `\n                                        <iframe allow="autoplay; encrypted-media" \n                                            src="${src}" title="" \n                                            frameborder="0" allowfullscreen>\n                                        </iframe>\n                                    `;\n                                    break;\n                            }\n                            \n                            const div = document.createElement(\'div\');\n                            div.innerHTML = video;\n                            btn.parentNode.insertBefore(div, btn.nextSibling);\n\n                        });\n                    });\n                }\n            },\n\n            addPortal: function() {\n                let portal = document.createElement(\'div\');\n                portal.classList.add(\'js-portal\');\n                document.body.append(portal);\n            },\n\n            handleModal: function() {\n                let modal = document.querySelector(\'.js-modal-boostbox\');\n                let portal = document.querySelector(\'.js-portal\');\n\n                if (modal && portal) {\n                    portal.append(modal);\n                }\n            },\n            \n            handleSlider: function() {\n                let sliders = document.querySelectorAll(\'.js-slider-hackbox\');\n                let time = 8 * 1000;\n                let format = "swipe";\n\n                if (sliders) {\n\n                    sliders.forEach(slider => {\n                        let hasItems = slider.querySelectorAll(\'img\').length;\n                        \n                        if (hasItems > 1) {\n                            jQuery(slider).greatSlider({\n                                type: format,\n                                nav: true,\n                                lazyLoad: true,\n                                bullets: false,\n                                autoHeight: false,\n                                autoplay: true,\n                                autoplaySpeed: time,\n                            });\n                        }\n                    });\n                           \n                }\n            }\n        };\n\n        function idxpagesDomReady(fn) {\n            if (typeof fn !== \'function\') {\n                return;\n            }\n\n            if (document.readyState === \'interactive\' || document.readyState === \'complete\') {\n                return fn();\n            }\n\n            document.addEventListener(\'DOMContentLoaded\', fn, false);\n        }\n\n        idxpagesDomReady(function () {\n            idxpages.hackbox.init();          // hackbox\n        });\n        \n    })();\n\n    setTimeout(() => {\n        idxpages.forms.init();\n    }, 1500);\n</script>',
   },
-  list_offmarket: [],
+  list_offmarket: '',
   agentFullName: 'Rentals idxboost',
   agentPhoto:
     'https://idxboost.s3.amazonaws.com/agent_profiles/64675262c2f0.4292e9a90f91.jpg',
@@ -2018,6 +2019,10 @@ export const flex_idx_search_filter = {
         label: '70000',
         value: 70000,
       },
+      {
+        label: '80000',
+        value: 80000,
+      },
     ],
     lot_size_range: [
       {
@@ -2168,6 +2173,10 @@ export const flex_idx_search_filter = {
         label: '70000',
         value: 70000,
       },
+      {
+        label: '80000',
+        value: 80000,
+      },
     ],
     parking_options: [
       {
@@ -2197,8 +2206,8 @@ export const flex_idx_search_filter = {
     ],
     price_rent_range: [
       {
-        label: 'Any Price',
-        value: '',
+        label: '$0',
+        value: 0,
       },
       {
         label: '$500',
@@ -2316,11 +2325,15 @@ export const flex_idx_search_filter = {
         label: '$90,000',
         value: 90000,
       },
+      {
+        label: '$100,000',
+        value: 100000,
+      },
     ],
     price_sale_range: [
       {
-        label: 'Any Price',
-        value: '',
+        label: '$0',
+        value: 0,
       },
       {
         label: '$50,000',
@@ -2510,10 +2523,14 @@ export const flex_idx_search_filter = {
         label: '$90M',
         value: 90000000,
       },
+      {
+        label: '$100M',
+        value: 100000000,
+      },
     ],
     property_types: [
       {
-        label: 'Single Family Home',
+        label: 'Single Family Homes',
         value: 2,
       },
       {
@@ -2523,10 +2540,6 @@ export const flex_idx_search_filter = {
       {
         label: 'Townhouses',
         value: 'tw',
-      },
-      {
-        label: 'Multi-Family',
-        value: 'mf',
       },
     ],
     rental_types: '0',
@@ -3052,6 +3065,14 @@ export const flex_idx_search_filter = {
         label: '2020',
         value: 2020,
       },
+      {
+        label: '2021',
+        value: 2021,
+      },
+      {
+        label: '2022',
+        value: 2022,
+      },
     ],
     default_language: 'en',
     default_floor_plan: ['den', 'size_sqft', 'size_m2'],
@@ -3059,8 +3080,7 @@ export const flex_idx_search_filter = {
     hide_pending_content_options: 0,
   },
   fields: 'address,building,city,street,subdivision,zip,neighborhood',
-  searchFilterPermalink:
-    'https://idxbrentalsdev.wpengine.com/properties-for-sale/',
+  searchFilterPermalink: 'https://idxbrentalsdev.wpengine.com/search-fifty/',
   leadFirstName: '',
   leadLastName: '',
   leadEmailAddress: '',

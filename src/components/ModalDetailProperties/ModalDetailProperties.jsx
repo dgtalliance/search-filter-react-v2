@@ -112,22 +112,7 @@ export const ModalDetailProperties = () => {
     overflow: 'hidden',
   }
 
-  const handleOpenModal = (mls_num) => {
-    // var new_slug = slug ? slug +`&show=${mls_num}`: `show=${mls_num}`;
-    // var new_slug =  `show=${mls_num}`;
-    // history.replaceState(null, null, "?" + new_slug);
-    // setSlug(new_slug);
-
-    // if(slug.includes("&")){
-    //   let pos = slug.lastIndexOf("&");
-    //   let new_str = slug.slice(0, pos);
-    //   history.replaceState(null, null, "?" + new_str);
-    //   setSlug(new_str);
-    // }else{
-    //   history.replaceState(null, null, "?");
-    //   setSlug("");
-    // }
-
+  const handleOpenModal = (mls_num) => {   
     var currentSlug = 'show=' + propertiesData.mls_num
     var str = slug.replace(new RegExp(currentSlug, 'g'), `show=${mls_num}`)
     history.replaceState(null, null, '?' + str)
@@ -148,7 +133,6 @@ export const ModalDetailProperties = () => {
 
       var calc_mg = calculate_mortgage(price, dp, ty, ir)
 
-      // refPriceCalculator.current.innerText = "$" + calc_mg.monthly + "/mo";
       refPriceCalculator.current.innerText = calc_mg.monthly + '/mo'
 
       var pp = price.replace(/[^\d]/g, '')
@@ -312,32 +296,32 @@ export const ModalDetailProperties = () => {
     // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
-      series: chartDataApi.value[defaultCity].metadata[value][defaultTab],
-    })
-    setDefaultHome(value)
+      series: chartDataApi.value[defaultCity].metadata[value] ? chartDataApi.value[defaultCity].metadata[value][defaultTab] : [],
+    });
+    setDefaultHome(value);
   }
   function onChangeP(value) {
     // console.log(`selected ${value}`);
     setChartDataShowP({
       ...chartDataShowP,
-      series: chartDataApiP.value[defaultCityP].metadata[value][defaultTabP],
-    })
-    setDefaultHomeP(value)
+      series: chartDataApiP.value[defaultCityP].metadata[value] ? chartDataApiP.value[defaultCityP].metadata[value][defaultTabP] : [],
+    });
+    setDefaultHomeP(value);
   }
   function onChangeCity(value) {
     // console.log(`selected ${value}`);
     setChartDataShow({
       ...chartDataShow,
-      series: chartDataApi.value[value].metadata[defaultHome][defaultTab],
-    })
-    setDefaultCity(value)
+      series: chartDataApi.value[value].metadata[defaultHome] ? chartDataApi.value[value].metadata[defaultHome][defaultTab] : [],
+    });
+    setDefaultCity(value);
   }
   function onChangeCityP(value) {
     setChartDataShowP({
       ...chartDataShowP,
-      series: chartDataApiP.value[value].metadata[defaultHomeP][defaultTabP],
-    })
-    setDefaultCityP(value)
+      series: chartDataApiP.value[value].metadata[defaultHomeP] ? chartDataApiP.value[value].metadata[defaultHomeP][defaultTabP] : [],
+    });
+    setDefaultCityP(value);
   }
   function changeYear(value) {
     setDefaultYears(value.charAt(0))
@@ -355,17 +339,16 @@ export const ModalDetailProperties = () => {
   function callback(key) {
     setChartDataShow({
       ...chartDataShow,
-      series: chartDataApi.value[defaultCity].metadata[defaultHome][key],
-    })
-    setDefaultTab(key)
+      series: chartDataApi.value[defaultCity].metadata[defaultHome] ? chartDataApi.value[defaultCity].metadata[defaultHome][key] : [],
+    });
+    setDefaultTab(key);
   }
-
   function callbackP(key) {
     setChartDataShowP({
       ...chartDataShowP,
-      series: chartDataApiP.value[defaultCityP].metadata[defaultHomeP][key],
-    })
-    setDefaultTabP(key)
+      series: chartDataApiP.value[defaultCityP].metadata[defaultHomeP] ? chartDataApiP.value[defaultCityP].metadata[defaultHomeP][key] : [],
+    });
+    setDefaultTabP(key);
   }
 
   const [isOpenCarusel, setIsOpenCarusel] = useState(false)
@@ -551,6 +534,36 @@ export const ModalDetailProperties = () => {
     // refCalcMcMonthly.current.innerText = "$" + calc_mg.monthly;
     refCalcMcMonthly.current.innerText = calc_mg.monthly
   }
+
+  const iniView = () => {
+    var __flex_g_settings =
+      window.location.host === 'localhost:3000'
+        ? flex_g_settings
+        : window.__flex_g_settings
+
+    if (
+      __flex_g_settings.hasOwnProperty('anonymous') &&
+      'yes' === __flex_g_settings.anonymous
+    ) {
+      var _ib_user_listing_views = []
+      if ('undefined' !== typeof Cookies.get('_ib_user_listing_views')) {
+        _ib_user_listing_views = JSON.parse(
+          Cookies.get('_ib_user_listing_views'),
+        )
+
+        if (
+          -1 === jQuery.inArray(propertiesData.mls_num, _ib_user_listing_views)
+        ) {
+          _ib_user_listing_views.push(propertiesData.mls_num)
+          Cookies.set(
+            '_ib_user_listing_views',
+            JSON.stringify(_ib_user_listing_views),
+          )
+        }
+      }
+    }
+  }
+
 
   const close = () => {
     setDefaultHome('1')
