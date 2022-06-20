@@ -13,8 +13,7 @@ initializeElement()
 const ContainerFiftyFifty = () => {
   document.body.classList.add('-react-filter')
   document.body.classList.add('draw-map')
- 
-
+  
   return (
     <>
       <LazyLoadComponent>

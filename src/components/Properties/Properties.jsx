@@ -4,12 +4,15 @@ import {
   fetchAsyncGetSaveFavorite,
   fetchAsyncSearch,
 } from '../../config/actions/properties'
+import { fetchAsyncDetails } from '../../config/actions/propertiesDetails'
 import {
   getpropertiesItems,
   getloading,
   updateForm,
   updateTriggered,
   getsavedlistings,
+  getmls,
+  updateMLS,
 } from '../../config/slices/properties'
 import FilterContext from '../../Contexts/FilterContext'
 import { flex_g_settings } from '../../utils/utils'
@@ -36,10 +39,11 @@ const useMutationObserver = (
   }, [callback, options])
 }
 
-function Properties() {
+const Properties = () => {
   const propertiesItems = useSelector(getpropertiesItems)
   const savedlistings = useSelector(getsavedlistings)
   const loading = useSelector(getloading)
+  const mls = useSelector(getmls)
   const dispatch = useDispatch()
 
   // Observable for html elements
@@ -68,10 +72,30 @@ function Properties() {
     subtree: true,
   })
 
-  const { setSlug } = useContext(FilterContext)
+  const { setSlug,setModalData } = useContext(FilterContext)
 
   useEffect(() => {
     setSlug(propertiesItems.slug)
+
+    console.log('mls_num', mls)
+    if (null !== mls) {
+      dispatch(fetchAsyncDetails(mls))     
+      if (!document.body.classList.contains('openModals')) {
+        document.body.classList.add('openModals')
+
+        var url = ''
+
+        if (window.location.search !== '' && window.location.search !== '?') {
+          url = window.location.search.replace('?','')
+        }
+        var new_slug = url !== '' ? url + `&show=${mls}` : `show=${mls}`
+        console.log('slug', new_slug)
+        history.replaceState(null, null, '?' + new_slug)
+        setSlug(new_slug.replace('?',''))
+        setModalData({ mls_num: mls })
+        dispatch(updateMLS(null))
+      }
+    }
   }, [propertiesItems, savedlistings])
 
   const infoSearch = useRef()
@@ -143,14 +167,14 @@ function Properties() {
               <NewestListings />
             </div>
             <div className="ib-wrapper-grid-result">
-              <ul className="ib-lproperties ib-listings-ct">               
+              <ul className="ib-lproperties ib-listings-ct">
                 {propertiesItems.items.map((itemData, index) =>
                   renderItem(
                     index,
                     itemData,
                     propertiesItems.hackbox,
                     isFavorite(itemData.mls_num),
-                    propertiesItems.items?.length
+                    propertiesItems.items?.length,
                   ),
                 )}
               </ul>
@@ -167,8 +191,8 @@ function Properties() {
           <>
             <div className="ib-gnopro">
               <span className="ib-gnpno">No matching results...</span>Modify
-              your <span className="ib-gnpoall">filter</span> preferences to get
-              new results or{' '}
+              your <span className="ib-gnpoall js-show-all-filter">filter</span>{' '}
+              preferences to get new results or{' '}
               <span className="ib-gnpclear" onClick={handleClean}>
                 clear
               </span>{' '}

@@ -73,7 +73,7 @@ var temp_property_type = [
 export const property_type_d =
   window.location.host === 'localhost:3000'
     ? temp_property_type
-    : window.__flex_g_settings.params.property_types
+    : window.__flex_g_settings.overwrite_settings.property_types
 
 const amenities = [
   {
@@ -130,6 +130,7 @@ export const amenities_d =
   window.location.host === 'localhost:3000'
     ? convertParamsArray(amenities)
     : convertParamsArray(window.__flex_g_settings.params.amenities)
+
 
 const waterfront_options = [
   {

@@ -9,52 +9,51 @@ import {
 } from '../config'
 import Cookies from 'js-cookie'
 import { defaultPropsShortCode } from '../../App'
+import { updateMLS } from '../slices/properties'
 
 const filter_id = defaultPropsShortCode.filter
 export const fetchAsyncSearch = createAsyncThunk(
   'properties/fetchAsyncSearch',
   async (arg, thunkAPI) => {
-    const { properties } = thunkAPI.getState()
-
-    var mls_num = null
-    var urlParams = ''
-    var url = null
-
-    if (window.location.search !== '') {
-      url = window.location.search
-
-      urlParams = new URLSearchParams(url)
-      mls_num = urlParams.get('show')
-
-      if (mls_num !== null) {
-        if (url.includes('&')) {
-          var pos = slurlug.lastIndexOf('&')
-          url = url.slice(0, pos)
-          urlParams = new URLSearchParams(url)
-        }
-
-      }
-    }
-
-    const post_params = encodeURIComponent(generateSlug(properties.params))
-
-    const event_triggered = properties.event_triggered
-
-    var query_params_val = encodeURIComponent(urlParams.toString())
-
-    const flex_credentials = Cookies.get('ib_lead_token')
     try {
+      const { properties } = thunkAPI.getState()
+
+      var mls_num = null
+      var urlParams = ''
+      var url = ''
+
+      if (window.location.search !== '' && window.location.search !== '?') {
+        url = window.location.search
+
+        urlParams = new URLSearchParams(url)
+        mls_num = urlParams.get('show')
+
+        if (mls_num !== null) {
+          if (url.includes('&')) {
+            var pos = url.lastIndexOf('&')
+            url = url.slice(0, pos)
+            urlParams = new URLSearchParams(url)
+          }
+        }
+      }
+
+      const post_params = encodeURIComponent(generateSlug(properties.params))
+
+      const event_triggered = properties.event_triggered
+
+      var query_params_val = encodeURIComponent(urlParams.toString())
+
+      const flex_credentials = Cookies.get('ib_lead_token')
+
       const body = `access_token=${ACCESS_TOKEN}&search_filter_id=${filter_id}&flex_credentials=${flex_credentials}&event_triggered=${event_triggered}&query_params=${query_params_val}&device_width=${window.innerWidth}&post_params=${post_params}`
 
       const response = await axios.post(API_SEARCH_URL, body)
 
       if (response.data.length != 0) {
-        /* if (mls_num !== null) {
-         console.log(mls_num)
-         thunkAPI.dispatch(updateMLSupdateMLS(mls_num))
-         window.lastOpenedProperty = mls_num
-        } */
-
+        if (mls_num !== null) {
+          thunkAPI.dispatch(updateMLS(mls_num))
+          window.lastOpenedProperty = mls_num
+        }
         if (response.data?.success !== false) {
           return {
             data: response.data,

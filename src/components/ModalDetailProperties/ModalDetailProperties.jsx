@@ -28,7 +28,7 @@ import Cookies from 'js-cookie'
 
 import { ChartTabs } from './ChartTabs'
 import { ChartTabsP } from './ChartTabsP'
-import { getloadingfav, getsavedlistings } from '../../config/slices/properties'
+import { getloadingfav, getsavedlistings, updateMLS } from '../../config/slices/properties'
 import {
   fetchAsyncGetSaveFavorite,
   fetchAsyncSaveFavorite,
@@ -151,6 +151,9 @@ export const ModalDetailProperties = () => {
 
   useEffect(() => {
     if (Object.keys(propertiesData).length > 0) calculate(propertiesData)
+
+    dispatch(updateMLS(null))
+
   }, [propertiesData])
 
   useEffect(() => {

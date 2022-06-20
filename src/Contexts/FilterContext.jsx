@@ -6,11 +6,9 @@ import { removeDetail } from '../config/slices/propertiesDetails'
 const FilterContext = createContext()
 
 const FilterProvider = ({ children }) => {
-
   const dispatch = useDispatch()
   // Slug
   const [slug, setSlug] = useState('')
-  const [slugShow, setSlugShow] = useState(false)
 
   const [autoMapSearch, setAutoMapSearch] = useState(true)
 
@@ -18,9 +16,8 @@ const FilterProvider = ({ children }) => {
   const [modalData, setModalData] = useState(null)
   const [modalInfoWindow, setModalInfoWindow] = useState([])
 
-  const openModal = (datainfo, stay) => {
-    setModalData({ ...datainfo, stay })
-    setSlugShow(true)
+  const openModal = (datainfo) => {
+    setModalData(datainfo)
 
     if (!document.body.classList.contains('openModals')) {
       document.body.classList.add('openModals')
@@ -35,7 +32,6 @@ const FilterProvider = ({ children }) => {
   const closeModal = () => {
     setModalData(null)
     dispatch(removeDetail())
-    setSlugShow(false)
     if (document.body.classList.contains('openModals')) {
       document.body.classList.remove('openModals')
     }
@@ -46,7 +42,7 @@ const FilterProvider = ({ children }) => {
       history.replaceState(null, null, '?' + new_str)
       setSlug(new_str)
     } else {
-      history.replaceState(null, null, '?')
+      history.replaceState(null, null, '')
       setSlug('')
     }
   }
@@ -73,8 +69,6 @@ const FilterProvider = ({ children }) => {
     setSuccess(val)
   }
 
-  
-
   const data = {
     modalData,
     openModal,
@@ -86,11 +80,11 @@ const FilterProvider = ({ children }) => {
     closeModalAlert,
     slug,
     setSlug,
-    slugShow,
     modalInfoWindow,
     setModalInfoWindow,
     autoMapSearch,
     setAutoMapSearch,
+    setModalData, 
   }
   return (
     <FilterContext.Provider value={data}>{children}</FilterContext.Provider>

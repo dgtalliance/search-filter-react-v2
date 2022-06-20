@@ -278,6 +278,7 @@ export const getpropertiesData = (state) => state.properties.properties_data
 export const getpropertiesItems = (state) => state.properties.properties
 export const getloading = (state) => state.properties.loading
 export const getloadingfav = (state) => state.properties.loadinglisted
+export const getmls = (state) => state.properties.mls_active
 
 export const geterror = (state) => state.properties.error
 
@@ -287,6 +288,7 @@ export const {
   updateTriggered,
   updateDataMap,
   savedListings,
+  updateMLS,
 } = propertySlice.actions
 
 export default propertySlice.reducer
