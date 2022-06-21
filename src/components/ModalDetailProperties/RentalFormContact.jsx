@@ -62,6 +62,7 @@ const RentalFormContact = ({
 
   const handleVerify = useCallback(
     (token) => {
+      console.log(token)
       setToken(token)
     },
     [useToken],
@@ -104,7 +105,7 @@ const RentalFormContact = ({
       setEmail(false)
     }
   }
-
+ 
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -123,7 +124,7 @@ const RentalFormContact = ({
       message += ` Rentals Stay: ${chech_in} - ${check_out}. `
     }
 
-    var form_data = {
+    /*   var form_data = {
       first_name: leadFirstName,
       last_name: leadLastName,
       email_address: leadEmailAddress,
@@ -132,17 +133,22 @@ const RentalFormContact = ({
       mls_num: mls_num,
       price_rate: lead.rate,
       permalink: encodeURIComponent(permalink),
-    }
+    } */
 
-    var is_vacation_rentals = 1
-    var ib_tags = 'Vacation Rentals'
     var recaptcha_response = token
     var lead_credentials =
       Cookies.get('ib_lead_token') !== undefined
         ? Cookies.get('ib_lead_token')
         : ''
 
-    form_data = JSON.stringify(form_data)
+    jQuery('#propertyForm-react').prepend(
+      '<input type="hidden" name="recaptcha_response" value="' +
+        recaptcha_response +
+        '">',
+    )
+    var form_data = encodeURIComponent(
+      jQuery('#propertyForm-react').serialize(),
+    )
 
     if (
       leadFirstName.trim() &&
@@ -151,36 +157,37 @@ const RentalFormContact = ({
       !validator.isEmpty(leadLastName) &&
       validator.isEmail(leadEmailAddress)
     ) {
-       fetchData(
-        form_data,
-        ib_tags,
-        is_vacation_rentals,
-        recaptcha_response,
-        lead_credentials,
-      ) 
+      fetchData(form_data,lead_credentials)
     } else {
       return
     }
   }
-  async function fetchData(
-    form_data,
-    ib_tags,
-    is_vacation_rentals,
-    recaptcha_response,
-    lead_credentials,
-  ) {
+  async function fetchData(form_data, lead_credentials) {
     try {
-      setDisable(true)      
-      const body = `access_token=${ACCESS_TOKEN}&ib_tags=${ib_tags}&is_vacation_rentals=${is_vacation_rentals}&recaptcha_response=${recaptcha_response}&lead_credentials=${lead_credentials}&data=${form_data}`
-      const response = await axios.post(API_CONTACT_FORM_URL, body)
-      if (response.data.success) {
-        isOpenModalAlert(true)
-        defSuccess(true)
+      setDisable(true)
+      const body = `access_token=${ACCESS_TOKEN}&lead_credentials=${lead_credentials}&form_data=${form_data}`
+      const response = await axios.post(API_CONTACT_FORM_URL + mls_num, body)
+      if (response.data.response_auto.status) {
+        console.log(response)
+
+        swal({
+          title: 'Email Sent!',
+          text: response.data.response_auto.message,
+          type: 'success',
+          timer: 2000,
+          showConfirmButton: false,
+        })
+
         setUseToken(!useToken)
         setDisable(false)
-      } else {
-        isOpenModalAlert(true)
-        defSuccess(false)
+      } else {      
+        swal({
+          title: 'Oops...',
+          text: response.data.response_auto.message,
+          type: 'error',
+          timer: 2000,
+          showConfirmButton: false,
+        })        
         setUseToken(!useToken)
         setDisable(false)
       }
@@ -221,55 +228,20 @@ const RentalFormContact = ({
               )}
 
               {/* <button aria-label="Close" className="ib-close"></button> */}
-              <button aria-label="Close" className="ib-close js-close-modal-aside"></button>
+              <button
+                aria-label="Close"
+                className="ib-close js-close-modal-aside"
+              ></button>
             </div>
             <div className="ib-modal-body">
-              {/* <div className="ib-info-property">
-                <div className="ib-item -price">
-                  <span className="ib-label">Rate</span>
-                  <span className="ib-price">{lead.rate}</span>
-                </div>
-
-                <div className="ib-item">
-                  <span className="ib-label">Bed(s)</span>
-                  <i className="modal-detail-icon-beds"></i>
-                  <span className="ib-text">{lead.bed}</span>
-                </div>
-
-                <div className="ib-item">
-                  <span className="ib-label">Bath(s)</span>
-                  <i className="modal-detail-icon-baths"></i>
-                  <span className="ib-text">{lead.bath}</span>
-                </div>
-
-                <div className="ib-item">
-                  <span className="ib-label">Sleep(s)</span>
-                  <i className="modal-detail-icon-sleeps"></i>
-                  <span className="ib-text">{lead.occupancy_limit}</span>
-                </div>
-
-                <div className="ib-item -key">
-                  <span className="ib-label">Key</span>
-                  <i className="modal-detail-icon-key"></i>
-                  <span className="ib-text">{key_val}</span>
-                </div>
-
-                <div className="ib-item -rental">
-                  <span className="ib-label">Rental Stay</span>
-                  <span className="ib-text">
-                    {lead.stay ? dateViewRental(lead.stay) : 'N/A'}
-                  </span>
-                </div>
-              </div> */}
-
               <div className="ib-form">
-                <form action="" onSubmit={handleSubmit} id="propertyForm">
+                <form action="" onSubmit={handleSubmit} id="propertyForm-react">
                   <div className="ib-input">
                     <label htmlFor="firstName">First Name</label>
                     <input
                       ref={reffirstName}
                       type="text"
-                      name="firstName"
+                      name="first_name"
                       id="firstName"
                       placeholder="First Name*"
                       value={leadFirstName}
@@ -299,7 +271,7 @@ const RentalFormContact = ({
                     <input
                       ref={reflastName}
                       type="text"
-                      name="lastName"
+                      name="last_name"
                       id="lastName"
                       placeholder="Last Name*"
                       value={leadLastName}
@@ -329,7 +301,7 @@ const RentalFormContact = ({
                     <input
                       ref={refemail}
                       type="text"
-                      name="email"
+                      name="email_address"
                       id="email"
                       placeholder="Email*"
                       value={leadEmailAddress}
@@ -355,18 +327,18 @@ const RentalFormContact = ({
                     <input
                       ref={refphone}
                       type="tel"
-                      name="phone"
+                      name="phone_number"
                       id="phone"
                       placeholder="Phone*"
                       value={leadPhoneNumber}
-                      onChange={(e) => setLeadPhoneNumber(e.target.value)}                      
+                      onChange={(e) => setLeadPhoneNumber(e.target.value)}
                       onPaste={() => {
                         return false
                       }}
                       onDrop={() => {
                         return false
                       }}
-                      autoComplete="off"                      
+                      autoComplete="off"
                     />
                     {phone && (
                       <label htmlFor="phone" generated="true" className="error">
@@ -377,7 +349,7 @@ const RentalFormContact = ({
                   <div className="ib-input">
                     <label htmlFor="Comment">Comment</label>
                     <textarea
-                      name="comment"
+                      name="message"
                       id="comment"
                       value={leadComment}
                       onChange={(e) => setLeadComment(e.target.value)}

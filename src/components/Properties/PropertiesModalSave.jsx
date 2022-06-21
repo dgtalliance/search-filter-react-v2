@@ -29,10 +29,7 @@ function PropertiesModalSave() {
   const [newListing, setNewListing] = useState(true)
   const [priceChange, setPriceChange] = useState(true)
   const [statusChange, setStatusChange] = useState(true)
-  const properties = useSelector(getpropertiesData)
-
-  const filter_id = defaultPropsShortCode.filter
-
+ 
   const onChangeNewListing = (e) => {
     setNewListing(e.target.checked)
   }

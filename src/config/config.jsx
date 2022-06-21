@@ -38,8 +38,8 @@ export const LEAD_FAVORITES =
 
 export const API_CONTACT_FORM_URL =
   window.location.host === 'localhost:3000'
-    ? 'https://api.idxboost.dev/tracking/property_inquiries'
-    : `${window.__flex_g_settings.domain_service}/tracking/property_inquiries`
+    ? 'https://api.idxboost.dev/inquiry/'
+    : `${window.__flex_g_settings.domain_service}/inquiry/`
 
 export const API_PROPERTIES_DETAIL_CHART =
   'https://statistics.idxboost.dev/api/get-property-details-mt'
