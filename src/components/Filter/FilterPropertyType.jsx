@@ -4,13 +4,14 @@ import { getparams, updateForm } from '../../config/slices/properties'
 import { fetchAsyncSearch } from '../../config/actions/properties'
 import CheckboxGroup from '../common/Checkbox'
 import { property_type_d } from '../../config/config'
+import { memo } from 'react'
 
 const FilterPropertyType = () => {
   const dispatch = useDispatch()
   const [listCheck, setlistCheck] = useState([])
   var params = useSelector(getparams)
   var property_type
-
+  
   useEffect(() => {
     property_type = params.property_type
     if (Array.isArray(property_type)) {
@@ -28,8 +29,8 @@ const FilterPropertyType = () => {
   const handleChangeItem = (e) => {
     var v = e.target.value
     var temp = []
-    if (checkedDefault(v)) {
-      temp = listCheck.filter((item) => item !== v)
+    if (checkedDefault(v)) {     
+      temp = listCheck.filter((item) => item.toString() !== v.toString())
     } else {
       temp = Array.from(listCheck)
       temp.push(v)
@@ -55,4 +56,4 @@ const FilterPropertyType = () => {
   )
 }
 
-export default FilterPropertyType
+export default memo(FilterPropertyType)
